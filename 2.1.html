@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloning Vectors: Concept, Structure, Requirements &amp; pBR322 — MSc Lecture</title>
+<style>
+  :root {
+    --bg: #0b1320;
+    --panel: #111e30;
+    --panel2: #172840;
+    --panel-border: rgba(234, 227, 207, 0.12);
+    --paper: #f6f1e3;
+    --text: #ede7d6;
+    --text-muted: #96a9c0;
+    --gold: #dfb15b;
+    --gold-glow: rgba(223, 177, 91, 0.2);
+    --teal: #3ec29e;
+    --teal-glow: rgba(62, 194, 158, 0.2);
+    --rose: #e85d5d;
+    --rose-glow: rgba(232, 93, 93, 0.2);
+    --indigo: #818cf8;
+    --indigo-glow: rgba(129, 140, 248, 0.2);
+    --slate: #5a718c;
+    --good: #3ec29e;
+    --danger: #e85d5d;
+    --serif: 'Georgia', 'Cambria', 'Palatino Linotype', 'Times New Roman', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --mono: 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+  }
+
+  .app {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Top Navigation Bar */
+  header.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 28px;
+    background: linear-gradient(180deg, #0e1929 0%, #0a1320 100%);
+    border-bottom: 1px solid var(--panel-border);
+    gap: 20px;
+    flex-shrink: 0;
+    z-index: 100;
+  }
+
+  .brand-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    background: rgba(223, 177, 91, 0.15);
+    color: var(--gold);
+    border: 1px solid rgba(223, 177, 91, 0.35);
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.8px;
+  }
+
+  .brand-title {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    color: var(--paper);
+  }
+  .brand-title span { color: var(--gold); }
+
+  .nav-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+    max-width: 620px;
+  }
+
+  .progress-track {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    align-items: center;
+  }
+
+  .dot-step {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(234, 227, 207, 0.12);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+  }
+  .dot-step:hover { background: rgba(223, 177, 91, 0.4); }
+  .dot-step.done { background: var(--teal); }
+  .dot-step.active { background: var(--gold); box-shadow: 0 0 8px var(--gold-glow); }
+
+  .sec-indicator {
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  button {
+    font-family: var(--sans);
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .btn-nav {
+    background: var(--panel2);
+    border: 1px solid var(--panel-border);
+    color: var(--text);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-nav:hover:not(:disabled) {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(223, 177, 91, 0.08);
+  }
+  .btn-nav:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .btn-gold {
+    background: var(--gold);
+    color: #0b1320;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13.5px;
+  }
+  .btn-gold:hover {
+    background: #edd087;
+    box-shadow: 0 0 12px var(--gold-glow);
+  }
+
+  /* Main Scrollable Viewport & Slides */
+  main {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 32px 5vw 90px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+
+  /* Custom Clean Scrollbar */
+  main::-webkit-scrollbar {
+    width: 10px;
+  }
+  main::-webkit-scrollbar-track {
+    background: rgba(11, 19, 32, 0.7);
+    border-left: 1px solid rgba(234, 227, 207, 0.06);
+  }
+  main::-webkit-scrollbar-thumb {
+    background: rgba(223, 177, 91, 0.35);
+    border-radius: 5px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  main::-webkit-scrollbar-thumb:hover {
+    background: rgba(223, 177, 91, 0.7);
+  }
+  main {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(223, 177, 91, 0.35) rgba(11, 19, 32, 0.7);
+  }
+
+  .slide {
+    display: none;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    animation: slideIn 0.35s ease-out;
+  }
+  .slide.active { display: block; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Typography & Badges */
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--teal);
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--teal);
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: 34px;
+    line-height: 1.25;
+    color: var(--paper);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-size: 24px;
+    color: var(--paper);
+    margin: 28px 0 12px;
+  }
+
+  h3 {
+    font-family: var(--serif);
+    font-size: 19px;
+    color: var(--gold);
+    margin: 18px 0 8px;
+  }
+
+  h4 {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--paper);
+    margin-bottom: 6px;
+  }
+
+  p {
+    font-size: 15.5px;
+    color: #ddd4be;
+    margin-bottom: 12px;
+  }
+
+  .lede {
+    font-size: 17.5px;
+    color: var(--text-muted);
+    max-width: 860px;
+    line-height: 1.55;
+    margin-bottom: 22px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 22px 26px;
+    margin: 16px 0;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+  }
+
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .grid-equal {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .grid3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  @media (max-width: 920px) {
+    .grid2, .grid-equal, .grid3 { grid-template-columns: 1fr; }
+  }
+
+  /* Interactive Options / MCQ */
+  .opt {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: var(--panel2);
+    border: 1px solid var(--panel-border);
+    color: var(--text);
+    padding: 13px 18px;
+    border-radius: 8px;
+    margin: 9px 0;
+    font-size: 15px;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    line-height: 1.45;
+  }
+  .opt:hover:not(:disabled) {
+    border-color: var(--gold);
+    background: rgba(223, 177, 91, 0.07);
+    transform: translateX(3px);
+  }
+  .opt.correct {
+    border-color: var(--good) !important;
+    background: rgba(62, 194, 158, 0.18) !important;
+    color: #e3faf3;
+    font-weight: 500;
+  }
+  .opt.wrong {
+    border-color: var(--danger) !important;
+    background: rgba(232, 93, 93, 0.18) !important;
+    color: #fde8e8;
+  }
+  .opt:disabled { cursor: default; }
+
+  .feedback {
+    margin-top: 14px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    background: var(--panel2);
+    border-left: 4px solid var(--gold);
+    display: none;
+    font-size: 14.5px;
+    line-height: 1.55;
+    animation: fadeIn 0.25s ease;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb { border-left-color: var(--good); background: rgba(62, 194, 158, 0.1); }
+  .feedback.wrong-fb { border-left-color: var(--danger); background: rgba(232, 93, 93, 0.1); }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Workflow Ribbon */
+  .workflow-ribbon {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: linear-gradient(90deg, #162438, #1c2e47);
+    border: 1px solid rgba(223, 177, 91, 0.3);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 18px 0;
+    overflow-x: auto;
+  }
+
+  .wf-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 100px;
+  }
+  .wf-step .step-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--gold);
+    background: rgba(223, 177, 91, 0.15);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+  }
+  .wf-step .step-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--paper);
+    white-space: nowrap;
+  }
+  .wf-arrow {
+    color: var(--gold);
+    font-size: 18px;
+    opacity: 0.7;
+  }
+
+  /* SVG & Diagrams */
+  .diagram-wrap {
+    background: #0d1726;
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  svg text {
+    font-family: var(--sans);
+    user-select: none;
+  }
+
+  .arc {
+    stroke-width: 24;
+    fill: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  .arc:hover {
+    stroke-width: 28;
+    filter: drop-shadow(0 0 6px rgba(223, 177, 91, 0.4));
+  }
+  .arc.dim { opacity: 0.2; }
+  .arc.removed {
+    opacity: 0.15;
+    stroke-dasharray: 4 6;
+    filter: none;
+  }
+  .arc.sel {
+    stroke-width: 30;
+    filter: drop-shadow(0 0 8px rgba(223, 177, 91, 0.7));
+  }
+
+  .site-tick {
+    stroke: #e2d9be;
+    stroke-width: 2;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .site-tick:hover {
+    stroke: var(--gold);
+    stroke-width: 3.5;
+  }
+
+  .site-label {
+    fill: #ccd7e4;
+    font-size: 10px;
+    font-family: var(--mono);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .site-label:hover {
+    fill: var(--gold);
+    font-weight: bold;
+  }
+
+  .backbone-ring {
+    fill: none;
+    stroke: #253952;
+    stroke-width: 3;
+  }
+
+  /* Feature Buttons & Chips */
+  .featrow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+  }
+
+  .fbtn {
+    background: var(--panel2);
+    border: 1px solid var(--panel-border);
+    color: var(--text);
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.2s ease;
+  }
+  .fbtn:hover {
+    border-color: var(--gold);
+    transform: translateY(-1px);
+  }
+  .fbtn .sw {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .fbtn.active {
+    border-color: var(--gold);
+    background: rgba(223, 177, 91, 0.15);
+    color: var(--paper);
+    font-weight: 500;
+  }
+  .fbtn.removed {
+    opacity: 0.4;
+    text-decoration: line-through;
+    border-color: var(--danger);
+  }
+
+  /* Info Panels */
+  .infopanel {
+    background: var(--panel2);
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    min-height: 120px;
+    margin-top: 12px;
+  }
+  .infopanel h4 {
+    color: var(--gold);
+    font-size: 17px;
+    margin-bottom: 8px;
+  }
+  .infopanel .row {
+    margin: 7px 0;
+    font-size: 14.5px;
+    line-height: 1.5;
+  }
+  .infopanel .row b { color: var(--paper); }
+  .infopanel .placeholder {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 14px;
+  }
+
+  .btn-action-remove {
+    margin-top: 12px;
+    background: rgba(232, 93, 93, 0.15);
+    border: 1px solid var(--rose);
+    color: #ff9b9b;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-action-remove:hover {
+    background: var(--rose);
+    color: #fff;
+  }
+  .btn-action-remove.is-removed {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: #0b1320;
+  }
+
+  /* Checklists */
+  .checklist {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 18px;
+  }
+  @media (max-width: 768px) { .checklist { grid-template-columns: 1fr; } }
+
+  .cli {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: var(--panel2);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    transition: all 0.2s ease;
+  }
+  .cli:hover { border-color: rgba(223, 177, 91, 0.3); }
+  .cli input[type="checkbox"] {
+    margin-top: 4px;
+    accent-color: var(--gold);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+  .cli label { cursor: pointer; }
+  .cli label b { color: var(--paper); font-size: 14.5px; display: block; }
+  .cli label span { display: block; color: var(--text-muted); font-size: 13px; margin-top: 2px; }
+
+  /* Plates & Simulated Microbiology */
+  .platewrap {
+    display: flex;
+    gap: 36px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 20px 0 10px;
+  }
+
+  .plate-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .plate-dish {
+    background: #ebdcb2;
+    border-radius: 50%;
+    width: 240px;
+    height: 240px;
+    position: relative;
+    box-shadow: inset 0 0 0 9px #d4be88, inset 0 0 24px rgba(175, 142, 70, 0.35), 0 8px 24px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    border: 2px solid #b8a26c;
+  }
+
+  .plate-lbl {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--paper);
+    background: var(--panel2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--panel-border);
+  }
+
+  .colony-dot {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  .colony-dot:hover {
+    transform: scale(1.3);
+    outline: 2px solid #ffffff;
+    z-index: 10;
+  }
+  .colony-dot .colony-num {
+    font-family: var(--mono);
+    font-size: 8px;
+    font-weight: bold;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .legend-bar {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+    font-size: 13px;
+    color: var(--text-muted);
+    background: var(--panel2);
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--panel-border);
+  }
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  /* Tables */
+  .msc-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 14px;
+  }
+  .msc-table th, .msc-table td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--panel-border);
+  }
+  .msc-table th {
+    background: var(--panel2);
+    color: var(--gold);
+    font-family: var(--serif);
+    font-size: 14.5px;
+  }
+  .msc-table td b { color: var(--paper); }
+  .msc-table tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+  /* Details Accordion */
+  details.deep-dive {
+    background: var(--panel2);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+  }
+  details.deep-dive summary {
+    font-family: var(--serif);
+    font-weight: 600;
+    color: var(--teal);
+    cursor: pointer;
+    font-size: 15px;
+    outline: none;
+  }
+  details.deep-dive[open] summary { margin-bottom: 10px; color: var(--gold); }
+  details.deep-dive p { margin: 6px 0; font-size: 14px; }
+
+  /* Callout boxes */
+  .callout-box {
+    background: linear-gradient(135deg, #13243a, #1a2f4d);
+    border-left: 4px solid var(--gold);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    margin: 16px 0;
+  }
+
+  .callout-box.info { border-left-color: var(--indigo); background: linear-gradient(135deg, #141c33, #1c2747); }
+  .callout-box.danger { border-left-color: var(--rose); background: linear-gradient(135deg, #2b161c, #381c25); }
+
+  /* Assessment Scoreboard */
+  .score-header {
+    background: var(--panel2);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 12px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-family: var(--mono);
+  }
+  .score-value {
+    color: var(--gold);
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  /* Utility */
+  .mono { font-family: var(--mono); }
+  .gold { color: var(--gold); }
+  .teal { color: var(--teal); }
+  .rose { color: var(--rose); }
+  .paper { color: var(--paper); }
+  .text-sm { font-size: 13.5px; }
+
+  /* Modal / Fullscreen Styles */
+  :fullscreen main { padding: 24px 8vw 60px; }
+</style>
+</head>
+<body>
+
+<div class="app" id="lectureApp">
+  <!-- Top Navigation Header -->
+  <header class="topbar">
+    <div class="brand-area">
+      <span class="brand-badge">MSc MICROBIOLOGY</span>
+      <div class="brand-title">Cloning Vectors &amp; <span>pBR322</span></div>
+    </div>
+
+    <div class="nav-center">
+      <div class="progress-track" id="progressTrack" title="Click any dot to jump to that module"></div>
+      <div class="sec-indicator" id="secIndicator">Module 1 of 8</div>
+    </div>
+
+    <div class="nav-actions">
+      <button class="btn-nav" id="btnPrev" title="Previous Module (Left Arrow)">← Back</button>
+      <button class="btn-nav btn-gold" id="btnNext" title="Next Module (Right Arrow)">Next →</button>
+    </div>
+  </header>
+
+  <!-- Main Scrollable Content -->
+  <main id="mainContainer">
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 1 : OPENING PROBLEM & CONCEPTUAL IMPASSE                          -->
+    <!-- ========================================================================= -->
+    <section class="slide active" id="sec0">
+      <div class="eyebrow">Interactive Opening Problem</div>
+      <h1>Why Can't You Just Put Purified Linear DNA into a Bacterium?</h1>
+      <p class="lede">
+        Suppose you have PCR-amplified and gel-purified a high-yield, 1.5 kb target gene. If you transform this naked linear DNA directly into competent <i>Escherichia coli</i> cells and plate them, you will recover zero copies. Why?
+      </p>
+
+      <div class="card">
+        <h3>Diagnostic Inquiry</h3>
+        <p>Select the most biologically accurate explanation for this failure:</p>
+        <div id="q0opts"></div>
+        <div class="feedback" id="q0fb"></div>
+      </div>
+
+      <!-- Workflow Ribbon -->
+      <div class="card">
+        <h3>The 4 Inescapable Hurdles of Gene Cloning</h3>
+        <p>
+          Transforming naked DNA fails due to three fundamental biological realities: (1) <b>Host Nuclease Degradation</b> (host <i>RecBCD</i> exonucleases rapidly destroy unprotected linear ends), (2) <b>Replication Incompetence</b> (no host DNA polymerase recognition sequence / <i>ori</i>), and (3) <b>Zero Selective Advantage</b> (transformation efficiency is low; 1 in 10,000 cells takes up DNA—without a marker, transformants are overgrown by billions of untransformed cells).
+        </p>
+
+        <p><b class="paper">The universal recombinant DNA workflow that solves this:</b></p>
+        <div class="workflow-ribbon">
+          <div class="wf-step">
+            <span class="step-num">STEP 1</span>
+            <span class="step-name">Target Insert</span>
+          </div>
+          <div class="wf-arrow">+</div>
+          <div class="wf-step">
+            <span class="step-num">STEP 2</span>
+            <span class="step-name">Vector DNA</span>
+          </div>
+          <div class="wf-arrow">➔</div>
+          <div class="wf-step">
+            <span class="step-num">STEP 3</span>
+            <span class="step-name">Recombinant DNA</span>
+          </div>
+          <div class="wf-arrow">➔</div>
+          <div class="wf-step">
+            <span class="step-num">STEP 4</span>
+            <span class="step-name">Host Uptake</span>
+          </div>
+          <div class="wf-arrow">➔</div>
+          <div class="wf-step">
+            <span class="step-num">STEP 5</span>
+            <span class="step-name">Selection</span>
+          </div>
+          <div class="wf-arrow">➔</div>
+          <div class="wf-step">
+            <span class="step-num">STEP 6</span>
+            <span class="step-name">Identification</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cloning vs Expression Vector Deep-Dive -->
+      <div class="card">
+        <h3>Cloning Vector vs. Expression Vector — Essential Distinction</h3>
+        <p>A frequent point of confusion at the MSc level is conflating cloning vehicles with protein expression systems:</p>
+        <table class="msc-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Cloning Vector (e.g. pBR322)</th>
+              <th>Expression Vector (e.g. pET-28a, pGEX)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Primary Goal</b></td>
+              <td>Propagate, amplify, store, and sequence target DNA.</td>
+              <td>Transcribe mRNA and translate high yields of recombinant protein.</td>
+            </tr>
+            <tr>
+              <td><b>Promoter Architecture</b></td>
+              <td>Only requires constitutive promoters for its resistance marker genes.</td>
+              <td>Requires strong, tightly regulatable host-specific promoter (e.g., T7, <i>lacUV5</i>, <i>tac</i>).</td>
+            </tr>
+            <tr>
+              <td><b>Translation Signals</b></td>
+              <td>Not required for the insert.</td>
+              <td>Must provide Shine-Dalgarno (RBS), ATG start codon in-frame, stop codons.</td>
+            </tr>
+            <tr>
+              <td><b>Copy Number Priority</b></td>
+              <td>Moderate-to-high copy number to maximize plasmid mini-prep yield.</td>
+              <td>Often controlled copy number to avoid metabolic burden/toxicity prior to induction.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 2 : WHAT IS A CLONING VECTOR? & CONSTRUCTION SYSTEM               -->
+    <!-- ========================================================================= -->
+    <section class="slide" id="sec1">
+      <div class="eyebrow">Fundamental Concept</div>
+      <h1>What is a Cloning Vector?</h1>
+      <p class="lede">
+        A <b>cloning vector</b> is an autonomously replicating, non-essential genetic element (typically a double-stranded circular plasmid, bacteriophage, or cosmid) engineered to physically carry foreign DNA fragments into a host cell for propagation and maintenance.
+      </p>
+
+      <div class="grid2">
+        <div class="card">
+          <h3>Interactive System Builder</h3>
+          <p class="text-sm" style="color:var(--text-muted);">Click each molecular entity to inspect its structural role in the cloning process:</p>
+          <div class="featrow" id="buildRow"></div>
+          <div class="infopanel" id="buildPanel">
+            <span class="placeholder">Click any component button above to reveal its molecular definition and role.</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Rigorous MSc Vocabulary Reference</h3>
+          <div class="infopanel" style="margin-top:0;">
+            <div class="row"><b>Host Cell:</b> An engineered bacterial strain (e.g. <i>E. coli</i> DH5α, JM109) that is typically <i>recA⁻</i> (prevents homologous recombination) and <i>endA1⁻</i> (eliminates non-specific Endonuclease I to ensure high-quality mini-prep DNA).</div>
+            <div class="row"><b>Vector Backbone:</b> The engineered DNA molecule providing replication machinery, antibiotic selection, and structural spacing.</div>
+            <div class="row"><b>Insert / Passenger DNA:</b> The exogenous DNA sequence (genomic, cDNA, synthetic) to be cloned.</div>
+            <div class="row"><b>Recombinant Molecule:</b> The chimaeric DNA circularized <i>in vitro</i> by DNA ligase joining vector and insert at compatible ends.</div>
+            <div class="row"><b>Isogenic Clone:</b> A population of billions of genetically identical bacteria arising from binary fission of a single transformed cell.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Conceptual Comprehension Check</h3>
+        <p><b>Question:</b> Which property of a vector would be rendered utterly useless if the vector lacked a functional Origin of Replication (<i>ori</i>)?</p>
+        <div id="q1opts"></div>
+        <div class="feedback" id="q1fb"></div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 3 : ANATOMY OF A GENERIC PLASMID VECTOR                           -->
+    <!-- ========================================================================= -->
+    <section class="slide" id="sec2">
+      <div class="eyebrow">Vector Architecture &amp; Knockout Activity</div>
+      <h1>Anatomy of a Generic Plasmid Vector</h1>
+      <p class="lede">
+        All plasmid cloning vectors possess a modular architecture. Click any functional domain on the plasmid ring or button row below to inspect its mechanism, and test the <b>"Knockout / Remove Component"</b> feature to observe the experimental consequence.
+      </p>
+
+      <div class="grid2">
+        <div class="diagram-wrap">
+          <svg id="genericSvg" viewBox="0 0 360 360" width="100%" style="max-width:340px;"></svg>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:10px;text-align:center;">
+            Interactive Generic Plasmid Map (Click sectors or labels)
+          </div>
+        </div>
+
+        <div>
+          <div class="featrow" id="genFeatRow"></div>
+          <div class="infopanel" id="genPanel">
+            <span class="placeholder">Click any sector on the plasmid map or a chip above.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout-box info" style="margin-top:20px;">
+        <h4>Experimental Significance of Topology</h4>
+        <p class="text-sm">
+          Natural plasmids exist in a <b>negatively supercoiled covalently closed circular (CCC)</b> form. Supercoiling facilitates DNA unwinding at the <i>ori</i> by replication initiator proteins and protects the vector against exonucleolytic cleavage. When restriction enzymes cleave a single site, they convert CCC DNA into <b>linear DNA</b>, relaxing torsional strain and exposing free 5'-phosphate and 3'-hydroxyl ends for ligation.
+        </p>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 4 : REQUIREMENTS OF A GOOD CLONING VECTOR                         -->
+    <!-- ========================================================================= -->
+    <section class="slide" id="sec3">
+      <div class="eyebrow">Vector Engineering Principles</div>
+      <h1>Requirements of an Ideal Cloning Vector</h1>
+      <p class="lede">
+        Designing a molecular cloning vehicle involves balancing genetic, biochemical, and biophysical constraints. Review the 8 essential engineering criteria below:
+      </p>
+
+      <div class="checklist" id="reqList"></div>
+
+      <!-- Vector Design Challenge -->
+      <div class="card" style="margin-top:24px;">
+        <h3>Design-the-Vector Diagnostic Challenge</h3>
+        <p>
+          <b class="paper">Scenario:</b> An enthusiastic graduate student synthesizes a novel plasmid vector termed <b>"pTEST1"</b>. Analytical sequencing reveals the following characteristics:
+        </p>
+        <ul style="margin-left:22px;margin-bottom:14px;color:#d8ceb4;font-size:14.5px;">
+          <li>Total size = <b>52 kb</b>.</li>
+          <li>Possesses a strong ColE1 <i>ori</i>.</li>
+          <li>Contains 42 restriction sites for <i>EcoRI</i>, <i>BamHI</i>, and <i>HindIII</i> scattered across the <i>ori</i> and structural regions.</li>
+          <li>Lacks an antibiotic resistance gene or metabolic selectable marker.</li>
+        </ul>
+        <p>Which fundamental vector engineering criteria does <b>pTEST1</b> violate? (Select all that apply, then reveal the evaluation):</p>
+        
+        <div class="checklist" id="challengeOpts" style="grid-template-columns: 1fr;"></div>
+        <div style="margin-top:14px;">
+          <button class="btn-gold" id="btnChallengeReveal">Evaluate Design</button>
+        </div>
+        <div class="feedback" id="challengeFb"></div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 5 : pBR322 ARCHITECTURE & STRUCTURAL ANATOMY                      -->
+    <!-- ========================================================================= -->
+    <section class="slide" id="sec4">
+      <div class="eyebrow">The Archetype Plasmid</div>
+      <h1>pBR322 — Complete Structural &amp; Genetic Anatomy</h1>
+      <p class="lede">
+        Engineered in 1977 by Francisco Bolívar and Raymond Rodriguez, <b>pBR322</b> (4,361 bp) was the first widely adopted, fully characterized plasmid vector. Click any genetic element or unique restriction enzyme site below:
+      </p>
+
+      <div class="grid2">
+        <div class="diagram-wrap">
+          <svg id="pbrSvg" viewBox="0 0 400 400" width="100%" style="max-width:390px;"></svg>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:10px;text-align:center;">
+            pBR322 Circular Restriction Map (Exact bp coordinates)
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">
+            Genes &amp; Functional Elements:
+          </div>
+          <div class="featrow" id="pbrFeatRow"></div>
+          
+          <div style="font-size:13px;color:var(--text-muted);margin:14px 0 6px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">
+            Key Unique Restriction Sites:
+          </div>
+          <div class="featrow" id="pbrSitesRow"></div>
+
+          <div class="infopanel" id="pbrPanel">
+            <span class="placeholder">Click any gene sector or restriction enzyme site on the map or chips above.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Molecular Details Deep-Dive -->
+      <div class="grid-equal" style="margin-top:18px;">
+        <div class="card">
+          <h3>The Origin of Replication: pMB1 (ColE1 Family)</h3>
+          <p class="text-sm">
+            pBR322 carries a <b>relaxed pMB1 origin</b> (closely homologous to ColE1). It replicates independently of host DNA polymerase I after initiation, maintaining ~15–20 copies per chromosome. Copy number is negative-feedback regulated by two plasmid-encoded non-coding RNAs (<b>RNA I</b> and <b>RNA II</b>) stabilized by the <b>Rop (Repressor of primer)</b> protein.
+          </p>
+          <details class="deep-dive">
+            <summary>Chloramphenicol Amplification Mechanism</summary>
+            <p>
+              When protein synthesis inhibitor chloramphenicol is added to a pBR322 culture, host chromosome replication stops (requiring active protein synthesis), but pBR322 continues replicating using stable pre-existing host enzymes. Plasmid copy number surges to <b>1,000–3,000 copies per cell</b>, providing massive plasmid yields for purification.
+            </p>
+          </details>
+        </div>
+
+        <div class="card">
+          <h3>Dual Antibiotic Resistance Mechanisms</h3>
+          <p class="text-sm">
+            <b>1. Ampicillin Resistance (<i>bla</i> gene):</b> Encodes a 31.5 kDa periplasmic <b>β-lactamase</b> that hydrolyzes the β-lactam ring of ampicillin, preventing it from inhibiting transpeptidase (cell wall synthesis).<br><br>
+            <b>2. Tetracycline Resistance (<i>tetR / tetA</i> gene):</b> Encodes a 43 kDa membrane-associated <b>efflux antiporter</b> that pumps tetracycline out of the cytoplasm, preventing it from binding to the 30S ribosomal subunit.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 6 : SELECTION, SCREENING & INSERTIONAL INACTIVATION               -->
+    <!-- ========================================================================= -->
+    <section class="slide" id="sec5">
+      <div class="eyebrow">Interactive Laboratory Simulation</div>
+      <h1>Selection, Screening &amp; Insertional Inactivation</h1>
+      <p class="lede">
+        <b>Insertional inactivation</b> is the loss of a selectable gene's function resulting from the direct insertion of foreign DNA into its coding sequence. Test the simulated cloning experiment below:
+      </p>
+
+      <!-- Prediction Question -->
+      <div class="card">
+        <h3>Cloning Scenario Prediction</h3>
+        <p>
+          You digest a 1.5 kb cDNA fragment with <i>BamHI</i> and ligate it into the unique <b><i>BamHI</i> site (bp 375)</b> located inside the <i>tetR</i> gene of pBR322. Following transformation into wild-type <i>E. coli</i>, what is the expected antibiotic resistance phenotype of cells harboring this recombinant plasmid?
+        </p>
+        <div id="q2opts"></div>
+        <div class="feedback" id="q2fb"></div>
+      </div>
+
+      <!-- Simulated Replica Plating Lab -->
+      <div class="card">
+        <h3>Master Plate &amp; Replica Plating Simulation (Lederberg Technique)</h3>
+        <p style="font-size:14.5px;color:var(--text-muted);">
+          Following transformation, cells are plated on a Master Ampicillin plate. Surviving colonies are then transferred using a sterile velvet stamp onto a Replica Tetracycline plate.
+        </p>
+
+        <div class="legend-bar">
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#5a6e85;"></span>
+            <span>Non-transformed Cell (No plasmid: Lyse on Amp)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:var(--teal);"></span>
+            <span>Self-ligated pBR322 (Intact: <b class="paper">Ampᴿ Tetᴿ</b>)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:var(--rose);"></span>
+            <span>Recombinant Clone (Insert in <i>tetR</i>: <b class="paper">Ampᴿ Tetˢ</b>)</span>
+          </div>
+        </div>
+
+        <div class="platewrap">
+          <div class="plate-box">
+            <div class="plate-dish" id="plateAmp"></div>
+            <div class="plate-lbl">Master Plate: +Ampicillin (100 µg/mL)</div>
+          </div>
+          <div class="plate-box">
+            <div class="plate-dish" id="plateTet"></div>
+            <div class="plate-lbl">Replica Plate: +Tetracycline (15 µg/mL)</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:20px;">
+          <button class="btn-gold" id="btnStepAmp">1. Incubate on Ampicillin (Selection)</button>
+          <button class="btn-nav" id="btnStepTet">2. Replica Stamp to Tetracycline (Screening)</button>
+          <button class="btn-nav" id="btnResetPlates">Reset &amp; Randomize Plate</button>
+        </div>
+
+        <div class="infopanel" id="plateInfo" style="margin-top:16px;">
+          <span class="placeholder">Click "1. Incubate on Ampicillin" to begin the experiment.</span>
+        </div>
+
+        <!-- Interactive Colony Diagnostic Tool -->
+        <div class="callout-box" style="margin-top:16px;">
+          <h4>Interactive Colony Diagnostic Challenge</h4>
+          <p class="text-sm">
+            Once both plates are incubated, click directly on any colony (1 to 14) on the Master Plate to inspect its dual-plate phenotype and classify whether it contains a recombinant clone!
+          </p>
+          <div id="colonyInspectResult" style="font-family:var(--mono);font-size:13.5px;color:var(--gold);margin-top:6px;">
+            No colony selected. Click a colony on the Ampicillin plate.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 7 : HISTORICAL SIGNIFICANCE & LIMITATIONS                         -->
+    <!-- ========================================================================= -->
+    <section class="slide" id="sec6">
+      <div class="eyebrow">Critical Evaluation &amp; Vector Evolution</div>
+      <h1>Why pBR322 Mattered &amp; Its Engineering Limitations</h1>
+      <p class="lede">
+        While pBR322 launched the recombinant DNA revolution and served as the cloning workhorse of the late 1970s and 1980s, its practical limitations spurred the development of next-generation vectors.
+      </p>
+
+      <div class="grid2">
+        <div class="card">
+          <h3 style="color:var(--teal);">Groundbreaking Strengths of pBR322</h3>
+          <ul style="margin-left:20px;margin-top:10px;font-size:14.5px;line-height:1.6;color:#d8ceb4;">
+            <li><b>Small, Manageable Size (4.36 kb):</b> Far smaller than natural plasmids (>100 kb), resisting physical shear forces during extraction and achieving high transformation efficiency.</li>
+            <li><b>Dual Selectable Phenotypes:</b> Combining <i>bla</i> and <i>tetR</i> enabled the revolutionary negative-selection screening strategy.</li>
+            <li><b>Completely Sequenced:</b> In 1979, J.G. Sutcliffe determined its entire 4,361 bp sequence, making it the first fully sequenced plasmid tool in history.</li>
+            <li><b>Relaxed Replication:</b> Allowed high-density plasmid yields via chloramphenicol amplification.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 style="color:var(--rose);">Major Experimental Bottlenecks</h3>
+          <ul style="margin-left:20px;margin-top:10px;font-size:14.5px;line-height:1.6;color:#d8ceb4;">
+            <li><b>Cumbersome Two-Step Replica Plating:</b> Identifying recombinants required a tedious 24–48 hr secondary plating step; desired colonies were killed on the tetracycline plate and had to be picked from the master.</li>
+            <li><b>No Clustered Multiple Cloning Site (MCS):</b> Cloning sites are dispersed; restricting one gene eliminates flexibility to choose alternative enzyme combinations.</li>
+            <li><b>Moderate Basal Copy Number:</b> ~15–20 copies/cell without amplification requires large culture volumes for minipreps.</li>
+            <li><b>Satellite Colony Growth:</b> Secreted β-lactamase degrades extracellular ampicillin, allowing untransformed satellite colonies to form around authentic transformants.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Teaser for Lecture 2 -->
+      <div class="callout-box" style="margin-top:24px;border-left-color:var(--indigo);background:linear-gradient(135deg,#121e35,#182745);">
+        <h3 style="color:var(--indigo);margin-top:0;">Looking Forward: The Genesis of pUC18</h3>
+        <p style="font-size:15px;color:#d7e3f4;">
+          “If pBR322 already works, why did Joachim Messing and colleagues develop <b>pUC18 / pUC19</b> in 1982?”
+        </p>
+        <p class="text-sm" style="color:var(--text-muted);margin-bottom:0;">
+          In our next lecture, we will investigate how mutating the pMB1 origin (deleting <i>rop</i>) surged copy numbers to <b>500–700 copies/cell</b>, how synthetic <b>Multiple Cloning Sites (polylinkers)</b> revolutionized cloning flexibility, and how <b>lacZα α-complementation (Blue/White screening)</b> enabled instant single-plate visual identification of recombinant clones.
+        </p>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 8 : RETRIEVAL & RAPID ASSESSMENT                                  -->
+    <!-- ========================================================================= -->
+    <section class="slide" id="sec7">
+      <div class="eyebrow">Knowledge Consolidation</div>
+      <h1>MSc Mastery Assessment</h1>
+      <p class="lede">
+        Evaluate your conceptual command of cloning vectors, vector engineering requirements, and pBR322 experimental genetics:
+      </p>
+
+      <div class="score-header">
+        <span>ASSESSMENT PROGRESS:</span>
+        <span class="score-value" id="scoreDisplay">0 / 5 Correct</span>
+      </div>
+
+      <div id="quizContainer"></div>
+
+      <!-- Capstone Mastery Challenge -->
+      <div class="card" style="margin-top:28px;">
+        <h3>Capstone Rigor Challenge</h3>
+        <p style="font-size:15.5px;color:var(--paper);">
+          <b>Prompt:</b> You are provided with an engineered plasmid containing a fully functional pMB1 <i>ori</i> and an MCS, but completely lacking any selectable marker (e.g. no antibiotic resistance gene). 
+        </p>
+        <p class="text-sm" style="color:var(--text-muted);">
+          1. Will this plasmid replicate inside an <i>E. coli</i> host?<br>
+          2. Can you efficiently identify transformed colonies on an agar plate?
+        </p>
+        <div style="margin-top:12px;">
+          <button class="btn-gold" id="btnFinalReveal">Reveal Detailed Master Analysis</button>
+        </div>
+        <div class="feedback" id="finalFb"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ========================================================================= -->
+<!-- JAVASCRIPT LOGIC ENGINE                                                   -->
+<!-- ========================================================================= -->
+<script>
+/* -------------------------------------------------------------------------
+   1. SLIDE NAVIGATION CONTROLLER & PROGRESS
+------------------------------------------------------------------------- */
+const TOTAL_SLIDES = 8;
+let currentSlide = 0;
+const slideLabels = [
+  "Opening Problem",
+  "Vector Concept",
+  "Generic Anatomy",
+  "Vector Requirements",
+  "pBR322 Architecture",
+  "Selection & Screening",
+  "Significance & Limits",
+  "Mastery Assessment"
+];
+
+const progressTrack = document.getElementById('progressTrack');
+const secIndicator = document.getElementById('secIndicator');
+const btnPrev = document.getElementById('btnPrev');
+const btnNext = document.getElementById('btnNext');
+const mainContainer = document.getElementById('mainContainer');
+
+// Build progress dots
+for (let i = 0; i < TOTAL_SLIDES; i++) {
+  const dot = document.createElement('div');
+  dot.className = 'dot-step';
+  dot.title = `Module ${i + 1}: ${slideLabels[i]}`;
+  dot.addEventListener('click', () => navigateTo(i));
+  progressTrack.appendChild(dot);
+}
+
+function updateNavigation() {
+  document.querySelectorAll('.slide').forEach((slide, idx) => {
+    slide.classList.toggle('active', idx === currentSlide);
+  });
+
+  document.querySelectorAll('.dot-step').forEach((dot, idx) => {
+    dot.classList.toggle('active', idx === currentSlide);
+    dot.classList.toggle('done', idx < currentSlide);
+  });
+
+  secIndicator.textContent = `Module ${currentSlide + 1} of ${TOTAL_SLIDES} : ${slideLabels[currentSlide]}`;
+  btnPrev.disabled = (currentSlide === 0);
+  btnNext.disabled = (currentSlide === TOTAL_SLIDES - 1);
+  mainContainer.scrollTop = 0;
+}
+
+function navigateTo(targetIndex) {
+  currentSlide = Math.max(0, Math.min(TOTAL_SLIDES - 1, targetIndex));
+  updateNavigation();
+}
+
+btnPrev.addEventListener('click', () => navigateTo(currentSlide - 1));
+btnNext.addEventListener('click', () => navigateTo(currentSlide + 1));
+
+// Keyboard navigation (Arrow keys for modules, standard keys for scrolling)
+window.addEventListener('keydown', (e) => {
+  // Ignore if user is interacting with form controls
+  if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+
+  if (e.key === 'ArrowRight') {
+    if (currentSlide < TOTAL_SLIDES - 1) navigateTo(currentSlide + 1);
+  } else if (e.key === 'ArrowLeft') {
+    if (currentSlide > 0) navigateTo(currentSlide - 1);
+  }
+});
+
+updateNavigation();
+
+/* -------------------------------------------------------------------------
+   2. REUSABLE MCQ BUILDER
+------------------------------------------------------------------------- */
+function buildMCQ(containerId, feedbackId, options, correctIndex, explanation) {
+  const container = document.getElementById(containerId);
+  const feedback = document.getElementById(feedbackId);
+  if (!container || !feedback) return;
+
+  container.innerHTML = '';
+  options.forEach((optText, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = optText;
+    btn.addEventListener('click', () => {
+      container.querySelectorAll('.opt').forEach(b => b.disabled = true);
+      if (idx === correctIndex) {
+        btn.classList.add('correct');
+        feedback.className = 'feedback show correct-fb';
+      } else {
+        btn.classList.add('wrong');
+        container.children[correctIndex].classList.add('correct');
+        feedback.className = 'feedback show wrong-fb';
+      }
+      feedback.innerHTML = explanation;
+    });
+    container.appendChild(btn);
+  });
+}
+
+// Module 0 Question
+buildMCQ(
+  'q0opts', 'q0fb',
+  [
+    "Purified DNA is too large to cross the bacterial outer membrane pores.",
+    "Naked linear DNA is rapidly degraded by host exonucleases (e.g. <i>RecBCD</i>) and lacks an origin of replication to drive replication during host cell division.",
+    "Bacterial RNA polymerases are strictly incapable of transcribing foreign DNA.",
+    "Bacterial cells recognize foreign DNA as toxic and immediately undergo programmed apoptosis."
+  ],
+  1,
+  "<b>Rigorous Molecular Rationale:</b> Linear DNA fragments introduced into <i>E. coli</i> are destroyed within minutes by the ATP-dependent exonuclease complex <i>RecBCD</i>. Furthermore, even if DNA survives, host DNA Polymerase III requires a specific double-stranded origin sequence (<i>ori</i>) to initiate replication. Without an <i>ori</i> and a selectable marker, replication and recovery are impossible."
+);
+
+// Module 1 Question
+buildMCQ(
+  'q1opts', 'q1fb',
+  [
+    "The multiple cloning site (MCS)",
+    "The selectable antibiotic resistance marker",
+    "The origin of replication (<i>ori</i>)",
+    "The plasmid backbone spacer length"
+  ],
+  2,
+  "<b>Correct Analysis:</b> If the vector lacks an <i>ori</i> (or if the <i>ori</i> is mutated/incompatible), the plasmid cannot replicate when the host cell divides. Consequently, the vector is lost after 1–2 generations. Selectable markers and cloning sites are completely useless if the carrier molecule cannot propagate."
+);
+
+// Module 5 Scenario Question
+buildMCQ(
+  'q2opts', 'q2fb',
+  [
+    "Ampicillin-sensitive (Ampˢ) and Tetracycline-resistant (Tetᴿ)",
+    "Ampicillin-resistant (Ampᴿ) and Tetracycline-resistant (Tetᴿ)",
+    "Ampicillin-resistant (Ampᴿ) and Tetracycline-sensitive (Tetˢ)",
+    "Ampicillin-sensitive (Ampˢ) and Tetracycline-sensitive (Tetˢ)"
+  ],
+  2,
+  "<b>Biochemical Mechanism:</b> The foreign insert physically splits the coding sequence of the <i>tetR</i> (tetracycline efflux pump) gene at nucleotide 375, causing a catastrophic open reading frame disruption and loss of functional TetA protein (<b>Tetˢ</b>). Conversely, the <i>bla</i> (β-lactamase) gene is structurally intact and fully expressed, conferring robust ampicillin resistance (<b>Ampᴿ</b>)."
+);
+
+/* -------------------------------------------------------------------------
+   3. SVG GEOMETRY UTILITIES
+------------------------------------------------------------------------- */
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+function createSvgEl(tag, attrs) {
+  const el = document.createElementNS(SVG_NS, tag);
+  for (const key in attrs) {
+    el.setAttribute(key, attrs[key]);
+  }
+  return el;
+}
+
+function polarToCartesian(cx, cy, radius, angleInDegrees) {
+  const radians = (angleInDegrees - 90) * Math.PI / 180.0;
+  return {
+    x: cx + (radius * Math.cos(radians)),
+    y: cy + (radius * Math.sin(radians))
+  };
+}
+
+function describeArc(cx, cy, radius, startAngle, endAngle) {
+  let sweep = endAngle - startAngle;
+  if (sweep < 0) sweep += 360;
+  const start = polarToCartesian(cx, cy, radius, startAngle);
+  const end = polarToCartesian(cx, cy, radius, endAngle);
+  const largeArcFlag = sweep > 180 ? "1" : "0";
+  return `M ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${end.x} ${end.y}`;
+}
+
+/* -------------------------------------------------------------------------
+   4. MODULE 1 : SYSTEM BUILDER
+------------------------------------------------------------------------- */
+const buildComponents = [
+  {
+    id: 'b-vec', label: '1. Vector DNA', color: 'var(--teal)',
+    title: 'Vector DNA Backbone',
+    desc: 'An engineered, self-replicating double-stranded circular DNA carrier carrying an origin of replication (<i>ori</i>), selectable markers, and unique restriction cleavage sites.'
+  },
+  {
+    id: 'b-ins', label: '2. Target Insert', color: 'var(--rose)',
+    title: 'Exogenous Target DNA (Insert)',
+    desc: 'The specific gene or DNA fragment of interest (genomic, cDNA, PCR product) possessing termini compatible with the cleaved vector (sticky or blunt ends).'
+  },
+  {
+    id: 'b-lig', label: '3. Recombinant Molecule', color: 'var(--gold)',
+    title: 'In Vitro Recombinant DNA',
+    desc: 'The covalent chimaeric molecule produced when T4 DNA Ligase seals the phosphodiester backbone between vector and insert DNA at 16°C.'
+  },
+  {
+    id: 'b-host', label: '4. Competent Host Cell', color: 'var(--indigo)',
+    title: 'Competent Host (e.g. E. coli DH5α)',
+    desc: 'Bacterial cells chemically treated (CaCl₂/heat-shock) or electroporated to transiently permeabilize the cell membrane, allowing uptake of recombinant plasmids.'
+  },
+  {
+    id: 'b-clone', label: '5. Isogenic Colony', color: 'var(--paper)',
+    title: 'Transformed Recombinant Clone',
+    desc: 'A macroscopically visible colony of 10⁸–10⁹ identical bacterial cells arising from binary fission, each harboring identical replicates of the recombinant plasmid.'
+  }
+];
+
+const buildRow = document.getElementById('buildRow');
+const buildPanel = document.getElementById('buildPanel');
+
+buildComponents.forEach(b => {
+  const btn = document.createElement('button');
+  btn.className = 'fbtn';
+  btn.innerHTML = `<span class="sw" style="background:${b.color}"></span>${b.label}`;
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#buildRow .fbtn').forEach(x => x.classList.remove('active'));
+    btn.classList.add('active');
+    buildPanel.innerHTML = `
+      <h4>${b.title}</h4>
+      <div class="row">${b.desc}</div>
+    `;
+  });
+  buildRow.appendChild(btn);
+});
+
+/* -------------------------------------------------------------------------
+   5. MODULE 2 : GENERIC PLASMID MAP & KNOCKOUT SIMULATOR
+------------------------------------------------------------------------- */
+const genericFeatures = [
+  {
+    id: 'g-ori', label: 'ori (Origin of Replication)', startDeg: 350, endDeg: 55, color: '#3ec29e',
+    what: 'Specific DNA sequence recognized by host replication initiator proteins (e.g., DnaA in <i>E. coli</i>) to unwind the duplex and recruit DNA Polymerase III.',
+    why: 'Allows the plasmid to replicate independently of host chromosomal control.',
+    ifAbsent: '<b>FATAL:</b> The plasmid cannot be duplicated during binary fission. Within 3–4 generations, it is diluted out and completely lost. Zero stable transformants survive.'
+  },
+  {
+    id: 'g-marker', label: 'Selectable Marker (e.g. ampR)', startDeg: 75, endDeg: 165, color: '#dfb15b',
+    what: 'A constitutively expressed gene (e.g., β-lactamase) that inactivates a lethal or growth-inhibitory antibiotic.',
+    why: 'Transformation efficiency is low (~1 in 10,000 cells). The marker allows only plasmid-containing cells to grow on selective agar.',
+    ifAbsent: '<b>EXPERIMENTAL FAILURE:</b> You cannot distinguish rare transformants from millions of non-transformed cells. Untransformed bacteria will form an overgrown lawn, obscuring clones.'
+  },
+  {
+    id: 'g-mcs', label: 'Multiple Cloning Site (MCS)', startDeg: 185, endDeg: 235, color: '#e85d5d',
+    what: 'A short synthetic region engineered with unique recognition sequences for multiple restriction endonucleases (e.g. <i>EcoRI</i>, <i>BamHI</i>, <i>HindIII</i>).',
+    why: 'Provides defined, reproducible cleavage sites for inserting foreign DNA without disrupting other essential genes.',
+    ifAbsent: '<b>CLONING IMPOSSIBLE:</b> The vector cannot be linearized site-specifically. Cleaving the plasmid with non-specific enzymes destroys the <i>ori</i> or marker gene.'
+  },
+  {
+    id: 'g-reg', label: 'Promoter / Regulatory Region', startDeg: 250, endDeg: 285, color: '#818cf8',
+    what: 'Transcriptional promoter, operator, and ribosomal binding sequences that drive expression of the marker or passenger gene.',
+    why: 'Ensures that mRNA is actively transcribed by host RNA polymerase.',
+    ifAbsent: '<b>SILENT GENES:</b> The antibiotic resistance gene will not be transcribed, resulting in antibiotic sensitivity despite the gene\'s presence.'
+  },
+  {
+    id: 'g-backbone', label: 'Plasmid Backbone Spacers', startDeg: 295, endDeg: 340, color: '#5a718c',
+    what: 'Non-coding structural DNA maintaining optimal plasmid supercoiling and physical spacing between functional cassettes.',
+    why: 'Prevents steric hindrance and transcriptional read-through interference between adjacent genes.',
+    ifAbsent: '<b>TRANSCRIPTIONAL COLLISION:</b> Converging RNA polymerases cause severe transcriptional interference and topology destabilization.'
+  }
+];
+
+const genericKnockouts = {};
+const genPanel = document.getElementById('genPanel');
+const genFeatRow = document.getElementById('genFeatRow');
+
+function renderGenericSvg() {
+  const svg = document.getElementById('genericSvg');
+  svg.innerHTML = '';
+  const cx = 180, cy = 180, r = 110;
+
+  // Backbone ring
+  svg.appendChild(createSvgEl('circle', { cx, cy, r, class: 'backbone-ring' }));
+
+  // Center text
+  const t1 = createSvgEl('text', { x: cx, y: cy - 6, 'text-anchor': 'middle', 'font-size': '14', 'font-weight': 'bold', fill: '#f6f1e3' });
+  t1.textContent = 'Generic Vector';
+  svg.appendChild(t1);
+
+  const t2 = createSvgEl('text', { x: cx, y: cy + 12, 'text-anchor': 'middle', 'font-size': '11', fill: '#96a9c0', 'font-family': 'monospace' });
+  t2.textContent = 'Circular dsDNA';
+  svg.appendChild(t2);
+
+  // Arcs
+  genericFeatures.forEach(feat => {
+    const isRemoved = genericKnockouts[feat.id];
+    const path = createSvgEl('path', {
+      d: describeArc(cx, cy, r, feat.startDeg, feat.endDeg),
+      class: `arc ${isRemoved ? 'removed' : ''}`,
+      stroke: isRemoved ? '#e85d5d' : feat.color,
+      'data-id': feat.id
+    });
+    path.addEventListener('click', () => selectGenericFeature(feat.id));
+    svg.appendChild(path);
+
+    // Label on arc
+    const midAngle = (feat.startDeg + (feat.endDeg < feat.startDeg ? feat.endDeg + 360 : feat.endDeg)) / 2;
+    const labelPos = polarToCartesian(cx, cy, r + 30, midAngle % 360);
+    const lbl = createSvgEl('text', {
+      x: labelPos.x,
+      y: labelPos.y,
+      'text-anchor': 'middle',
+      'font-size': '10',
+      'font-weight': '600',
+      fill: isRemoved ? '#e85d5d' : '#ede7d6',
+      cursor: 'pointer'
+    });
+    lbl.textContent = feat.label.split(' ')[0];
+    lbl.addEventListener('click', () => selectGenericFeature(feat.id));
+    svg.appendChild(lbl);
+  });
+}
+
+function selectGenericFeature(id) {
+  const feat = genericFeatures.find(f => f.id === id);
+  if (!feat) return;
+
+  document.querySelectorAll('#genericSvg .arc').forEach(a => {
+    a.classList.toggle('sel', a.getAttribute('data-id') === id);
+    a.classList.toggle('dim', a.getAttribute('data-id') !== id);
+  });
+
+  document.querySelectorAll('#genFeatRow .fbtn').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-id') === id);
+  });
+
+  const isRemoved = genericKnockouts[id];
+  genPanel.innerHTML = `
+    <h4>${feat.label} ${isRemoved ? '<span style="color:var(--rose);font-size:12px;">[KNOCKED OUT]</span>' : ''}</h4>
+    <div class="row"><b>What it is:</b> ${feat.what}</div>
+    <div class="row"><b>Why the vector requires it:</b> ${feat.why}</div>
+    <div class="row" style="color:${isRemoved ? '#ff9b9b' : 'var(--text-muted)'};margin-top:10px;">
+      <b>Consequence if absent/knocked out:</b> ${feat.ifAbsent}
+    </div>
+    <button class="btn-action-remove ${isRemoved ? 'is-removed' : ''}" id="btnToggleKnockout">
+      ${isRemoved ? '↺ Restore Component to Vector' : '✕ Knockout / Remove This Component'}
+    </button>
+  `;
+
+  document.getElementById('btnToggleKnockout').addEventListener('click', () => {
+    genericKnockouts[id] = !genericKnockouts[id];
+    renderGenericSvg();
+    const btnChip = document.querySelector(`#genFeatRow .fbtn[data-id="${id}"]`);
+    if (btnChip) btnChip.classList.toggle('removed', genericKnockouts[id]);
+    selectGenericFeature(id);
+  });
+}
+
+genericFeatures.forEach(feat => {
+  const btn = document.createElement('button');
+  btn.className = 'fbtn';
+  btn.setAttribute('data-id', feat.id);
+  btn.innerHTML = `<span class="sw" style="background:${feat.color}"></span>${feat.label.split(' ')[0]}`;
+  btn.addEventListener('click', () => selectGenericFeature(feat.id));
+  genFeatRow.appendChild(btn);
+});
+
+renderGenericSvg();
+
+/* -------------------------------------------------------------------------
+   6. MODULE 3 : REQUIREMENTS CHECKLIST & DESIGN CHALLENGE
+------------------------------------------------------------------------- */
+const requirementsList = [
+  ['Autonomous Origin of Replication (ori)', 'Must replicate independently of host chromosome under relaxed control in the target host species.'],
+  ['Dominant Selectable Marker', 'Confers an unequivocal selectable phenotype (e.g. antibiotic resistance) to distinguish transformants.'],
+  ['Unique Restriction Sites (MCS)', 'Must possess cleavage sites that cut exactly once to allow linear opening without fragmenting the vector.'],
+  ['Low Molecular Weight (< 10 kb)', 'Small plasmids are resistant to pipetting shear forces and yield exponentially higher transformation efficiencies.'],
+  ['High Copy Number (15–500 copies/cell)', 'Ensures high plasmid DNA yield from modest culture volumes during standard mini-preparations.'],
+  ['Facile Isolation & Purification', 'Covalently closed circular (CCC) form allows rapid separation from chromosomal DNA via alkaline lysis.'],
+  ['Insert Capacity Compatibility', 'Must stably accommodate foreign inserts ranging from 0.1 kb to > 10 kb without structural instability.'],
+  ['Host Biosafety & Non-Conjugative Nature', 'Must lack functional <i>tra</i>/<i>mob</i> genes to prevent autonomous horizontal spread into wild microbiomes.']
+];
+
+const reqListEl = document.getElementById('reqList');
+requirementsList.forEach(([title, desc], idx) => {
+  const div = document.createElement('div');
+  div.className = 'cli';
+  div.innerHTML = `
+    <input type="checkbox" id="req_chk_${idx}">
+    <label for="req_chk_${idx}">
+      <b>${title}</b>
+      <span>${desc}</span>
+    </label>
+  `;
+  reqListEl.appendChild(div);
+});
+
+const challengeOptionsData = [
+  { text: "Total size of 52 kb (Extremely large: will suffer physical shear and abysmal transformation efficiency)", isFlaw: true },
+  { text: "Absence of any selectable marker (Impossible to select transformants from untransformed host lawn)", isFlaw: true },
+  { text: "42 restriction sites scattered inside essential genes and ori (Digesting vector fragments it into useless pieces)", isFlaw: true },
+  { text: "Presence of a ColE1 origin of replication (This is a correct, functional component)", isFlaw: false }
+];
+
+const challengeOptsContainer = document.getElementById('challengeOpts');
+challengeOptionsData.forEach((opt, idx) => {
+  const div = document.createElement('div');
+  div.className = 'cli';
+  div.innerHTML = `
+    <input type="checkbox" id="ch_opt_${idx}" data-idx="${idx}">
+    <label for="ch_opt_${idx}">
+      <b>${opt.text}</b>
+    </label>
+  `;
+  challengeOptsContainer.appendChild(div);
+});
+
+document.getElementById('btnChallengeReveal').addEventListener('click', () => {
+  const fb = document.getElementById('challengeFb');
+  fb.className = 'feedback show correct-fb';
+  fb.innerHTML = `
+    <h4>Diagnostic Evaluation:</h4>
+    <p><b>pTEST1 suffers from three fatal engineering defects:</b></p>
+    <ol style="margin-left:20px;line-height:1.6;font-size:14px;">
+      <li><b>Absence of a Selectable Marker:</b> With an average transformation frequency of 0.01%, it is impossible to recover transformants without an antibiotic selection screen.</li>
+      <li><b>Scattered Restriction Sites:</b> A restriction enzyme must cleave the vector at <b>exactly one unique position</b>. 42 cleavage sites will chop the vector into 42 linear fragments, destroying the <i>ori</i>.</li>
+      <li><b>Excessive Size (52 kb):</b> Standard plasmid uptake decreases exponentially above 15 kb. Large plasmids also undergo spontaneous deletions and shear during pipetting.</li>
+    </ol>
+    <p style="margin-top:8px;font-size:13.5px;color:var(--paper);"><i>Note: The ColE1 origin itself is a valid, desirable feature and represents the only sound design element in pTEST1.</i></p>
+  `;
+});
+
+/* -------------------------------------------------------------------------
+   7. MODULE 4 : pBR322 RESTRICTION MAP & GENETICS
+------------------------------------------------------------------------- */
+const PBR_TOTAL_BP = 4361;
+
+const pbrGenes = [
+  {
+    id: 'pbr-tet', label: 'tetR (Tetracycline Resistance)',
+    startBp: 86, endBp: 1276, color: '#e85d5d',
+    title: 'tetR / tetA Gene (Tetracycline Efflux Pump)',
+    what: 'Transcribed counter-clockwise (nucleotides 86 to 1276). Encodes a 43 kDa inner-membrane H⁺/tetracycline antiporter that actively exports tetracycline from the cytoplasm.',
+    role: 'Primary selectable marker & insertional inactivation target. Cleavage at internal sites (<i>BamHI</i>, <i>SalI</i>) inactivates resistance.'
+  },
+  {
+    id: 'pbr-rop', label: 'rop (Repressor of Primer)',
+    startBp: 1917, endBp: 2111, color: '#818cf8',
+    title: 'rop / rom Gene (Copy Number Regulator)',
+    what: 'Encodes a 63-amino-acid homodimeric protein (Rop) that stabilizes the kissing hairpin complex between pre-primer RNA II and antisense inhibitor RNA I.',
+    role: 'Restricts pBR322 copy number to a moderate level (~15–20 copies/cell). Deletion of <i>rop</i> in later vectors (like pUC18) causes a dramatic surge in copy number.'
+  },
+  {
+    id: 'pbr-ori', label: 'ori (pMB1 Replication Origin)',
+    startBp: 2534, endBp: 3122, color: '#3ec29e',
+    title: 'pMB1 Origin of Replication (ColE1 Family)',
+    what: 'Relaxed origin requiring RNA II transcript as a replication primer. Independent of host DnaA protein for initiation; utilizes host RNA Polymerase and DNA Pol I/III.',
+    role: 'Drives autonomous plasmid duplication. Allows chloramphenicol amplification up to 3,000 copies/cell.'
+  },
+  {
+    id: 'pbr-bla', label: 'ampR / bla (β-Lactamase)',
+    startBp: 3293, endBp: 4153, color: '#dfb15b',
+    title: 'bla Gene (Ampicillin Resistance / β-Lactamase)',
+    what: 'Transcribed clockwise (nucleotides 4153 to 3293). Derived from transposon Tn3. Encodes a 31.5 kDa enzyme secreted into the periplasmic space.',
+    role: 'Hydrolyzes the β-lactam ring of ampicillin. Inserting foreign DNA into <i>PstI</i> (bp 3609) or <i>PvuI</i> (bp 3735) inactivates ampicillin resistance.'
+  }
+];
+
+const pbrUniqueSites = [
+  { id: 'site-EcoRI', name: 'EcoRI', bp: 0, seq: "5'-G^AATTC-3'", location: 'Unique site upstream of tetR promoter (outside coding regions)' },
+  { id: 'site-ClaI', name: 'ClaI', bp: 23, seq: "5'-AT^CGAT-3'", location: 'In tetR promoter region (can inactivate tetR expression)' },
+  { id: 'site-HindIII', name: 'HindIII', bp: 29, seq: "5'-A^AGCTT-3'", location: 'In tetR promoter region (disrupts tetR transcription)' },
+  { id: 'site-BamHI', name: 'BamHI', bp: 375, seq: "5'-G^GATCC-3'", location: 'Inside tetR coding sequence (classic insertional inactivation site)' },
+  { id: 'site-SalI', name: 'SalI', bp: 651, seq: "5'-G^TCGAC-3'", location: 'Inside tetR coding sequence (classic insertional inactivation site)' },
+  { id: 'site-PvuII', name: 'PvuII', bp: 2066, seq: "5'-CAG^CTG-3'", location: 'Inside rop gene (blunt-end cutter)' },
+  { id: 'site-PstI', name: 'PstI', bp: 3609, seq: "5'-CTGCA^G-3'", location: 'Inside bla (ampR) coding sequence (inactivates ampicillin resistance)' },
+  { id: 'site-PvuI', name: 'PvuI', bp: 3735, seq: "5'-CGAT^CG-3'", location: 'Inside bla (ampR) coding sequence (inactivates ampicillin resistance)' }
+];
+
+function bpToDegrees(bp) {
+  return (bp / PBR_TOTAL_BP) * 360;
+}
+
+function renderPbrSvg() {
+  const svg = document.getElementById('pbrSvg');
+  svg.innerHTML = '';
+  const cx = 200, cy = 200, r = 125;
+
+  // Backbone ring
+  svg.appendChild(createSvgEl('circle', { cx, cy, r, class: 'backbone-ring', 'stroke-width': '4' }));
+
+  // Central Label
+  const tTitle = createSvgEl('text', { x: cx, y: cy - 8, 'text-anchor': 'middle', 'font-size': '17', 'font-weight': 'bold', fill: '#dfb15b', 'font-family': 'var(--serif)' });
+  tTitle.textContent = 'pBR322';
+  svg.appendChild(tTitle);
+
+  const tSize = createSvgEl('text', { x: cx, y: cy + 12, 'text-anchor': 'middle', 'font-size': '11', fill: '#ede7d6', 'font-family': 'var(--mono)' });
+  tSize.textContent = '4,361 bp';
+  svg.appendChild(tSize);
+
+  // Gene Arcs
+  pbrGenes.forEach(gene => {
+    const startDeg = bpToDegrees(gene.startBp);
+    const endDeg = bpToDegrees(gene.endBp);
+    const path = createSvgEl('path', {
+      d: describeArc(cx, cy, r, startDeg, endDeg),
+      class: 'arc',
+      stroke: gene.color,
+      'data-id': gene.id
+    });
+    path.addEventListener('click', () => selectPbrEntity(gene.id));
+    svg.appendChild(path);
+  });
+
+  // Restriction Site Ticks & Labels
+  pbrUniqueSites.forEach(site => {
+    const deg = bpToDegrees(site.bp);
+    const pInner = polarToCartesian(cx, cy, r - 16, deg);
+    const pOuter = polarToCartesian(cx, cy, r + 16, deg);
+
+    const tick = createSvgEl('line', {
+      x1: pInner.x, y1: pInner.y,
+      x2: pOuter.x, y2: pOuter.y,
+      class: 'site-tick',
+      'data-id': site.id
+    });
+    tick.addEventListener('click', () => selectPbrEntity(site.id));
+    svg.appendChild(tick);
+
+    const pLabel = polarToCartesian(cx, cy, r + 32, deg);
+    const lbl = createSvgEl('text', {
+      x: pLabel.x,
+      y: pLabel.y + 3,
+      'text-anchor': 'middle',
+      class: 'site-label',
+      'data-id': site.id
+    });
+    lbl.textContent = site.name;
+    lbl.addEventListener('click', () => selectPbrEntity(site.id));
+    svg.appendChild(lbl);
+  });
+}
+
+const pbrPanel = document.getElementById('pbrPanel');
+const pbrFeatRow = document.getElementById('pbrFeatRow');
+const pbrSitesRow = document.getElementById('pbrSitesRow');
+
+function selectPbrEntity(id) {
+  document.querySelectorAll('#pbrSvg .arc').forEach(a => {
+    const isTarget = a.getAttribute('data-id') === id;
+    a.classList.toggle('sel', isTarget);
+    a.classList.toggle('dim', !isTarget && !id.startsWith('site-'));
+  });
+
+  document.querySelectorAll('#pbrFeatRow .fbtn, #pbrSitesRow .fbtn').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-id') === id);
+  });
+
+  const gene = pbrGenes.find(g => g.id === id);
+  const site = pbrUniqueSites.find(s => s.id === id);
+
+  if (gene) {
+    pbrPanel.innerHTML = `
+      <h4>${gene.title} [${gene.startBp}–${gene.endBp} bp]</h4>
+      <div class="row"><b>Structure &amp; Mechanism:</b> ${gene.what}</div>
+      <div class="row"><b>Experimental Function:</b> ${gene.role}</div>
+    `;
+  } else if (site) {
+    pbrPanel.innerHTML = `
+      <h4>Restriction Enzyme: ${site.name} (Position: ${site.bp} bp)</h4>
+      <div class="row"><b>Recognition Sequence:</b> <span class="mono" style="color:var(--gold);">${site.seq}</span></div>
+      <div class="row"><b>Location in Vector:</b> ${site.location}</div>
+      <div class="row" style="color:var(--teal);margin-top:8px;">
+        <b>Cloning Utility:</b> Unique cleavage site allows linearizing pBR322 into an intact 4,361 bp fragment ready to accept matching compatible ends.
+      </div>
+    `;
+  }
+}
+
+pbrGenes.forEach(gene => {
+  const btn = document.createElement('button');
+  btn.className = 'fbtn';
+  btn.setAttribute('data-id', gene.id);
+  btn.innerHTML = `<span class="sw" style="background:${gene.color}"></span>${gene.label.split(' ')[0]}`;
+  btn.addEventListener('click', () => selectPbrEntity(gene.id));
+  pbrFeatRow.appendChild(btn);
+});
+
+pbrUniqueSites.forEach(site => {
+  const btn = document.createElement('button');
+  btn.className = 'fbtn';
+  btn.setAttribute('data-id', site.id);
+  btn.innerHTML = `<span class="sw" style="background:#5a718c"></span>${site.name}`;
+  btn.addEventListener('click', () => selectPbrEntity(site.id));
+  pbrSitesRow.appendChild(btn);
+});
+
+renderPbrSvg();
+
+/* -------------------------------------------------------------------------
+   8. MODULE 5 : SIMULATED REPLICA PLATING EXPERIMENT
+------------------------------------------------------------------------- */
+const plateAmp = document.getElementById('plateAmp');
+const plateTet = document.getElementById('plateTet');
+const plateInfo = document.getElementById('plateInfo');
+const colonyInspectResult = document.getElementById('colonyInspectResult');
+
+let simColonies = [];
+
+// Pre-defined spatial layout for clean visualization
+const colonyCoordinates = [
+  { x: 26, y: 30 }, { x: 50, y: 22 }, { x: 74, y: 30 },
+  { x: 30, y: 50 }, { x: 50, y: 48 }, { x: 70, y: 50 },
+  { x: 20, y: 70 }, { x: 42, y: 72 }, { x: 62, y: 72 }, { x: 80, y: 68 },
+  { x: 34, y: 84 }, { x: 54, y: 86 }, { x: 68, y: 84 }, { x: 50, y: 34 }
+];
+
+function generateSimPlates() {
+  simColonies = [];
+  plateAmp.innerHTML = '';
+  plateTet.innerHTML = '';
+  colonyInspectResult.innerHTML = 'No colony selected. Click a colony on the Ampicillin plate.';
+
+  // Distribution: ~8 Recombinants (AmpR TetS), ~6 Intact (AmpR TetR)
+  const types = [
+    'rec', 'rec', 'intact', 'rec', 'intact', 'rec',
+    'intact', 'rec', 'rec', 'intact', 'rec', 'intact', 'rec', 'intact'
+  ];
+  types.sort(() => Math.random() - 0.5);
+
+  colonyCoordinates.forEach((coord, idx) => {
+    const type = types[idx];
+    const colonyObj = {
+      id: idx + 1,
+      type: type, // 'intact' or 'rec'
+      x: coord.x,
+      y: coord.y
+    };
+    simColonies.push(colonyObj);
+
+    // Create Ampicillin colony element
+    const dotAmp = document.createElement('div');
+    dotAmp.className = 'colony-dot';
+    dotAmp.id = `amp-colony-${colonyObj.id}`;
+    dotAmp.style.left = `${colonyObj.x}%`;
+    dotAmp.style.top = `${colonyObj.y}%`;
+    dotAmp.style.background = (type === 'intact') ? '#3ec29e' : '#e85d5d';
+    dotAmp.style.opacity = '0';
+    dotAmp.innerHTML = `<span class="colony-num">${colonyObj.id}</span>`;
+    dotAmp.addEventListener('click', () => inspectColony(colonyObj.id));
+    plateAmp.appendChild(dotAmp);
+
+    // Create Tetracycline replica colony element
+    const dotTet = document.createElement('div');
+    dotTet.className = 'colony-dot';
+    dotTet.id = `tet-colony-${colonyObj.id}`;
+    dotTet.style.left = `${colonyObj.x}%`;
+    dotTet.style.top = `${colonyObj.y}%`;
+    dotTet.style.background = '#3ec29e';
+    dotTet.style.opacity = '0';
+    dotTet.style.display = 'none';
+    dotTet.innerHTML = `<span class="colony-num">${colonyObj.id}</span>`;
+    plateTet.appendChild(dotTet);
+  });
+
+  plateInfo.innerHTML = '<span class="placeholder">Click "1. Incubate on Ampicillin" to begin the selection step.</span>';
+}
+
+function inspectColony(colonyId) {
+  const colony = simColonies.find(c => c.id === colonyId);
+  if (!colony) return;
+
+  if (colony.type === 'rec') {
+    colonyInspectResult.innerHTML = `
+      <b style="color:var(--rose);">Colony #${colony.id}: RECOMBINANT CLONE (Ampᴿ Tetˢ)</b><br>
+      <span style="color:#ded4bd;">Grows on Ampicillin (<i>bla</i> intact) | Fails to grow on Tetracycline (<i>tetR</i> disrupted by insert). Pick this colony from the Master Plate for downstream plasmid prep!</span>
+    `;
+  } else {
+    colonyInspectResult.innerHTML = `
+      <b style="color:var(--teal);">Colony #${colony.id}: NON-RECOMBINANT / INTACT pBR322 (Ampᴿ Tetᴿ)</b><br>
+      <span style="color:#ded4bd;">Grows on both Ampicillin and Tetracycline. Represents recircularized vector with no foreign DNA insert. Discard this clone.</span>
+    `;
+  }
+}
+
+document.getElementById('btnStepAmp').addEventListener('click', () => {
+  simColonies.forEach(col => {
+    const el = document.getElementById(`amp-colony-${col.id}`);
+    if (el) el.style.opacity = '1';
+  });
+  plateInfo.innerHTML = `
+    <div class="row"><b class="paper">Step 1 (Selection on Ampicillin):</b> All bacteria harboring pBR322 (both recombinant and self-ligated plasmids) survive and form colonies because <i>bla</i> is intact. Non-transformed cells (which received no plasmid) were lysed by ampicillin and are absent.</div>
+  `;
+});
+
+document.getElementById('btnStepTet').addEventListener('click', () => {
+  simColonies.forEach(col => {
+    const el = document.getElementById(`tet-colony-${col.id}`);
+    if (el) {
+      el.style.display = 'block';
+      el.style.opacity = (col.type === 'intact') ? '1' : '0';
+    }
+  });
+  plateInfo.innerHTML = `
+    <div class="row"><b class="paper">Step 2 (Screening on Tetracycline Replica):</b> Only non-recombinant colonies with an intact <i>tetR</i> gene grow on tetracycline (Teal). Recombinant colonies with disrupted <i>tetR</i> fail to grow (Rose, absent on replica).<br><br>
+    <b style="color:var(--gold);">Experimental Recovery:</b> The molecular biologist matches the missing positions on the replica plate to retrieve the living recombinant clones from the <b>Master Ampicillin Plate</b>.</div>
+  `;
+});
+
+document.getElementById('btnResetPlates').addEventListener('click', generateSimPlates);
+generateSimPlates();
+
+/* -------------------------------------------------------------------------
+   9. MODULE 7 : RAPID ASSESSMENT ENGINE
+------------------------------------------------------------------------- */
+const quizQuestions = [
+  {
+    q: "1. What is the fundamental role of the pMB1 origin of replication in pBR322?",
+    opts: [
+      "It expresses the β-lactamase enzyme required for ampicillin resistance.",
+      "It provides the DNA sequence recognized by host replication machinery to initiate autonomous plasmid duplication.",
+      "It contains unique restriction sites for foreign DNA insertion.",
+      "It prevents the bacterial host from undergoing spontaneous mutation."
+    ],
+    correct: 1,
+    exp: "<b>Biochemical Fact:</b> The origin of replication (<i>ori</i>) is the essential cis-acting sequence where host DNA replication enzymes assemble to initiate plasmid copying independently of the bacterial chromosome."
+  },
+  {
+    q: "2. Why is a selectable marker gene essential in a cloning vector?",
+    opts: [
+      "Because transformation is inefficient (~0.01%), and the marker allows selective survival of plasmid-bearing cells amidst billions of untransformed cells.",
+      "Because it increases the copy number of the plasmid from 15 to 1,000 copies.",
+      "Because it provides the recognition sites for restriction endonuclease cleavage.",
+      "Because it facilitates homologous recombination with the host bacterial genome."
+    ],
+    correct: 0,
+    exp: "<b>Selective Principle:</b> Since only a tiny fraction of competent bacteria take up plasmid DNA, plating on antibiotic medium kills all non-transformants, ensuring only transformed clones survive."
+  },
+  {
+    q: "3. If a DNA fragment is inserted into the PstI site (bp 3609) of pBR322, what is the resulting phenotype?",
+    opts: [
+      "Ampicillin-resistant (Ampᴿ) and Tetracycline-resistant (Tetᴿ)",
+      "Ampicillin-resistant (Ampᴿ) and Tetracycline-sensitive (Tetˢ)",
+      "Ampicillin-sensitive (Ampˢ) and Tetracycline-resistant (Tetᴿ)",
+      "Ampicillin-sensitive (Ampˢ) and Tetracycline-sensitive (Tetˢ)"
+    ],
+    correct: 2,
+    exp: "<b>Insertional Inactivation:</b> The <i>PstI</i> site is located within the <i>bla</i> gene. Inserting DNA here disrupts β-lactamase synthesis (yielding <b>Ampˢ</b>), while <i>tetR</i> remains intact (yielding <b>Tetᴿ</b>). Primary selection must therefore be performed on tetracycline!"
+  },
+  {
+    q: "4. Why must restriction cloning sites on a vector ideally be unique (cleaved only once)?",
+    opts: [
+      "Multiple sites would chop the vector into multiple disconnected fragments, destroying the circular topology and essential genes.",
+      "Having multiple sites makes the vector too toxic for <i>E. coli</i> survival.",
+      "Unique sites ensure that the plasmid can never be degraded by host exonucleases.",
+      "Restriction enzymes cannot bind to plasmids with more than one cleavage site."
+    ],
+    correct: 0,
+    exp: "<b>Molecular Cloning Requirement:</b> A unique restriction site allows the circular vector to be cleanly linearized at a single defined position. Multiple cleavage sites would disintegrate the plasmid backbone into multiple fragments."
+  },
+  {
+    q: "5. Which sequence represents the correct chronological workflow of a molecular cloning experiment?",
+    opts: [
+      "Host transformation ➔ Antibiotic selection ➔ Vector digestion ➔ In vitro ligation ➔ Clone screening",
+      "Vector + insert digestion &amp; ligation ➔ Transformation of competent host ➔ Antibiotic selection ➔ Recombinant screening &amp; recovery",
+      "Screening on replica plate ➔ In vitro ligation ➔ Transformation ➔ Antibiotic selection",
+      "Antibiotic selection ➔ Host cell lysis ➔ Vector ligation ➔ Transformation"
+    ],
+    correct: 1,
+    exp: "<b>Standard Paradigm:</b> First, the recombinant molecule is constructed <i>in vitro</i> (digestion &amp; ligation), then introduced into competent cells (transformation), selected on antibiotic media, and screened for insertional inactivation."
+  }
+];
+
+let assessmentScore = 0;
+const answeredQuestions = {};
+const quizContainer = document.getElementById('quizContainer');
+const scoreDisplay = document.getElementById('scoreDisplay');
+
+quizQuestions.forEach((qData, qIdx) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.style.marginBottom = '20px';
+
+  card.innerHTML = `
+    <h3 style="color:var(--paper);margin-top:0;">${qData.q}</h3>
+    <div id="quiz-opts-${qIdx}"></div>
+    <div class="feedback" id="quiz-fb-${qIdx}"></div>
+  `;
+  quizContainer.appendChild(card);
+
+  const optsContainer = card.querySelector(`#quiz-opts-${qIdx}`);
+  const fbEl = card.querySelector(`#quiz-fb-${qIdx}`);
+
+  qData.opts.forEach((optText, optIdx) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = optText;
+    btn.addEventListener('click', () => {
+      if (answeredQuestions[qIdx]) return;
+      answeredQuestions[qIdx] = true;
+
+      optsContainer.querySelectorAll('.opt').forEach(b => b.disabled = true);
+      if (optIdx === qData.correct) {
+        btn.classList.add('correct');
+        fbEl.className = 'feedback show correct-fb';
+        assessmentScore++;
+      } else {
+        btn.classList.add('wrong');
+        optsContainer.children[qData.correct].classList.add('correct');
+        fbEl.className = 'feedback show wrong-fb';
+      }
+      fbEl.innerHTML = qData.exp;
+      scoreDisplay.textContent = `${assessmentScore} / ${quizQuestions.length} Correct`;
+    });
+    optsContainer.appendChild(btn);
+  });
+});
+
+// Final Challenge Reveal
+document.getElementById('btnFinalReveal').addEventListener('click', () => {
+  const fb = document.getElementById('finalFb');
+  fb.className = 'feedback show correct-fb';
+  fb.innerHTML = `
+    <h4>Comprehensive Master\'s Level Analysis:</h4>
+    <p><b>1. Will it replicate? YES.</b><br>
+    The presence of a functional pMB1 <i>ori</i> is necessary and sufficient for host DNA replication enzymes (DNA Pol I and III, RNA Pol, DnaB helicase) to initiate plasmid duplication in trans. The plasmid will be copied and distributed to daughter cells during binary fission.</p>
+    
+    <p style="margin-top:10px;"><b>2. Can you efficiently identify transformed colonies? NO.</b><br>
+    Because transformation efficiency is naturally low (~0.01% of competent cells take up DNA), non-transformed cells outnumber transformed cells by 10,000 to 1. Without an antibiotic resistance marker to selectively kill untransformed bacteria, both transformed and untransformed cells will grow identically on non-selective agar, forming a continuous bacterial lawn. Identifying the rare transformed clone would require tedious individual colony PCR or plasmid mini-preps from thousands of random colonies.</p>
+
+    <p style="margin-top:10px;color:var(--gold);"><b>Take-home Axiom:</b> <i>ori</i> governs physical replication; the selectable marker governs experimental recoverability. Both are strictly indispensable.</p>
+  `;
+});
+</script>
+</body>
+</html>
