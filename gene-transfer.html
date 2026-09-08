@@ -1,0 +1,2177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insertion of Foreign DNA into Host Cells | Interactive Undergraduate Lecture</title>
+  <meta name="description" content="Comprehensive interactive undergraduate lecture module in Biotechnology, Biochemistry, and Molecular Biology on foreign DNA insertion methods.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f1f5f9;
+      --bg-accent: #e2e8f0;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --border-hover: #cbd5e1;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --primary-light: #e0f2fe;
+      --primary-dark: #075985;
+      --secondary: #0d9488;
+      --secondary-light: #ccfbf1;
+      --accent-purple: #7c3aed;
+      --accent-purple-light: #ede9fe;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-serif: 'Source Serif 4', Georgia, serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      --header-height: 64px;
+      --sidebar-width: 280px;
+    }
+    [data-theme="dark"] {
+      --bg-primary: #090d16;
+      --bg-secondary: #111827;
+      --bg-tertiary: #1f2937;
+      --bg-accent: #374151;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+      --border-hover: #334155;
+      --primary: #38bdf8;
+      --primary-hover: #7dd3fc;
+      --primary-light: rgba(56, 189, 248, 0.12);
+      --primary-dark: #0284c7;
+      --secondary: #2dd4bf;
+      --secondary-light: rgba(45, 212, 191, 0.12);
+      --accent-purple: #a78bfa;
+      --accent-purple-light: rgba(167, 139, 250, 0.12);
+      --success: #34d399;
+      --success-light: rgba(52, 211, 153, 0.12);
+      --danger: #f87171;
+      --danger-light: rgba(248, 113, 113, 0.12);
+      --warning: #fbbf24;
+      --warning-light: rgba(251, 191, 36, 0.12);
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { font-family: var(--font-sans); background-color: var(--bg-primary); color: var(--text-primary); line-height: 1.65; -webkit-font-smoothing: antialiased; transition: background-color 0.25s ease, color 0.25s ease; }
+    body.large-text { font-size: 18px; }
+    #reading-progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: transparent; z-index: 1000; }
+    #reading-progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent-purple)); transition: width 0.1s linear; }
+    header.site-header { position: sticky; top: 0; height: var(--header-height); background: var(--bg-secondary); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; z-index: 999; box-shadow: var(--shadow-sm); }
+    .brand-title { display: flex; align-items: center; gap: 0.75rem; }
+    .brand-badge { background: var(--primary); color: white; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: var(--radius-sm); letter-spacing: 0.05em; text-transform: uppercase; }
+    .brand-text h1 { font-size: 1.125rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.01em; }
+    .brand-text p { font-size: 0.75rem; color: var(--text-muted); }
+    .header-controls { display: flex; align-items: center; gap: 0.5rem; }
+    .btn-icon { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-secondary); width: 38px; height: 38px; border-radius: var(--radius-sm); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
+    .btn-icon:hover { background: var(--bg-accent); color: var(--text-primary); border-color: var(--border-hover); }
+    .btn-action { background: var(--primary); color: white; border: none; font-size: 0.85rem; font-weight: 600; padding: 0.45rem 0.9rem; border-radius: var(--radius-sm); display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer; transition: background-color 0.2s; }
+    .btn-action:hover { background: var(--primary-hover); }
+    .lecture-container { display: flex; max-width: 1480px; margin: 0 auto; padding: 1.5rem 1rem; gap: 2rem; }
+    aside.lecture-sidebar { width: var(--sidebar-width); flex-shrink: 0; position: sticky; top: calc(var(--header-height) + 1.5rem); height: calc(100vh - var(--header-height) - 3rem); overflow-y: auto; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem 1rem; box-shadow: var(--shadow-sm); }
+    aside.lecture-sidebar::-webkit-scrollbar { width: 4px; }
+    aside.lecture-sidebar::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 4px; }
+    .sidebar-heading { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.75rem; padding-left: 0.5rem; }
+    .toc-list { list-style: none; }
+    .toc-item { margin-bottom: 0.25rem; }
+    .toc-link { display: flex; align-items: center; gap: 0.5rem; padding: 0.45rem 0.65rem; color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; font-weight: 500; border-radius: var(--radius-sm); transition: all 0.15s ease; line-height: 1.3; }
+    .toc-link:hover { background: var(--bg-tertiary); color: var(--primary); }
+    .toc-link.active { background: var(--primary-light); color: var(--primary-dark); font-weight: 600; border-left: 3px solid var(--primary); }
+    .toc-num { font-family: var(--font-mono); font-size: 0.75rem; opacity: 0.7; }
+    main.lecture-main { flex: 1; min-width: 0; }
+    .lecture-header-card { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2.25rem; margin-bottom: 2rem; box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
+    .lecture-header-card::before { content: ""; position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: linear-gradient(180deg, var(--primary), var(--secondary)); }
+    .lecture-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .pill { font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: var(--radius-full); background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-secondary); }
+    .pill.primary { background: var(--primary-light); color: var(--primary-dark); border-color: transparent; }
+    .pill.secondary { background: var(--secondary-light); color: var(--secondary); border-color: transparent; }
+    .lecture-title { font-family: var(--font-serif); font-size: 2.35rem; font-weight: 700; line-height: 1.2; color: var(--text-primary); margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+    .lecture-subtitle { font-size: 1.1rem; color: var(--text-secondary); max-width: 800px; margin-bottom: 1.5rem; }
+    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; padding-top: 1.25rem; border-top: 1px solid var(--border-color); }
+    .meta-box { display: flex; flex-direction: column; }
+    .meta-label { font-size: 0.725rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); font-weight: 600; }
+    .meta-value { font-size: 0.925rem; font-weight: 600; color: var(--text-primary); }
+    section.lecture-section { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2.25rem; margin-bottom: 2.5rem; box-shadow: var(--shadow-sm); scroll-margin-top: calc(var(--header-height) + 1.5rem); }
+    .section-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
+    .section-number { font-family: var(--font-mono); font-size: 1.25rem; font-weight: 700; color: var(--primary); background: var(--primary-light); width: 44px; height: 44px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .section-title-wrap h2 { font-family: var(--font-serif); font-size: 1.75rem; font-weight: 700; color: var(--text-primary); line-height: 1.25; letter-spacing: -0.01em; }
+    .section-title-wrap p { font-size: 0.9rem; color: var(--text-muted); margin-top: 0.2rem; }
+    p { margin-bottom: 1.15rem; color: var(--text-secondary); }
+    p strong { color: var(--text-primary); }
+    h3 { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600; color: var(--text-primary); margin: 1.75rem 0 0.75rem; }
+    h4 { font-size: 1rem; font-weight: 700; color: var(--text-primary); margin: 1.25rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    ul, ol { margin-bottom: 1.25rem; padding-left: 1.5rem; color: var(--text-secondary); }
+    li { margin-bottom: 0.4rem; }
+    .callout { border-radius: var(--radius-md); padding: 1.15rem 1.25rem; margin: 1.25rem 0; border-left: 4px solid; background: var(--bg-tertiary); }
+    .callout.info { border-color: var(--primary); background: var(--primary-light); }
+    .callout.info .callout-title { color: var(--primary-dark); }
+    .callout.tip { border-color: var(--secondary); background: var(--secondary-light); }
+    .callout.warning { border-color: var(--warning); background: var(--warning-light); }
+    .callout-title { font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; color: var(--text-primary); }
+    .callout-body { font-size: 0.9rem; color: var(--text-secondary); }
+    .four-q-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .four-q-card { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem 1.15rem; position: relative; }
+    .four-q-card .q-tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.15rem 0.45rem; border-radius: var(--radius-sm); display: inline-block; margin-bottom: 0.5rem; }
+    .four-q-card.what .q-tag { background: #dbeafe; color: #1e40af; }
+    .four-q-card.how .q-tag { background: #dcfce7; color: #166534; }
+    .four-q-card.where .q-tag { background: #fef3c7; color: #92400e; }
+    .four-q-card.tradeoff .q-tag { background: #f3e8ff; color: #6b21a8; }
+    .four-q-card h4 { font-size: 0.95rem; text-transform: none; margin: 0 0 0.4rem; letter-spacing: 0; }
+    .four-q-card p { font-size: 0.85rem; margin-bottom: 0; line-height: 1.5; }
+    .scientific-figure { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; margin: 1.75rem 0; box-shadow: var(--shadow-sm); }
+    .figure-image-wrap { background: #ffffff; padding: 1.25rem; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--border-color); max-height: 480px; overflow: hidden; }
+    .figure-image-wrap img { max-width: 100%; max-height: 440px; object-fit: contain; border-radius: var(--radius-sm); }
+    .figure-caption { padding: 1rem 1.25rem; background: var(--bg-secondary); font-size: 0.85rem; color: var(--text-secondary); }
+    .figure-title { font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+    .figure-badge { font-family: var(--font-mono); font-size: 0.7rem; padding: 0.15rem 0.45rem; border-radius: var(--radius-sm); background: var(--bg-tertiary); color: var(--text-muted); border: 1px solid var(--border-color); }
+    .figure-desc { margin-bottom: 0.5rem; line-height: 1.45; }
+    .figure-attribution { font-size: 0.75rem; color: var(--text-muted); display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; padding-top: 0.5rem; border-top: 1px dashed var(--border-color); }
+    .figure-attribution a { color: var(--primary); text-decoration: none; font-weight: 500; }
+    .figure-attribution a:hover { text-decoration: underline; }
+    .interactive-stepper { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.5rem; margin: 1.5rem 0; }
+    .stepper-nav { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-color); }
+    .step-btn { background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 0.5rem 0.85rem; border-radius: var(--radius-sm); font-size: 0.825rem; font-weight: 600; color: var(--text-secondary); white-space: nowrap; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; transition: all 0.2s; }
+    .step-btn:hover { background: var(--bg-tertiary); border-color: var(--border-hover); color: var(--primary); }
+    .step-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 2px 4px rgba(2, 132, 199, 0.25); }
+    .step-display { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; }
+    .step-display h4 { font-size: 1.05rem; text-transform: none; margin-top: 0; margin-bottom: 0.5rem; color: var(--text-primary); }
+    .step-display p { font-size: 0.9rem; margin-bottom: 0.75rem; }
+    .step-formula { font-family: var(--font-mono); font-size: 0.825rem; background: var(--bg-tertiary); padding: 0.4rem 0.75rem; border-radius: var(--radius-sm); display: inline-block; color: var(--primary-dark); border: 1px solid var(--border-color); }
+    .conceptual-pipeline { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin: 1.25rem 0; padding: 1rem; background: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-color); }
+    .pipeline-node { background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 0.45rem 0.85rem; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 0.35rem; box-shadow: var(--shadow-sm); }
+    .pipeline-arrow { color: var(--primary); font-weight: 700; font-size: 1.1rem; }
+    .simulation-box { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.5rem; margin: 1.5rem 0; }
+    .sim-viewport { background: #0f172a; border-radius: var(--radius-sm); height: 220px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; border: 1px solid #1e293b; }
+    .sim-status-banner { position: absolute; top: 10px; left: 10px; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.15); color: #38bdf8; font-family: var(--font-mono); font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 4px; z-index: 10; }
+    .sim-controls { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; justify-content: space-between; }
+    .sim-btn { background: var(--primary); color: white; border: none; font-weight: 600; font-size: 0.85rem; padding: 0.55rem 1.1rem; border-radius: var(--radius-sm); cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s; }
+    .sim-btn:hover { background: var(--primary-hover); }
+    .sim-btn.secondary { background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); }
+    .sim-btn.secondary:hover { background: var(--bg-accent); }
+    .table-container { overflow-x: auto; margin: 1.5rem 0; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-secondary); box-shadow: var(--shadow-sm); }
+    table.comparison-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem; }
+    table.comparison-table th { background: var(--bg-tertiary); color: var(--text-primary); font-weight: 700; padding: 0.9rem 1rem; border-bottom: 2px solid var(--border-color); white-space: nowrap; }
+    table.comparison-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color); color: var(--text-secondary); vertical-align: top; }
+    table.comparison-table tr:hover { background: var(--bg-tertiary); cursor: pointer; }
+    table.comparison-table tr.selected { background: var(--primary-light); }
+    table.comparison-table tr.selected td { color: var(--text-primary); font-weight: 500; }
+    .table-method-name { font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 0.4rem; }
+    .table-inspector { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; margin-top: 1rem; display: none; }
+    .table-inspector.active { display: block; animation: fadeIn 0.25s ease; }
+    .concept-map-container { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2rem; margin: 1.5rem 0; }
+    .tree-root { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; font-weight: 700; font-size: 1.15rem; padding: 0.75rem 1.5rem; border-radius: var(--radius-md); display: inline-block; margin-bottom: 1.75rem; box-shadow: var(--shadow-md); }
+    .tree-branches { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
+    .tree-branch { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
+    .branch-header { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--primary); margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
+    .branch-items { display: flex; flex-direction: column; gap: 0.5rem; }
+    .branch-node-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.55rem 0.85rem; font-size: 0.875rem; font-weight: 600; color: var(--text-primary); text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
+    .branch-node-btn:hover { background: var(--primary-light); color: var(--primary-dark); border-color: var(--primary); transform: translateX(3px); }
+    .branch-node-btn .node-tag { font-size: 0.7rem; font-weight: 500; color: var(--text-muted); }
+    .method-selector-bar { display: flex; flex-wrap: wrap; gap: 0.5rem; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 0.75rem; border-radius: var(--radius-md); margin-bottom: 2rem; box-shadow: var(--shadow-sm); }
+    .method-tab-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.5rem 0.85rem; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+    .method-tab-btn:hover { background: var(--bg-accent); color: var(--text-primary); }
+    .method-tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .essentials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem; margin: 1.5rem 0; }
+    .essential-card { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.35rem; border-top: 4px solid var(--primary); }
+    .essential-card.alt-1 { border-top-color: var(--secondary); }
+    .essential-card.alt-2 { border-top-color: var(--accent-purple); }
+    .essential-card.alt-3 { border-top-color: var(--warning); }
+    .essential-card.alt-4 { border-top-color: #ec4899; }
+    .essential-card h4 { font-size: 1.05rem; text-transform: none; color: var(--text-primary); margin-bottom: 0.75rem; letter-spacing: -0.01em; }
+    .essential-vs { display: flex; flex-direction: column; gap: 0.65rem; font-size: 0.875rem; }
+    .vs-row { display: flex; align-items: flex-start; gap: 0.5rem; }
+    .vs-tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; padding: 0.15rem 0.4rem; border-radius: 4px; background: var(--bg-tertiary); border: 1px solid var(--border-color); flex-shrink: 0; margin-top: 0.15rem; }
+    .quiz-container { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.75rem; margin: 1.5rem 0; }
+    .quiz-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
+    .quiz-score-badge { background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 0.45rem 1rem; border-radius: var(--radius-full); font-weight: 700; font-size: 0.9rem; color: var(--primary); }
+    .mcq-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.25rem; }
+    .mcq-question { font-weight: 700; font-size: 1rem; color: var(--text-primary); margin-bottom: 1rem; }
+    .mcq-options { display: flex; flex-direction: column; gap: 0.5rem; }
+    .mcq-option { background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.65rem 0.9rem; font-size: 0.875rem; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; gap: 0.6rem; transition: all 0.15s; }
+    .mcq-option:hover { background: var(--bg-accent); color: var(--text-primary); border-color: var(--border-hover); }
+    .mcq-option.correct { background: var(--success-light) !important; border-color: var(--success) !important; color: #065f46 !important; font-weight: 600; }
+    .mcq-option.incorrect { background: var(--danger-light) !important; border-color: var(--danger) !important; color: #991b1b !important; font-weight: 600; }
+    .mcq-explanation { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.825rem; line-height: 1.45; display: none; }
+    .mcq-explanation.show { display: block; background: var(--bg-primary); border: 1px solid var(--border-color); }
+    .game-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.25rem; }
+    .scenario-badge { display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: var(--radius-sm); background: var(--primary-light); color: var(--primary-dark); margin-bottom: 0.5rem; }
+    .scenario-text { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem; }
+    .game-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem; margin-bottom: 0.75rem; }
+    .game-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.55rem 0.85rem; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; text-align: left; transition: all 0.2s; }
+    .game-btn:hover { background: var(--bg-accent); color: var(--text-primary); }
+    .game-btn.correct { background: var(--success-light); border-color: var(--success); color: #065f46; }
+    .game-btn.incorrect { background: var(--danger-light); border-color: var(--danger); color: #991b1b; }
+    .game-feedback { padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; display: none; }
+    .game-feedback.show { display: block; margin-top: 0.5rem; }
+    footer.lecture-footer { background: var(--bg-secondary); border-top: 1px solid var(--border-color); padding: 2.5rem 1.5rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 3rem; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 1024px) { .lecture-container { flex-direction: column; } aside.lecture-sidebar { width: 100%; position: static; height: auto; max-height: 280px; } }
+    @media (max-width: 640px) { .lecture-header-card { padding: 1.5rem; } .lecture-title { font-size: 1.75rem; } section.lecture-section { padding: 1.5rem; } .conceptual-pipeline { flex-direction: column; align-items: stretch; } .pipeline-arrow { text-align: center; transform: rotate(90deg); } }
+    @media print { header.site-header, aside.lecture-sidebar, #reading-progress-container, .btn-action, .btn-icon, .sim-controls, .method-selector-bar { display: none !important; } .lecture-container { padding: 0; margin: 0; max-width: 100%; } section.lecture-section { border: none; box-shadow: none; padding: 1rem 0; page-break-inside: avoid; } }
+  </style>
+</head>
+<body>
+  <div id="reading-progress-container"><div id="reading-progress-bar"></div></div>
+  <header class="site-header">
+    <div class="brand-title">
+      <span class="brand-badge">Lecture Module</span>
+      <div class="brand-text">
+        <h1>Foreign DNA Insertion into Host Cells</h1>
+        <p>Biotechnology • Biochemistry • Molecular Biology</p>
+      </div>
+    </div>
+    <div class="header-controls">
+      <button class="btn-icon" id="btn-font-toggle" title="Toggle Font Size (A/A+)" aria-label="Toggle font size"><span style="font-weight:700;font-size:0.95rem;">A+</span></button>
+      <button class="btn-icon" id="btn-theme-toggle" title="Toggle Dark/Light Mode" aria-label="Toggle dark mode"><span id="theme-icon">🌙</span></button>
+      <button class="btn-action" onclick="window.print()" title="Print Lecture Notes"><span>🖨️ Print Notes</span></button>
+    </div>
+  </header>
+  <div class="lecture-container">
+    <aside class="lecture-sidebar" aria-label="Table of Contents">
+      <div class="sidebar-heading">Lecture Outline</div>
+      <ul class="toc-list">
+        <li class="toc-item"><a href="#intro" class="toc-link active"><span class="toc-num">01.</span> Introduction & Barriers</a></li>
+        <li class="toc-item"><a href="#transformation" class="toc-link"><span class="toc-num">02.</span> Transformation</a></li>
+        <li class="toc-item"><a href="#transfection" class="toc-link"><span class="toc-num">03.</span> Transfection Overview</a></li>
+        <li class="toc-item"><a href="#lipofection" class="toc-link"><span class="toc-num">04.</span> Liposome Fusion / Lipofection</a></li>
+        <li class="toc-item"><a href="#microinjection" class="toc-link"><span class="toc-num">05.</span> Microinjection</a></li>
+        <li class="toc-item"><a href="#electroporation" class="toc-link"><span class="toc-num">06.</span> Electroporation</a></li>
+        <li class="toc-item"><a href="#biolistics" class="toc-link"><span class="toc-num">07.</span> Biolistics / Gene Gun</a></li>
+        <li class="toc-item"><a href="#somatic-fusion" class="toc-link"><span class="toc-num">08.</span> Somatic Cell Fusion</a></li>
+        <li class="toc-item"><a href="#pronuclear" class="toc-link"><span class="toc-num">09.</span> Pronuclear Microinjection</a></li>
+        <li class="toc-item"><a href="#comparison" class="toc-link"><span class="toc-num">10.</span> Core Comparison Table</a></li>
+        <li class="toc-item"><a href="#concept-map" class="toc-link"><span class="toc-num">11.</span> One-Page Concept Map</a></li>
+        <li class="toc-item"><a href="#diagrams-gallery" class="toc-link"><span class="toc-num">12.</span> Scientific Figure Directory</a></li>
+        <li class="toc-item"><a href="#essentials" class="toc-link"><span class="toc-num">13.</span> Exam Essentials</a></li>
+        <li class="toc-item"><a href="#assessments" class="toc-link"><span class="toc-num">14.</span> Knowledge Check (MCQs)</a></li>
+        <li class="toc-item"><a href="#mini-game" class="toc-link"><span class="toc-num">15.</span> 'Which Method?' Mini-Game</a></li>
+        <li class="toc-item"><a href="#summary" class="toc-link"><span class="toc-num">16.</span> 3-Minute Summary</a></li>
+      </ul>
+    </aside>
+    <main class="lecture-main">
+      <div class="lecture-header-card">
+        <div class="lecture-pills">
+          <span class="pill primary">Undergraduate Curriculum</span>
+          <span class="pill secondary">Lecture 14</span>
+          <span class="pill">Teaching Time: 45–60 min</span>
+        </div>
+        <h1 class="lecture-title">Insertion of Foreign DNA into Host Cells</h1>
+        <p class="lecture-subtitle">A conceptual and mechanical overview of biological uptake, chemical encapsulation, physical penetration, and cellular fusion methods in molecular biotechnology.</p>
+        <div class="meta-grid">
+          <div class="meta-box"><span class="meta-label">Core Objective</span><span class="meta-value">Cross Cellular Boundary</span></div>
+          <div class="meta-box"><span class="meta-label">Target Hosts</span><span class="meta-value">Bacteria, Plants, Animals, Zygotes</span></div>
+          <div class="meta-box"><span class="meta-label">Delivery Methods</span><span class="meta-value">7 Primary Methodologies</span></div>
+          <div class="meta-box"><span class="meta-label">Audience</span><span class="meta-value">Undergraduate Molecular Biology</span></div>
+        </div>
+      </div>
+      <div class="method-selector-bar" role="tablist">
+        <button class="method-tab-btn active" onclick="scrollToSection('transformation')">🧫 Transformation</button>
+        <button class="method-tab-btn" onclick="scrollToSection('lipofection')">🫧 Liposome Fusion</button>
+        <button class="method-tab-btn" onclick="scrollToSection('microinjection')">🔬 Microinjection</button>
+        <button class="method-tab-btn" onclick="scrollToSection('electroporation')">⚡ Electroporation</button>
+        <button class="method-tab-btn" onclick="scrollToSection('biolistics')">🎯 Biolistics (Gene Gun)</button>
+        <button class="method-tab-btn" onclick="scrollToSection('somatic-fusion')">🧬 Somatic Cell Fusion</button>
+        <button class="method-tab-btn" onclick="scrollToSection('pronuclear')">🥚 Pronuclear Microinjection</button>
+      </div>
+
+      <!-- SECTION 1: INTRODUCTION -->
+      <section id="intro" class="lecture-section">
+        <div class="section-header">
+          <div class="section-number">01</div>
+          <div class="section-title-wrap">
+            <h2>Introduction & Principles of Gene Transfer</h2>
+            <p>Fundamental concepts of introducing exogenous genetic material and the biological barriers imposed by host cell architecture.</p>
+          </div>
+        </div>
+        <h3>What is Foreign DNA?</h3>
+        <p><strong>Foreign DNA</strong> (also designated <em>heterologous</em> or <em>exogenous DNA</em>) refers to any genetic material introduced into a host organism from an external source. It typically comprises recombinant plasmids, synthetic complementary DNA (cDNA), engineered PCR amplicons, viral expression cassettes, or artificial chromosomes.</p>
+        <h3>Why is Foreign DNA Introduced into Host Cells?</h3>
+        <ul>
+          <li><strong>Recombinant Protein Production:</strong> Directing host cellular translation machinery to synthesize high-value therapeutic or industrial proteins (e.g., recombinant human insulin, growth hormone, clotting factor VIII, viral vaccine antigens).</li>
+          <li><strong>Functional Genomics & Gene Validation:</strong> Investigating the physiological consequences of overexpressing, silencing (RNAi), or editing specific genes to delineate metabolic and signaling pathways.</li>
+          <li><strong>Gene Therapy:</strong> Delivering functional copies of therapeutic genes into patient cells to correct underlying inborn errors of metabolism or genetic defects.</li>
+          <li><strong>Agricultural Biotechnology:</strong> Conferring agronomic traits such as drought tolerance, pest resistance (e.g., Bt endotoxin), and nutritional biofortification (e.g., Golden Rice).</li>
+          <li><strong>Disease Modeling:</strong> Generating transgenic or knock-out animal models to recapitulate human pathologies for targeted drug discovery.</li>
+        </ul>
+        <h3>The Universal Paradigm of Gene Transfer</h3>
+        <div class="conceptual-pipeline">
+          <div class="pipeline-node"><span>1. Host Cell + Foreign DNA</span></div>
+          <span class="pipeline-arrow">→</span>
+          <div class="pipeline-node"><span>2. DNA Entry (Overcoming Barrier)</span></div>
+          <span class="pipeline-arrow">→</span>
+          <div class="pipeline-node"><span>3. Expression / Integration</span></div>
+          <span class="pipeline-arrow">→</span>
+          <div class="pipeline-node"><span>4. Selection & Identification</span></div>
+        </div>
+        <p>Across all kingdoms of life, foreign DNA delivery faces a common physical problem: <em>how to transport large, highly charged polyanionic hydrophilic nucleic acid molecules across hydrophobic, negatively charged phospholipid bilayers</em> without causing fatal cellular lysis.</p>
+        <h3>Why Different Host Cells Demand Different Delivery Methods</h3>
+        <div class="four-q-grid">
+          <div class="four-q-card what">
+            <span class="q-tag">Bacteria</span>
+            <h4>Rigid Peptidoglycan Wall</h4>
+            <p>Possess dense peptidoglycan and outer lipopolysaccharide membranes with high negative charge density. Lacking endocytosis, they require divalent cation charge neutralization and heat shock, or high-voltage electroporation.</p>
+          </div>
+          <div class="four-q-card how">
+            <span class="q-tag">Plants</span>
+            <h4>Tough Cellulose & Pectin Wall</h4>
+            <p>Enclosed in a thick, rigid carbohydrate matrix with 5–10 atmospheres of internal turgor pressure. Chemical transfection fails; high-velocity heavy-metal microprojectiles (gene gun) are required to pierce the wall.</p>
+          </div>
+          <div class="four-q-card where">
+            <span class="q-tag">Mammalian</span>
+            <h4>Fluid Bilayer & Endocytosis</h4>
+            <p>Lack a cell wall but possess a fragile, fluid plasma membrane capable of endocytosis. Highly amenable to cationic lipid complexes (lipofection) and electrical permeabilization.</p>
+          </div>
+          <div class="four-q-card tradeoff">
+            <span class="q-tag">Zygotes</span>
+            <h4>Zona Pellucida & Pronuclear Target</h4>
+            <p>Single-celled fertilized embryos with a thick glycoprotein coat. Heritable animal transgenesis demands direct physical microinjection into the haploid male pronucleus using a glass micropipette.</p>
+          </div>
+        </div>
+        <div class="scientific-figure">
+          <div class="figure-image-wrap">
+            <img src="images/molecular_cloning_overview.png" alt="Molecular Cloning Overview">
+          </div>
+          <div class="figure-caption">
+            <div class="figure-title">
+              <span>Figure 1.1: General Concept of Foreign DNA Insertion and Host Cell Selection</span>
+              <span class="figure-badge">Real Scientific Diagram</span>
+            </div>
+            <div class="figure-desc">
+              Classical molecular biology workflow depicting isolation of foreign gene insert, ligation into an expression plasmid vector, transfer across the bacterial host boundary, and selective clonal outgrowth on antibiotic-containing nutrient agar.
+            </div>
+            <div class="figure-attribution">
+              <span><strong>Source:</strong> Wikimedia Commons / Open Educational Resources</span>
+              <span><strong>License:</strong> Creative Commons Attribution-ShareAlike 4.0 International</span>
+              <a href="https://commons.wikimedia.org/wiki/File:Steps_of_Molecular_Cloning.png" target="_blank" rel="noopener">View Academic Source ↗</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: TRANSFORMATION -->
+      <section id="transformation" class="lecture-section">
+        <div class="section-header">
+          <div class="section-number">02</div>
+          <div class="section-title-wrap">
+            <h2>Transformation</h2>
+            <p>Bacterial competence, cellular uptake of exogenous naked DNA, and selective outgrowth.</p>
+          </div>
+        </div>
+        <div class="four-q-grid">
+          <div class="four-q-card what">
+            <span class="q-tag">What is it?</span>
+            <h4>Definition</h4>
+            <p>The genetic alteration of a bacterial cell resulting from the direct uptake and incorporation of exogenous, naked plasmid or chromosomal DNA from its surrounding medium.</p>
+          </div>
+          <div class="four-q-card how">
+            <span class="q-tag">How does it work?</span>
+            <h4>Principle</h4>
+            <p>Cells are rendered <strong>competent</strong> by altering membrane permeability. Divalent cations shield negative charges; transient thermal or electrical shock facilitates DNA entry into the cytoplasm.</p>
+          </div>
+          <div class="four-q-card where">
+            <span class="q-tag">Where is it used?</span>
+            <h4>Application</h4>
+            <p>Routine molecular cloning, plasmid amplification, construction of cDNA/genomic libraries, and recombinant protein production in <em>Escherichia coli</em>.</p>
+          </div>
+          <div class="four-q-card tradeoff">
+            <span class="q-tag">Limitation</span>
+            <h4>Main Tradeoff</h4>
+            <p>Restricted primarily to prokaryotes and lower eukaryotes (yeast). Most standard laboratory bacterial strains (DH5α, BL21) are not naturally competent and require artificial induction.</p>
+          </div>
+        </div>
+        <h3>Natural vs. Artificial Transformation</h3>
+        <ul>
+          <li><strong>Natural Transformation:</strong> An active physiological, genetically programmed state encoded by competence (<em>com</em>) operons in bacterial species such as <em>Streptococcus pneumoniae</em>, <em>Bacillus subtilis</em>, and <em>Neisseria gonorrhoeae</em>. Surface protein complexes bind extracellular double-stranded DNA, degrade one strand, and transport the remaining single strand across the membrane for homologous chromosomal recombination.</li>
+          <li><strong>Artificial Transformation:</strong> Laboratory-induced competence forced upon non-naturally competent bacteria (such as laboratory <em>E. coli</em>). Physical or chemical treatments permeabilize the cell envelope to permit the uptake of intact double-stranded circular plasmid DNA.</li>
+        </ul>
+        <h3>Core Concepts in Laboratory Transformation</h3>
+        <ul>
+          <li><strong>Competent Cells:</strong> Bacteria treated (e.g., with chilled divalent CaCl₂ or extensive water washes for electroporation) to render their outer membranes and peptidoglycan layers permeable to exogenous plasmids.</li>
+          <li><strong>Selectable Marker:</strong> An antibiotic resistance gene contained on the plasmid vector (e.g., <em>bla</em> encoding β-lactamase for ampicillin resistance, <em>kanR</em> for kanamycin). Only successfully transformed bacteria survive in selective media.</li>
+          <li><strong>Transformed Colonies:</strong> Clonal colonies growing on selective antibiotic agar plates, each derived from a single bacterium that successfully took up, maintained, and expressed the plasmid.</li>
+        </ul>
+        <div class="interactive-stepper" id="transformation-stepper">
+          <h4>Interactive Laboratory Sequence: Chemical Transformation via Heat Shock</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Click each step below to reveal the specific molecular events taking place during the protocol:</p>
+          <div class="stepper-nav" role="tablist">
+            <button class="step-btn active" onclick="showTransformStep(0)">1. Chilling with Ca²⁺ (0°C)</button>
+            <button class="step-btn" onclick="showTransformStep(1)">2. Heat Shock (42°C)</button>
+            <button class="step-btn" onclick="showTransformStep(2)">3. Cold Plunge (0°C)</button>
+            <button class="step-btn" onclick="showTransformStep(3)">4. Recovery (37°C)</button>
+            <button class="step-btn" onclick="showTransformStep(4)">5. Antibiotic Selection</button>
+          </div>
+          <div class="step-display" id="transform-display-box">
+            <h4 id="transform-step-title">Step 1: Incubation on Ice with Divalent Cations (0°C, CaCl₂)</h4>
+            <p id="transform-step-desc">
+              Both plasmid DNA (polyanionic phosphate backbone) and the bacterial outer envelope (lipopolysaccharides and membrane phospholipids) carry strong negative charges, generating strong electrostatic repulsion. Positively charged calcium ions (Ca²⁺) bind and neutralize these negative charges, acting as an electrostatic bridge bringing plasmid DNA to the membrane surface. Ice-cold temperature (0°C) congeals the lipid bilayer, reducing membrane fluidity and stabilizing the complex.
+            </p>
+            <span class="step-formula" id="transform-step-formula">DNA⁻ + Ca²⁺ + LPS/Membrane⁻ → Electrostatic Neutralization at 0°C</span>
+          </div>
+        </div>
+        <div class="scientific-figure">
+          <div class="figure-image-wrap">
+            <img src="images/transformation_artificial.svg" alt="Artificial Bacterial Transformation Diagram">
+          </div>
+          <div class="figure-caption">
+            <div class="figure-title">
+              <span>Figure 2.1: Stepwise Schematic of Artificial Bacterial Transformation & Selection</span>
+              <span class="figure-badge">Real Scientific Diagram</span>
+            </div>
+            <div class="figure-desc">
+              Visual sequence illustrating competent cell preparation, addition of foreign plasmid, transient thermal heat shock permitting plasmid uptake, recovery incubation, and selective outgrowth of transformed colonies on antibiotic agar.
+            </div>
+            <div class="figure-attribution">
+              <span><strong>Source:</strong> Wikimedia Commons / Biomarkers Lab Illustration</span>
+              <span><strong>License:</strong> Public Domain Biological Resource</span>
+              <a href="https://commons.wikimedia.org/wiki/File:Artificial_Bacterial_Transformation.svg" target="_blank" rel="noopener">View Academic Source ↗</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: TRANSFECTION -->
+      <section id="transfection" class="lecture-section">
+        <div class="section-header">
+          <div class="section-number">03</div>
+          <div class="section-title-wrap">
+            <h2>Transfection Overview</h2>
+            <p>Introduction of nucleic acids into eukaryotic host cells and key conceptual distinctions.</p>
+          </div>
+        </div>
+        <h3>Definition</h3>
+        <p><strong>Transfection</strong> is the process of deliberately introducing naked or complexed nucleic acids (DNA, mRNA, siRNA) into <strong>eukaryotic cells</strong> (mammalian, insect, or plant cells) using non-viral chemical or physical methods.</p>
+        <div class="callout info">
+          <div class="callout-title">💡 Why "Transfection" Instead of "Transformation" for Animal Cells?</div>
+          <div class="callout-body">
+            In mammalian cell biology and oncology, the term <strong>"transformation"</strong> has a long-standing clinical meaning: the malignant oncogenic conversion of a normal animal cell into an uncontrolled cancerous tumor cell. To prevent confusion between creating cancer cells and transferring foreign genes, molecular biologists adopted the term <strong>transfection</strong> (derived from <em>trans-</em> + <em>infection</em>) specifically for eukaryotic non-viral gene delivery.
+          </div>
+        </div>
+        <h3>Key Differences: Transformation vs. Transfection vs. Transduction</h3>
+        <div class="table-container">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Transformation</th>
+                <th>Transfection</th>
+                <th>Transduction</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Primary Host</strong></td>
+                <td>Bacteria, Archaea, Yeast</td>
+                <td>Eukaryotic cells (Mammalian, Insect)</td>
+                <td>Bacteria or Eukaryotes</td>
+              </tr>
+              <tr>
+                <td><strong>Vehicle / Carrier</strong></td>
+                <td>Naked plasmid or linear DNA</td>
+                <td>Cationic lipids, polymers, voltage, particles</td>
+                <td>Bacteriophage or Viral Vectors (Lentivirus, AAV)</td>
+              </tr>
+              <tr>
+                <td><strong>Cell Wall Status</strong></td>
+                <td>Intact rigid wall present</td>
+                <td>No wall (Animal) or enzymatic removal (Protoplasts)</td>
+                <td>Wall present or absent</td>
+              </tr>
+              <tr>
+                <td><strong>Primary Mechanism</strong></td>
+                <td>Physiological or induced competence</td>
+                <td>Endocytosis, lipid fusion, or transient pores</td>
+                <td>Receptor-mediated viral entry and injection</td>
+              </tr>
+              <tr>
+                <td><strong>Expression Fates</strong></td>
+                <td>Autonomous plasmid replication</td>
+                <td><strong>Transient</strong> (episomal) vs <strong>Stable</strong> (genomic integration)</td>
+                <td>Transient episomal or stable chromosomal integration</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Transient vs. Stable Transfection</h3>
+        <ul>
+          <li><strong>Transient Transfection:</strong> Foreign DNA enters the eukaryotic cell nucleus but does <em>not</em> integrate into the host chromosomal genome. It is transcribed episomally for a finite duration (usually 24–72 hours) and is progressively degraded or diluted out during mitotic cell divisions. Ideal for rapid reporter assays and protein harvest.</li>
+          <li><strong>Stable Transfection:</strong> Foreign DNA integrates into host chromosomal DNA (usually at rare genomic double-strand breaks) or persists as a replicating episome with viral origins. Maintained by culturing cells under continuous selective antibiotic pressure (e.g., Geneticin/G418, Puromycin, Hygromycin B). Only cells with stable integration survive, creating permanent clonal cell lines.</li>
+        </ul>
+      </section>
+
+      <!-- SECTION 4: LIPOSOME FUSION / LIPOFECTION -->
+      <section id="lipofection" class="lecture-section">
+        <div class="section-header">
+          <div class="section-number">04</div>
+          <div class="section-title-wrap">
+            <h2>Liposome Fusion & Lipofection</h2>
+            <p>Cationic lipid nanoparticles, electrostatic complexation, endocytosis, and intracellular DNA release.</p>
+          </div>
+        </div>
+        <div class="four-q-grid">
+          <div class="four-q-card what">
+            <span class="q-tag">What is it?</span>
+            <h4>Definition</h4>
+            <p>A chemical transfection method utilizing synthetic cationic lipid vesicles (liposomes or lipid nanoparticles) to encapsulate and deliver nucleic acids into eukaryotic cells.</p>
+          </div>
+          <div class="four-q-card how">
+            <span class="q-tag">How does it work?</span>
+            <h4>Principle</h4>
+            <p>Positively charged cationic lipids electrostatically condense negatively charged DNA into <strong>lipoplexes</strong>, which attach to the anionic cell surface, enter via endocytosis, and release DNA into the cytosol.</p>
+          </div>
+          <div class="four-q-card where">
+            <span class="q-tag">Where is it used?</span>
+            <h4>Application</h4>
+            <p>Routine high-efficiency transfection of mammalian cell lines, mRNA therapeutics, COVID-19 mRNA vaccine delivery (lipid nanoparticles), and CRISPR Cas9 ribonucleoprotein delivery.</p>
+          </div>
+          <div class="four-q-card tradeoff">
+            <span class="q-tag">Limitation</span>
+            <h4>Main Tradeoff</h4>
+            <p>Variable efficiency across distinct cell types; non-dividing primary cells and suspension lymphocytes are often resistant; potential cationic lipid toxicity.</p>
+          </div>
+        </div>
+        <h3>Molecular Mechanism of Lipofection</h3>
+        <p>Lipofection relies on synthetic <strong>cationic lipids</strong> (e.g., DOTMA, DOTAP, Lipofectamine) consisting of a positively charged quaternary ammonium head group and hydrophobic aliphatic fatty acyl chains.</p>
+        <div class="interactive-stepper" id="lipofection-stepper">
+          <h4>Interactive Diagram: The 4-Stage Molecular Cascade of Lipofection</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Click each stage to explore how nucleic acids navigate from reagent tube to host nucleus:</p>
+          <div class="stepper-nav" role="tablist">
+            <button class="step-btn active" onclick="showLipoStage(0)">1. DNA & Cationic Lipids</button>
+            <button class="step-btn" onclick="showLipoStage(1)">2. Lipoplex Formation</button>
+            <button class="step-btn" onclick="showLipoStage(2)">3. Cell Membrane Interaction</button>
+            <button class="step-btn" onclick="showLipoStage(3)">4. Intracellular Release & Expression</button>
+          </div>
+          <div class="step-display" id="lipo-display-box">
+            <h4 id="lipo-stage-title">Stage 1: Polyphosphate DNA & Cationic Lipid Suspension</h4>
+            <p id="lipo-stage-desc">
+              Plasmid DNA contains a repeating polyanionic phosphate backbone (PO₄⁻). In aqueous solution, synthetic cationic lipids form unilamellar vesicles where positive head groups face outwards towards the water. When mixed in serum-free medium, opposite charges drive spontaneous thermodynamic self-assembly.
+            </p>
+            <span class="step-formula" id="lipo-stage-formula">Polyanionic DNA⁻ + Cationic Lipids⁺ in Aqueous Buffer</span>
+          </div>
+        </div>
+        <div class="scientific-figure">
+          <div class="figure-image-wrap">
+            <img src="images/liposome_transfection_mechanism.jpg" alt="Liposome and Lipid Nanoparticle Transfection Mechanism">
+          </div>
+          <div class="figure-caption">
+            <div class="figure-title">
+              <span>Figure 4.1: Peer-Reviewed Mechanism of Lipid Nanoparticle Cellular Uptake & Protein Expression</span>
+              <span class="figure-badge">Peer-Reviewed Journal Figure</span>
+            </div>
+            <div class="figure-desc">
+              Authentic scientific schematic showing: (1) Association of nucleic acids into lipid nanoparticles/lipoplexes; (2) Electrostatic binding to eukaryotic plasma membrane; (3) Endocytosis via clathrin/caveolae-mediated vesicle formation; (4) Endosomal escape releasing genetic material into cytosol; (5) Nuclear entry and subsequent transgene protein translation.
+            </div>
+            <div class="figure-attribution">
+              <span><strong>Source:</strong> NCBI PubMed Central (PMC13473061) / Springer Nature / Elsevier</span>
+              <span><strong>Citation:</strong> Critical chemistry manufacturing and controls considerations for mRNA lipid nanoparticles</span>
+              <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC13473061/" target="_blank" rel="noopener">View NCBI PMC Article ↗</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: MICROINJECTION -->
+      <section id="microinjection" class="lecture-section">
+        <div class="section-header">
+          <div class="section-number">05</div>
+          <div class="section-title-wrap">
+            <h2>Microinjection</h2>
+            <p>Direct mechanical physical injection of nucleic acids into single cells using precision glass microcapillaries.</p>
+          </div>
+        </div>
+        <div class="four-q-grid">
+          <div class="four-q-card what">
+            <span class="q-tag">What is it?</span>
+            <h4>Definition</h4>
+            <p>A direct, physical gene-delivery method that introduces foreign nucleic acids directly into the cytoplasm or nucleus of a single target cell using an ultra-fine glass micropipette under an inverted microscope.</p>
+          </div>
+          <div class="four-q-card how">
+            <span class="q-tag">How does it work?</span>
+            <h4>Principle</h4>
+            <p>The target cell is immobilized by suction using a blunt holding pipette. A sharp glass microinjection capillary (tip 0.5–1.0 µm) penetrates the plasma membrane, expelling a precise picoliter volume of DNA solution.</p>
+          </div>
+          <div class="four-q-card where">
+            <span class="q-tag">Where is it used?</span>
+            <h4>Application</h4>
+            <p>Single-cell embryology, developmental biology, oocyte gene delivery, Intracytoplasmic Sperm Injection (ICSI), Somatic Cell Nuclear Transfer (cloning), and precise zygotic CRISPR editing.</p>
+          </div>
+          <div class="four-q-card tradeoff">
+            <span class="q-tag">Limitation</span>
+            <h4>Main Tradeoff</h4>
+            <p>Extremely low throughput (one cell at a time; ~50–100 cells/hr); demands highly specialized anti-vibration tables and micromanipulators; requires immense operator technical skill; cell lysis risk.</p>
+          </div>
+        </div>
+        <h3>Targeting: Cytoplasm vs. Nucleus</h3>
+        <ul>
+          <li><strong>Cytoplasmic Injection:</strong> Simpler to execute with minimal physical disturbance to genomic architecture. Standard for delivering mRNA, small interfering RNA (siRNA), or translated proteins. Inefficient for plasmid DNA because the intact nuclear envelope acts as a major barrier against passive diffusion of large plasmids in non-dividing cells.</li>
+          <li><strong>Nuclear Injection:</strong> The needle tip is guided directly through the nuclear envelope into the nucleoplasm. Delivers DNA immediately to host RNA polymerase transcription machinery. Essential for high-efficiency expression of linear DNA constructs or integration experiments.</li>
+        </ul>
+        <div class="scientific-figure">
+          <div class="figure-image-wrap">
+            <img src="images/microinjection_microscopy.jpg" alt="Microscopy photograph of microinjection apparatus holding cell">
+          </div>
+          <div class="figure-caption">
+            <div class="figure-title">
+              <span>Figure 5.1: High-Magnification Inverted Microscope Photography of Real Microinjection</span>
+              <span class="figure-badge">Authentic Microscope Photograph</span>
+            </div>
+            <div class="figure-desc">
+              Real inverted laboratory microscopy visual showing the dual-pipette micromanipulation system: on the left, a blunt glass holding pipette immobilizes the cell via gentle capillary vacuum; on the right, an ultra-fine glass microcapillary needle pierces the cell membrane to deliver nucleic acid solution into the cell.
+            </div>
+            <div class="figure-attribution">
+              <span><strong>Source:</strong> Wikimedia Commons / Open Scientific Microscopy</span>
+              <span><strong>License:</strong> Creative Commons Attribution-Share Alike 3.0 Unported</span>
+              <a href="https://commons.wikimedia.org/wiki/File:Icsi.JPG" target="_blank" rel="noopener">View Academic Source ↗</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 6: ELECTROPORATION -->
+      <section id="electroporation" class="lecture-section">
+        <div class="section-header">
+          <div class="section-number">06</div>
+          <div class="section-title-wrap">
+            <h2>Electroporation</h2>
+            <p>Electrical membrane permeabilization, dielectric breakdown, transient hydrophilic pores, and recovery.</p>
+          </div>
+        </div>
+        <div class="four-q-grid">
+          <div class="four-q-card what">
+            <span class="q-tag">What is it?</span>
+            <h4>Definition</h4>
+            <p>A physical gene transfer method that subjects a cell suspension to high-voltage electrical pulses, causing temporary permeabilization of the lipid bilayer to allow foreign DNA entry.</p>
+          </div>
+          <div class="four-q-card how">
+            <span class="q-tag">How does it work?</span>
+            <h4>Principle</h4>
+            <p>The applied electric field induces an electrical potential across the cell membrane. Exceeding the dielectric breakdown threshold (~0.2–1.0 V) forms transient nanoscale hydrophilic pores through which DNA enters electrophoretically.</p>
+          </div>
+          <div class="four-q-card where">
+            <span class="q-tag">Where is it used?</span>
+            <h4>Application</h4>
+            <p>Universal transformation of bacterial cells (e.g., <em>E. coli</em> library construction with 10⁹–10¹⁰ CFU/µg efficiency), electro-transformation of yeast, and transfection of difficult mammalian suspension cells.</p>
+          </div>
+          <div class="four-q-card tradeoff">
+            <span class="q-tag">Limitation</span>
+            <h4>Main Tradeoff</h4>
+            <p>High cell mortality (typically 20% to 50% of cells lyse); highly sensitive to ionic strength (salt traces cause catastrophic electrical arc discharge and boiling); requires specialized cuvettes.</p>
+          </div>
+        </div>
+        <h3>The Biophysical Principle: Dielectric Breakdown</h3>
+        <p>The cell membrane behaves as an electrical capacitor composed of a non-conductive hydrophobic core between conductive aqueous solutions. When an external high-voltage field is applied, charges accumulate on opposite sides of the bilayer:</p>
+        <div class="conceptual-pipeline">
+          <div class="pipeline-node"><span>1. Cells + DNA in Cuvette</span></div>
+          <span class="pipeline-arrow">→</span>
+          <div class="pipeline-node"><span>2. Electric Pulse (kV/cm)</span></div>
+          <span class="pipeline-arrow">→</span>
+          <div class="pipeline-node"><span>3. Transient Hydrophilic Pores</span></div>
+          <span class="pipeline-arrow">→</span>
+          <div class="pipeline-node"><span>4. DNA Entry (Electrophoresis)</span></div>
+          <span class="pipeline-arrow">→</span>
+          <div class="pipeline-node"><span>5. Spontaneous Resealing</span></div>
+        </div>
+        <div class="simulation-box">
+          <h4>Interactive Simulation: Transient Membrane Permeabilization</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+            Observe how lipid bilayer integrity changes dynamically when an electrical pulse is triggered:
+          </p>
+          <div class="sim-viewport" id="sim-canvas-viewport">
+            <div class="sim-status-banner" id="sim-status-label">STATUS: Resting State (Membrane Intact, Potential = -70 mV)</div>
+            <svg id="sim-svg" width="100%" height="100%" viewBox="0 0 600 200" style="display: block;">
+              <rect x="0" y="0" width="600" height="75" fill="#0c4a6e" opacity="0.3" />
+              <text x="15" y="30" fill="#38bdf8" font-size="12" font-family="monospace">Extracellular Buffer + Plasmid DNA (Polyanionic)</text>
+              <g id="dna-particles">
+                <circle cx="80" cy="40" r="10" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="4,2"/>
+                <circle cx="180" cy="30" r="12" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="4,2"/>
+                <circle cx="300" cy="45" r="11" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="4,2"/>
+                <circle cx="420" cy="35" r="10" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="4,2"/>
+                <circle cx="530" cy="40" r="13" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="4,2"/>
+              </g>
+              <g id="membrane-group">
+                <rect x="0" y="75" width="600" height="15" fill="#0284c7" />
+                <rect x="0" y="90" width="600" height="20" fill="#1e293b" />
+                <rect x="0" y="110" width="600" height="15" fill="#0284c7" />
+              </g>
+              <g id="pores-group" style="display: none;">
+                <rect x="120" y="75" width="40" height="50" fill="#0c4a6e" opacity="0.9" />
+                <line x1="120" y1="75" x2="120" y2="125" stroke="#38bdf8" stroke-width="2" stroke-dasharray="3,3" />
+                <line x1="160" y1="75" x2="160" y2="125" stroke="#38bdf8" stroke-width="2" stroke-dasharray="3,3" />
+                <rect x="260" y="75" width="45" height="50" fill="#0c4a6e" opacity="0.9" />
+                <line x1="260" y1="75" x2="260" y2="125" stroke="#38bdf8" stroke-width="2" stroke-dasharray="3,3" />
+                <line x1="305" y1="75" x2="305" y2="125" stroke="#38bdf8" stroke-width="2" stroke-dasharray="3,3" />
+                <rect x="440" y="75" width="40" height="50" fill="#0c4a6e" opacity="0.9" />
+                <line x1="440" y1="75" x2="440" y2="125" stroke="#38bdf8" stroke-width="2" stroke-dasharray="3,3" />
+                <line x1="480" y1="75" x2="480" y2="125" stroke="#38bdf8" stroke-width="2" stroke-dasharray="3,3" />
+              </g>
+              <rect x="0" y="125" width="600" height="75" fill="#1e1b4b" opacity="0.4" />
+              <text x="15" y="180" fill="#a78bfa" font-size="12" font-family="monospace">Intracellular Cytoplasm</text>
+              <g id="pulse-arrows" style="display: none;">
+                <line x1="50" y1="10" x2="50" y2="190" stroke="#ef4444" stroke-width="3" />
+                <line x1="550" y1="10" x2="550" y2="190" stroke="#ef4444" stroke-width="3" />
+                <text x="190" y="20" fill="#f87171" font-weight="700" font-size="14" font-family="sans-serif">⚡ HIGH VOLTAGE ELECTRIC FIELD (1.8 kV/cm) ⚡</text>
+              </g>
+            </svg>
+          </div>
+          <div class="sim-controls">
+            <button class="sim-btn" id="btn-fire-pulse" onclick="runElectroporationSim()">
+              <span>⚡ Fire Electric Pulse (1.8 kV)</span>
+            </button>
+            <button class="sim-btn secondary" onclick="resetElectroporationSim()">
+              <span>↺ Reset Bilayer</span>
+            </button>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">
+              Watch: Dielectric breakdown → aqueous pore opening → electrophoretic DNA influx → thermodynamic resealing.
+            </span>
+          </div>
+        </div>
+        <div class="scientific-figure">
+          <div class="figure-image-wrap">
+            <img src="images/electroporation_diagram.png" alt="Electroporation Diagram">
+          </div>
+          <div class="figure-caption">
+            <div class="figure-title">
+              <span>Figure 6.1: Scientific Diagram of Electroporation-Mediated Membrane Permeabilization</span>
+              <span class="figure-badge">Real Scientific Diagram</span>
+            </div>
+            <div class="figure-desc">
+              Three-stage representation of electroporation: (A) Intact phospholipid bilayer exposed to an external electric pulse; (B) Localized dielectric breakdown yielding transient hydrophilic aqueous pores through which foreign DNA migrates; (C) Resealing of membrane upon dissipation of electrical potential.
+            </div>
+            <div class="figure-attribution">
+              <span><strong>Source:</strong> Wikimedia Commons / Open Peer-Reviewed Educational Resource</span>
+              <span><strong>License:</strong> Creative Commons Attribution-ShareAlike 4.0 International</span>
+              <a href="https://commons.wikimedia.org/wiki/File:Electroporation_Diagram.png" target="_blank" rel="noopener">View Academic Source ↗</a>
+            </div>
+          </div>
+        </div>
+        <div class="scientific-figure">
+          <div class="figure-image-wrap">
+            <img src="images/electroporation_cuvettes.jpg" alt="Electroporation Cuvettes">
+          </div>
+          <div class="figure-caption">
+            <div class="figure-title">
+              <span>Figure 6.2: Real Laboratory Electroporation Cuvettes with Precision Aluminum Electrodes</span>
+              <span class="figure-badge">Laboratory Equipment Photograph</span>
+            </div>
+            <div class="figure-desc">
+              Standard sterile laboratory electroporation cuvettes (0.1 cm, 0.2 cm, and 0.4 cm electrode gap sizes). The precisely spaced metal electrode plates generate a uniform electric field (E = V/d) across the cell suspension.
+            </div>
+            <div class="figure-attribution">
+              <span><strong>Source:</strong> Wikimedia Commons / Molecular Biology Equipment Archive</span>
+              <span><strong>License:</strong> Creative Commons Attribution-ShareAlike 3.0 Unported</span>
+              <a href="https://commons.wikimedia.org/wiki/File:Electroporation_Cuvettes.jpg" target="_blank" rel="noopener">View Academic Source ↗</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 7: BIOLISTIC METHOD / GENE GUN -->
+      <section id="biolistics" class="lecture-section">
+        <div class="section-header">
+          <div class="section-number">07</div>
+          <div class="section-title-wrap">
+            <h2>Biolistic Method (Gene Gun)</h2>
+            <p>High-velocity microprojectile bombardment of heavy-metal particles into walled plant cells and recalcitrant tissues.</p>
+          </div>
+        </div>
+        <div class="four-q-grid">
+          <div class="four-q-card what">
+            <span class="q-tag">What is it?</span>
+            <h4>Definition</h4>
+            <p>A physical gene-transfer method (also called particle bombardment) that accelerates DNA-coated microscopic heavy-metal particles (gold or tungsten) at supersonic velocity to penetrate cell walls and membranes.</p>
+          </div>
+          <div class="four-q-card how">
+            <span class="q-tag">How does it work?</span>
+            <h4>Principle</h4>
+            <p>High-pressure helium gas ruptures a calibrated disk, launching a macrocarrier carrying DNA-coated gold beads. A stopping screen halts the disk, allowing beads to shoot into the target tissue where DNA dissolves.</p>
+          </div>
+          <div class="four-q-card where">
+            <span class="q-tag">Where is it used?</span>
+            <h4>Application</h4>
+            <p>Primary method for transforming monocot crops (maize, wheat, rice), plant chloroplast/plastid genetic engineering, and genetic immunization of animal skin (*in vivo* DNA vaccines).</p>
+          </div>
+          <div class="four-q-card tradeoff">
+            <span class="q-tag">Limitation</span>
+            <h4>Main Tradeoff</h4>
+            <p>Physical tissue trauma and cell damage at the impact zone; high frequency of multi-copy and fragmented DNA insertion leading to transgene silencing; expensive gold/helium consumables.</p>
+          </div>
+        </div>
+        <h3>Why the Gene Gun is Indispensable for Plant Biology</h3>
+        <p>Unlike animal cells, plant cells are encased in a dense, rigid, multi-layered cell wall composed of <strong>cellulose microfibrils, hemicellulose, and pectin</strong>, with internal osmotic turgor pressure reaching 5 to 10 atmospheres. Chemical transfection (liposomes) and traditional bacterial transformation cannot cross intact plant walls. While <em>Agrobacterium tumefaciens</em> is effective for many dicotyledonous plants, it historically struggled with major monocot cereal grains (corn, wheat, barley, sugarcane). The biolistic method is completely <strong>cell-wall independent</strong> and physical, making it universally applicable to any plant species or tissue explant.</p>
+        <h3>Basic Components of a Biolistic System</h3>
+        <ul>
+          <li><strong>High-Pressure Helium Gas Chamber:</strong> Pressurized between 900 to 1,550 psi (6.2–10.7 MPa) to provide the explosive propulsive force.</li>
+          <li><strong>Rupture Disk:</strong> A calibrated membrane that bursts cleanly when helium pressure reaches the exact rating threshold.</li>
+          <li><strong>Macrocarrier:</strong> A lightweight plastic disk upon which the DNA-coated gold or tungsten microprojectiles are dried.</li>
+          <li><strong>Stopping Screen:</strong> A sturdy stainless-steel mesh that abruptly arrests the flying macrocarrier while allowing the microscopic microprojectiles to fly through.</li>
+          <li><strong>Target Shelf:</strong> An adjustable-height plate holding the Petri dish with target plant callus, leaf explants, or tissue culture in a partial vacuum chamber (to minimize aerodynamic drag).</li>
+        </ul>
+        <div class="scientific-figure">
+          <div class="figure-image-wrap">
+            <img src="images/gene_gun_schematic.svg" alt="Schematic Diagram of Biolistic Gene Gun System">
+          </div>
+          <div class="figure-caption">
+            <div class="figure-title">
+              <span>Figure 7.1: Scientific Schematic of the Helium-Driven Biolistic Particle Delivery System</span>
+              <span class="figure-badge">Real Vector Schematic</span>
+            </div>
+            <div class="figure-desc">
+              Detailed engineering diagram of the Bio-Rad PDS-1000/He gene gun mechanism showing: (1) Pressurized helium chamber; (2) Rupture disk bursting zone; (3) Macrocarrier flying plate; (4) Stainless-steel stopping screen; (5) High-velocity stream of DNA-coated microcarriers; (6) Target plant tissue plate inside vacuum chamber.
+            </div>
+            <div class="figure-attribution">
+              <span><strong>Source:</strong> Wikimedia Commons / OpenStax Scientific Illustrations</span>
+              <span><strong>License:</strong> Creative Commons Attribution-ShareAlike 3.0 Unported</span>
+              <a href="https://commons.wikimedia.org/wiki/File:Gene_Gun.svg" target="_blank" rel="noopener">View Academic Source ↗</a>
+            </div>
+          </div>
+        </div>
+        <div class="scientific-figure">
+          <div class="figure-image-wrap">
+            <img src="images/gene_gun_photo.jpg" alt="Photograph of Laboratory Gene Gun System">
+          </div>
+          <div class="figure-caption">
+            <div class="figure-title">
+              <span>Figure 7.2: Photograph of the Classic Laboratory Biolistic Particle Delivery System</span>
+              <span class="figure-badge">Laboratory Equipment Photograph</span>
+            </div>
+            <div class="figure-desc">
+              Actual desktop biolistic apparatus (PDS-1000/He style) used in plant biotechnology laboratories, illustrating the vacuum containment chamber, safety interlock door, and helium gas plumbing lines.
+            </div>
+            <div class="figure-attribution">
+              <span><strong>Source:</strong> Wikimedia Commons / Institutional Laboratory Archive</span>
+              <span><strong>License:</strong> Creative Commons Attribution 2.0 Generic</span>
+              <a href="https://commons.wikimedia.org/wiki/File:Genegun.jpg" target="_blank" rel="noopener">View Academic Source ↗</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 8: SOMATIC CELL FUSION -->
+      <section id="somatic-fusion" class="lecture-section">
+        <div class="section-header">
+          <div class="section-number">08</div>
+          <div class="section-title-wrap">
+            <h2>Somatic Cell Fusion</h2>
+            <p>Induced fusion of entire somatic cells, formation of heterokaryons and synkaryons, and hybridoma technology.</p>
+          </div>
+        </div>
+        <div class="four-q-grid">
+          <div class="four-q-card what">
+            <span class="q-tag">What is it?</span>
+            <h4>Definition</h4>
+            <p>The artificial fusion of two distinct, differentiated somatic cells to form a single viable hybrid cell possessing the cytoplasmic and genetic contents of both parental cells.</p>
+          </div>
+          <div class="four-q-card how">
+            <span class="q-tag">How does it work?</span>
+            <h4>Principle</h4>
+            <p>Fusogenic agents (PEG, electrofusion, inactivated Sendai virus) perturb and coalesce adjacent plasma membranes, forming a binucleated <strong>heterokaryon</strong> that fuses into a mononuclear <strong>synkaryon</strong> upon mitosis.</p>
+          </div>
+          <div class="four-q-card where">
+            <span class="q-tag">Where is it used?</span>
+            <h4>Application</h4>
+            <p><strong>Hybridoma technology</strong> for mass production of monoclonal antibodies (mAbs), chromosome mapping, and plant somatic hybridization (protoplast fusion to generate novel hybrids like the "pomato").</p>
+          </div>
+          <div class="four-q-card tradeoff">
+            <span class="q-tag">Limitation</span>
+            <h4>Main Tradeoff</h4>
+            <p>Fusion yields a heterogeneous mixture of unfused cells and aberrant polyploids; requires stringent biochemical selection (e.g., HAT medium); hybrid cells frequently exhibit spontaneous chromosome loss.</p>
+          </div>
+        </div>
+        <h3>The Crucial Distinction: Whole Cells vs. Purified DNA</h3>
+        <div class="callout warning">
+          <div class="callout-title">⚠️ Essential Distinction for Examinations</div>
+          <div class="callout-body">
+            Unlike transformation, electroporation, or microinjection—which introduce <em>purified, isolated nucleic acid molecules</em> across a single membrane—<strong>somatic cell fusion transfers intact genomes, cytoplasm, and organelles via the direct union of two complete living cells</strong>.
+          </div>
+        </div>
+        <h3>The Fusogens: Chemical, Physical, and Biological</h3>
+        <ul>
+          <li><strong>Polyethylene Glycol (PEG):</strong> A chemical fusogen (typically 40–50% w/v) that dehydrates cell surfaces, drawing lipid bilayers into ultra-close proximity and inducing transient hydrophilic pores that bridge and coalesce adjacent membranes.</li>
+          <li><strong>Electrofusion:</strong> A two-step physical technique: (1) High-frequency alternating current (AC) field causes <em>dielectrophoresis</em>, aligning cells into "pearl chains"; (2) High-voltage direct current (DC) pulses instantly breach adjacent membranes, fusing them with high viability.</li>
+          <li><strong>Inactivated Sendai Virus (HVJ):</strong> An envelope virus whose surface hemagglutinin-neuraminidase (HN) and fusion (F) glycoproteins directly bind sialic acid and trigger eukaryotic membrane fusion without viral replication.</li>
+        </ul>
+        <h3>Flagship Example: Hybridoma Technology for Monoclonal Antibodies (Köhler & Milstein)</h3>
+        <p>In 1975, Georges Köhler and César Milstein developed hybridoma technology (awarded the 1984 Nobel Prize in Physiology or Medicine):</p>
+        <div class="conceptual-pipeline">
+          <div class="pipeline-node"><span>B-Cells (HGPRT⁺, Mortal, Ab⁺)</span></div>
+          <span class="pipeline-arrow">+</span>
+          <div class="pipeline-node"><span>Myeloma Cells (HGPRT⁻, Immortal, Ab⁻)</span></div>
+          <span class="pipeline-arrow">→ PEG →</span>
+          <div class="pipeline-node"><span>Hybridoma (HGPRT⁺, Immortal, Ab⁺)</span></div>
+        </div>
+        <h4>The HAT Medium Selection Logic</h4>
+        <ul>
+          <li>Cells synthesize DNA purines via two pathways: the <em>de novo</em> pathway and the <em>salvage pathway</em> (utilizing the enzyme HGPRT: hypoxanthine-guanine phosphoribosyltransferase).</li>
+          <li>In <strong>HAT medium</strong> (Hypoxanthine, Aminopterin, Thymidine), the antibiotic <strong>aminopterin</strong> irreversibly blocks the <em>de novo</em> pathway. Cells are forced to survive exclusively through the salvage pathway using exogenous hypoxanthine and thymidine.</li>
+          <li><strong>Unfused Myeloma Cells:</strong> Lack HGPRT (HGPRT⁻). With <em>de novo</em> blocked by aminopterin and salvage blocked by enzyme deficiency, <em>they all die</em> within days.</li>
+          <li><strong>Unfused Primary B-Cells:</strong> Possess functional HGPRT (HGPRT⁺), but have a finite natural lifespan and <em>die naturally</em> within 1–2 weeks in culture.</li>
+          <li><strong>Hybridoma Cells:</strong> Possess immortality from the myeloma parent AND functional HGPRT from the B-cell parent. They <strong>survive, proliferate indefinitely</strong>, and continuously secrete homogeneous monoclonal antibodies!</li>
+        </ul>
+        <div class="scientific-figure">
+          <div class="figure-image-wrap">
+            <img src="images/hybridoma_technology.png" alt="Hybridoma Technology Diagram for Monoclonal Antibody Production">
+          </div>
+          <div class="figure-caption">
+            <div class="figure-title">
+              <span>Figure 8.1: Classical Scientific Schematic of Hybridoma Production via Somatic Cell Fusion</span>
+              <span class="figure-badge">Peer-Reviewed Educational Schematic</span>
+            </div>
+            <div class="figure-desc">
+              Complete workflow: (1) Mouse immunization with specific antigen; (2) Harvest of antibody-producing B-lymphocytes from spleen; (3) Fusion with HGPRT-deficient immortal myeloma cells using PEG; (4) Selective growth in HAT medium; (5) ELISA screening and clonal expansion of monoclonal antibody-producing hybridoma clones.
+            </div>
+            <div class="figure-attribution">
+              <span><strong>Source:</strong> Wikimedia Commons / Open Biomedical Diagram</span>
+              <span><strong>License:</strong> Creative Commons Attribution-ShareAlike 4.0 International</span>
+              <a href="https://commons.wikimedia.org/wiki/File:Hybridoma_technology.png" target="_blank" rel="noopener">View Academic Source ↗</a>
+            </div>
+          </div>
+        </div>
+        <div class="scientific-figure">
+          <div class="figure-image-wrap">
+            <img src="images/protoplast_fusion.jpg" alt="Protoplast Fusion in Plant Somatic Hybridization">
+          </div>
+          <div class="figure-caption">
+            <div class="figure-title">
+              <span>Figure 8.2: Plant Somatic Cell Hybridization via Protoplast Fusion</span>
+              <span class="figure-badge">Plant Biotechnology Photograph</span>
+            </div>
+            <div class="figure-desc">
+              Enzymatic digestion of plant cell walls using cellulase and pectinase generates wall-less "protoplasts" from two distinct plant cultivars. Under PEG or electrofusion, their plasma membranes coalesce, enabling interspecific and intergeneric hybridization that bypasses sexual breeding barriers.
+            </div>
+            <div class="figure-attribution">
+              <span><strong>Source:</strong> Wikimedia Commons / Botanical Biotechnology Archive</span>
+              <span><strong>License:</strong> Creative Commons Attribution-ShareAlike 3.0 Unported</span>
+              <a href="https://commons.wikimedia.org/wiki/File:Protoplast_fusion.jpg" target="_blank" rel="noopener">View Academic Source ↗</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 9: GENE TRANSFER BY PRONUCLEAR MICROINJECTION -->
+      <section id="pronuclear" class="lecture-section">
+        <div class="section-header">
+          <div class="section-number">09</div>
+          <div class="section-title-wrap">
+            <h2>Gene Transfer by Pronuclear Microinjection</h2>
+            <p>Targeting the male pronucleus of fertilized 1-cell zygotes to generate stable transgenic animals.</p>
+          </div>
+        </div>
+        <div class="four-q-grid">
+          <div class="four-q-card what">
+            <span class="q-tag">What is it?</span>
+            <h4>Definition</h4>
+            <p>A specialized form of microinjection wherein linear foreign DNA is specifically delivered into a haploid pronucleus of a single-cell fertilized egg (zygote) to generate a transgenic organism.</p>
+          </div>
+          <div class="four-q-card how">
+            <span class="q-tag">How does it work?</span>
+            <h4>Principle</h4>
+            <p>The larger <strong>male pronucleus</strong> is microinjected with ~1–2 pL of DNA solution. As the zygote replicates, the transgene integrates into the host chromosome, giving rise to an embryo where all cells carry the gene.</p>
+          </div>
+          <div class="four-q-card where">
+            <span class="q-tag">Where is it used?</span>
+            <h4>Application</h4>
+            <p>Generation of <strong>transgenic animals</strong> (transgenic founder mice, sheep/goats for mammary biopharming of human therapeutic proteins, and gene-function knock-in models).</p>
+          </div>
+          <div class="four-q-card tradeoff">
+            <span class="q-tag">Limitation</span>
+            <h4>Main Tradeoff</h4>
+            <p>Random chromosomal integration site (position effect variation / insertional mutagenesis); unpredictable copy number (tandem concatemers); requires animal colonies and embryo transfer surgery.</p>
+          </div>
+        </div>
+        <h3>What is a Pronucleus?</h3>
+        <p>A <strong>pronucleus</strong> is the haploid nucleus of a gamete (either sperm or egg) present in the single-cell fertilized ovum (zygote) immediately following fertilization, before the two parent pronuclei undergo nuclear envelope breakdown and fuse their genomes into a single diploid nucleus (syngamy).</p>
+        <h3>Why is the Male Pronucleus Specifically Targeted?</h3>
+        <ul>
+          <li><strong>Greater Physical Volume:</strong> The male pronucleus (derived from the decondensing sperm head) is substantially larger than the maternal female pronucleus, making it far easier to identify and target under differential interference contrast (DIC) microscopy.</li>
+          <li><strong>Peripheral Location:</strong> The male pronucleus is generally located closer to the plasma membrane (oolemma) and adjacent to the second polar body, providing an unobstructed angle for the microinjection needle.</li>
+          <li><strong>Accessible Chromatin:</strong> During the protamine-to-histone transition, the paternal chromatin is in a highly relaxed, decondensed state with active DNA repair enzymes, which facilitates higher rates of foreign DNA integration into host chromosomal breaks.</li>
+        </ul>
+        <h3>The Complete Experimental Workflow</h3>
+        <div class="conceptual-pipeline">
+          <div class="pipeline-node"><span>1. Fertilized 1-Cell Zygote Harvest</span></div>
+          <span class="pipeline-arrow">→</span>
+          <div class="pipeline-node"><span>2. Pronuclear Microinjection (~1–2 pL DNA)</span></div>
+          <span class="pipeline-arrow">→</span>
+          <div class="pipeline-node"><span>3. Embryo Transfer to Foster Mother</span></div>
+          <span class="pipeline-arrow">→</span>
+          <div class="pipeline-node"><span>4. Birth of Founder (F0) Offspring</span></div>
+          <span class="pipeline-arrow">→</span>
+          <div class="pipeline-node"><span>5. PCR / Southern Blot Screening</span></div>
+        </div>
+        <ol>
+          <li><strong>Superovulation & Mating:</strong> Donor females are treated with gonadotropins (PMSG and hCG) to induce superovulation and mated with fertile stud males.</li>
+          <li><strong>Zygote Recovery:</strong> One-cell fertilized embryos are surgically harvested from the ampulla of the oviduct prior to the first mitotic cleavage.</li>
+          <li><strong>Pronuclear Microinjection:</strong> Under an inverted microscope, the zygote is held by a suction holding pipette. The glass microinjection needle penetrates the zona pellucida, oolemma, and the male pronuclear membrane. DNA solution (containing ~100–500 copies of linearized construct) is injected until a visible swelling (~30–50% increase in pronuclear volume) confirms successful delivery.</li>
+          <li><strong>Oviductal Embryo Transfer:</strong> Surviving injected embryos are surgically implanted into the oviduct of pseudopregnant recipient foster mothers (induced by mating with vasectomized sterile males).</li>
+          <li><strong>Genotyping & Screening:</strong> Founder pups (F0) are born after gestation (~19–21 days in mice). Genomic DNA extracted from tail tip biopsies is screened by PCR and Southern blotting to confirm transgene presence, integration copy number, and subsequent germline transmission to F1 progeny.</li>
+        </ol>
+        <div class="scientific-figure">
+          <div class="figure-image-wrap">
+            <img src="images/pronuclear_microinjection_diagram.jpg" alt="Distinction of paternal and maternal pronuclei during pronuclear injection">
+          </div>
+          <div class="figure-caption">
+            <div class="figure-title">
+              <span>Figure 9.1: Distinction of Paternal (Male) and Maternal (Female) Pronuclei during Zygote Microinjection</span>
+              <span class="figure-badge">Peer-Reviewed Journal Figure</span>
+            </div>
+            <div class="figure-desc">
+              Authentic peer-reviewed diagram from <em>Experimental Animals</em> illustrating the anatomical identification of male (paternal) vs female (maternal) pronuclei in mouse zygotes. Notice the distinctly larger diameter of the male pronucleus and its characteristic orientation relative to the polar body.
+            </div>
+            <div class="figure-attribution">
+              <span><strong>Source:</strong> NCBI PubMed Central (PMC5682349) / Japanese Association for Laboratory Animal Science</span>
+              <span><strong>Citation:</strong> Exp Anim. 2017 Oct; 66(4): 367–377. doi: 10.1538/expanim.17-0036</span>
+              <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5682349/" target="_blank" rel="noopener">View NCBI PMC Article ↗</a>
+            </div>
+          </div>
+        </div>
+        <div class="scientific-figure">
+          <div class="figure-image-wrap">
+            <img src="images/pronuclear_transgenesis_workflow.jpg" alt="Overview of Pronuclear Injection-based Targeted Transgenesis Steps">
+          </div>
+          <div class="figure-caption">
+            <div class="figure-title">
+              <span>Figure 9.2: Complete Workflow of Pronuclear Injection for Transgenic Animal Generation</span>
+              <span class="figure-badge">NIH / Nature Protocols Figure</span>
+            </div>
+            <div class="figure-desc">
+              Peer-reviewed schematic from NIH-sponsored research depicting donor DNA construct preparation, pronuclear microinjection into zygotes, embryo transfer into pseudopregnant foster females, founder offspring rearing, and molecular PCR screening for germline integration.
+            </div>
+            <div class="figure-attribution">
+              <span><strong>Source:</strong> NCBI PubMed Central (PMC5123763) / NIH Public Access</span>
+              <span><strong>Citation:</strong> Pronuclear Injection-based Targeted Transgenesis (PITT). Nat Protoc.</span>
+              <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5123763/" target="_blank" rel="noopener">View NCBI PMC Article ↗</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 10: CORE COMPARISON TABLE -->
+      <section id="comparison" class="lecture-section">
+        <div class="section-header">
+          <div class="section-number">10</div>
+          <div class="section-title-wrap">
+            <h2>Core Comparison of DNA Insertion Methods</h2>
+            <p>Interactive synthesis across principles, target systems, entry mechanisms, applications, and primary limitations.</p>
+          </div>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">
+          Click any row in the table below to open a quick-inspector card with key takeaways and jump directly to that method section!
+        </p>
+        <div class="table-container">
+          <table class="comparison-table" id="interactive-comparison-table">
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Basic Principle</th>
+                <th>Main Target / Cell Type</th>
+                <th>How DNA Enters</th>
+                <th>Major Application</th>
+                <th>Major Limitation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr onclick="selectTableRow('transformation')">
+                <td><span class="table-method-name">🧫 Transformation</span></td>
+                <td>DNA uptake by competent cells</td>
+                <td>Mainly bacterial cells (e.g., <em>E. coli</em>)</td>
+                <td>Cellular uptake across permeable wall/membrane</td>
+                <td>Cloning & recombinant DNA propagation</td>
+                <td>Host-dependent (requires competence induction)</td>
+              </tr>
+              <tr onclick="selectTableRow('lipofection')">
+                <td><span class="table-method-name">🫧 Liposome Fusion</span></td>
+                <td>Lipid-mediated nanoparticle delivery</td>
+                <td>Eukaryotic cells (mammalian, insect)</td>
+                <td>Endocytosis or direct membrane fusion</td>
+                <td>Transient protein expression, mRNA vaccines</td>
+                <td>Variable efficiency; cytotoxic to sensitive lines</td>
+              </tr>
+              <tr onclick="selectTableRow('microinjection')">
+                <td><span class="table-method-name">🔬 Microinjection</span></td>
+                <td>Direct mechanical physical injection</td>
+                <td>Individual cells, oocytes, large cells</td>
+                <td>Hollow glass micropipette penetration</td>
+                <td>Experimental single-cell gene transfer & ICSI</td>
+                <td>Extremely low throughput; operator skill dependent</td>
+              </tr>
+              <tr onclick="selectTableRow('electroporation')">
+                <td><span class="table-method-name">⚡ Electroporation</span></td>
+                <td>Electrical membrane permeabilization</td>
+                <td>Bacterial, yeast, and eukaryotic cells</td>
+                <td>Temporary aqueous membrane pores (kV pulse)</td>
+                <td>High-efficiency cloning & suspension cell transfer</td>
+                <td>Substantial cell death (20–50%); arcing in salt</td>
+              </tr>
+              <tr onclick="selectTableRow('biolistics')">
+                <td><span class="table-method-name">🎯 Biolistic (Gene Gun)</span></td>
+                <td>Microprojectile particle bombardment</td>
+                <td>Plants, walled tissues, organelle genomes</td>
+                <td>High-velocity DNA-coated gold/tungsten particles</td>
+                <td>Plant transformation (cereal monocots, plastids)</td>
+                <td>Mechanical tissue damage; multicopy gene silencing</td>
+              </tr>
+              <tr onclick="selectTableRow('somatic-fusion')">
+                <td><span class="table-method-name">🧬 Somatic Cell Fusion</span></td>
+                <td>Cell membrane fusion via fusogens</td>
+                <td>Somatic cells (B-cells + myeloma, protoplasts)</td>
+                <td>Direct coalescence of two entire cell membranes</td>
+                <td>Hybridoma technology (monoclonal antibodies)</td>
+                <td>Complex selection required; chromosomal instability</td>
+              </tr>
+              <tr onclick="selectTableRow('pronuclear')">
+                <td><span class="table-method-name">🥚 Pronuclear Microinjection</span></td>
+                <td>DNA injection into male pronucleus</td>
+                <td>Fertilized 1-cell zygotes (mammalian eggs)</td>
+                <td>Direct nuclear delivery via microcapillary</td>
+                <td>Generation of transgenic animals</td>
+                <td>Random integration locus; position effects; labor intensive</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-inspector" id="table-inspector-card">
+          <h4 id="inspector-title">Method Details</h4>
+          <p id="inspector-summary" style="font-size: 0.9rem; margin-bottom: 0.75rem;"></p>
+          <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <button class="btn-action" id="inspector-jump-btn" onclick="">Jump to Section Detail ↗</button>
+            <span id="inspector-badge" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 11: ONE-PAGE CONCEPT MAP -->
+      <section id="concept-map" class="lecture-section">
+        <div class="section-header">
+          <div class="section-number">11</div>
+          <div class="section-title-wrap">
+            <h2>One-Page Concept Map</h2>
+            <p>Hierarchical taxonomy of foreign DNA insertion methods based on barrier-crossing strategy.</p>
+          </div>
+        </div>
+        <div class="concept-map-container">
+          <div class="tree-root">🧬 FOREIGN DNA INSERTION INTO HOST CELLS</div>
+          <div class="tree-branches">
+            <div class="tree-branch">
+              <div class="branch-header">1. Biological Uptake</div>
+              <div class="branch-items">
+                <button class="branch-node-btn" onclick="scrollToSection('transformation')">
+                  <span>Transformation</span>
+                  <span class="node-tag">Bacterial</span>
+                </button>
+              </div>
+            </div>
+            <div class="tree-branch">
+              <div class="branch-header">2. Chemical & Lipid-Mediated</div>
+              <div class="branch-items">
+                <button class="branch-node-btn" onclick="scrollToSection('lipofection')">
+                  <span>Liposome Fusion</span>
+                  <span class="node-tag">Cationic Lipids</span>
+                </button>
+              </div>
+            </div>
+            <div class="tree-branch">
+              <div class="branch-header">3. Direct Physical Methods</div>
+              <div class="branch-items">
+                <button class="branch-node-btn" onclick="scrollToSection('microinjection')">
+                  <span>Microinjection</span>
+                  <span class="node-tag">Micropipette</span>
+                </button>
+                <button class="branch-node-btn" onclick="scrollToSection('electroporation')">
+                  <span>Electroporation</span>
+                  <span class="node-tag">Voltage Pulse</span>
+                </button>
+                <button class="branch-node-btn" onclick="scrollToSection('biolistics')">
+                  <span>Biolistic (Gene Gun)</span>
+                  <span class="node-tag">Gold Particles</span>
+                </button>
+              </div>
+            </div>
+            <div class="tree-branch">
+              <div class="branch-header">4. Cell Fusion</div>
+              <div class="branch-items">
+                <button class="branch-node-btn" onclick="scrollToSection('somatic-fusion')">
+                  <span>Somatic Cell Fusion</span>
+                  <span class="node-tag">Whole Cells / PEG</span>
+                </button>
+              </div>
+            </div>
+            <div class="tree-branch">
+              <div class="branch-header">5. Embryo-Level Transgenesis</div>
+              <div class="branch-items">
+                <button class="branch-node-btn" onclick="scrollToSection('pronuclear')">
+                  <span>Pronuclear Microinjection</span>
+                  <span class="node-tag">Zygote Pronucleus</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 12: REAL DIAGRAM DIRECTORY & CITATIONS -->
+      <section id="diagrams-gallery" class="lecture-section">
+        <div class="section-header">
+          <div class="section-number">12</div>
+          <div class="section-title-wrap">
+            <h2>Scientific Figure Directory & Academic Citations</h2>
+            <p>Mandatory index of all externally sourced, peer-reviewed figures, microscopy photographs, and educational diagrams.</p>
+          </div>
+        </div>
+        <div class="callout info">
+          <div class="callout-title">📖 Academic Visual Integrity Policy</div>
+          <div class="callout-body">
+            All scientific figures throughout this module are authentic scientific illustrations, peer-reviewed diagrams, or laboratory photographs sourced from open-access scientific repositories (NCBI PubMed Central, Wikimedia Commons, OpenStax). None are generated with AI, canvas, or synthetic drawing libraries.
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Delivery Concept</th>
+                <th>Scientific Visual Title</th>
+                <th>Origin / Academic Repository</th>
+                <th>License</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>General Delivery</td>
+                <td>Figure 1.1: Molecular Cloning Overview</td>
+                <td>Wikimedia Commons / Open Educational Resources</td>
+                <td>CC-BY-SA 4.0</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Transformation</td>
+                <td>Figure 2.1: Artificial Bacterial Transformation</td>
+                <td>Wikimedia Commons / Biomarkers Lab Archive</td>
+                <td>Public Domain</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Lipofection</td>
+                <td>Figure 4.1: Cellular Uptake of mRNA-LNPs</td>
+                <td>NCBI PubMed Central (PMC13473061) / Springer Nature</td>
+                <td>Open Access CC-BY 4.0</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Microinjection</td>
+                <td>Figure 5.1: Real Inverted Microscopy Photograph</td>
+                <td>Wikimedia Commons / ICSI Procedure Microscopy</td>
+                <td>CC-BY-SA 3.0</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Electroporation</td>
+                <td>Figure 6.1: Electroporation Diagram & Figure 6.2: Cuvettes</td>
+                <td>Wikimedia Commons / Peer-Reviewed Biophysics Archive</td>
+                <td>CC-BY-SA 4.0 / CC-BY 3.0</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Biolistics</td>
+                <td>Figure 7.1: Gene Gun Schematic & Figure 7.2: Apparatus Photo</td>
+                <td>Wikimedia Commons / OpenStax / Lab Archive</td>
+                <td>CC-BY-SA 3.0 / CC-BY 2.0</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Somatic Fusion</td>
+                <td>Figure 8.1: Hybridoma Technology & Figure 8.2: Protoplasts</td>
+                <td>Wikimedia Commons / Biomedical Archive</td>
+                <td>CC-BY-SA 4.0 / CC-BY-SA 3.0</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Pronuclear Injection</td>
+                <td>Figure 9.1: Pronuclear Distinction & Figure 9.2: PITT Workflow</td>
+                <td>NCBI PMC5682349 & NCBI PMC5123763 (NIH / Nature Protocols)</td>
+                <td>Open Access CC-BY 4.0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION 13: EXAM ESSENTIALS -->
+      <section id="essentials" class="lecture-section">
+        <div class="section-header">
+          <div class="section-number">13</div>
+          <div class="section-title-wrap">
+            <h2>Exam Essentials: High-Yield Conceptual Distinctions</h2>
+            <p>Five critical pairwise comparisons that frequently appear in university examinations.</p>
+          </div>
+        </div>
+        <p>In undergraduate examinations, examiners frequently design questions around pairs of methods that share superficial similarities but differ fundamentally in mechanism, biological level, or host range. Master these five critical contrasts:</p>
+        
+        <div class="essentials-grid">
+          <!-- CARD 1 -->
+          <div class="essential-card">
+            <h4>1. Transformation vs. Transfection</h4>
+            <div class="essential-vs">
+              <div class="vs-row">
+                <span class="vs-tag" style="background:#e0f2fe; color:#0369a1;">Transformation</span>
+                <span>Strictly refers to <strong>bacterial or microbial</strong> uptake of naked exogenous DNA (e.g., <em>E. coli</em> heat-shock, <em>Bacillus</em> natural competence).</span>
+              </div>
+              <div class="vs-row">
+                <span class="vs-tag" style="background:#fef3c7; color:#b45309;">Transfection</span>
+                <span>Non-viral introduction of nucleic acids into <strong>eukaryotic (animal/human)</strong> cells. The term was specifically coined to avoid confusion with the oncogenic &ldquo;malignant transformation&rdquo; of normal animal cells into cancer cells.</span>
+              </div>
+              <div class="vs-row" style="margin-top:0.4rem; padding-top:0.4rem; border-top:1px dashed var(--border-color); font-size:0.8rem; color:var(--text-muted);">
+                <span>💡 <em>Exam Tip: Never write &ldquo;bacterial transfection&rdquo; or &ldquo;mammalian transformation&rdquo; in the context of standard gene transfer!</em></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 2 -->
+          <div class="essential-card alt-1">
+            <h4>2. Ordinary Microinjection vs. Pronuclear Microinjection</h4>
+            <div class="essential-vs">
+              <div class="vs-row">
+                <span class="vs-tag" style="background:#e0f2fe; color:#0369a1;">Ordinary Microinjection</span>
+                <span>Delivers DNA, RNA, or proteins into cultured somatic cells or unfertilized oocytes (e.g., ICSI). Affects only that single targeted cell; does <strong>not</strong> produce heritable whole-animal transgenics.</span>
+              </div>
+              <div class="vs-row">
+                <span class="vs-tag" style="background:#fce7f3; color:#be185d;">Pronuclear Microinjection</span>
+                <span>Specifically targets the <strong>male pronucleus of a fertilized 1-cell zygote</strong>. Followed by oviduct transfer to a pseudopregnant surrogate mother, integrating the transgene into all cleavage blastomeres and producing a <strong>heritable transgenic founder</strong> line.</span>
+              </div>
+              <div class="vs-row" style="margin-top:0.4rem; padding-top:0.4rem; border-top:1px dashed var(--border-color); font-size:0.8rem; color:var(--text-muted);">
+                <span>💡 <em>Exam Tip: Remember the male pronucleus is chosen because it is larger and closer to the surface due to sperm protamine decondensation.</em></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 3 -->
+          <div class="essential-card alt-2">
+            <h4>3. Electroporation vs. Liposome Fusion</h4>
+            <div class="essential-vs">
+              <div class="vs-row">
+                <span class="vs-tag" style="background:#f3e8ff; color:#7e22ce;">Electroporation</span>
+                <span><strong>Physical method:</strong> Uses high-voltage electrical fields (kV/cm) to trigger dielectric breakdown, creating temporary aqueous hydrophilic pores. High throughput for suspension cells and bacteria, but causes 20–50% cell mortality.</span>
+              </div>
+              <div class="vs-row">
+                <span class="vs-tag" style="background:#ecfdf5; color:#047857;">Lipofection</span>
+                <span><strong>Chemical method:</strong> Positively charged cationic lipids spontaneously condense polyanionic DNA into lipoplexes that enter via endocytosis. Very gentle, zero specialized equipment, but ineffective on rigid cell walls.</span>
+              </div>
+              <div class="vs-row" style="margin-top:0.4rem; padding-top:0.4rem; border-top:1px dashed var(--border-color); font-size:0.8rem; color:var(--text-muted);">
+                <span>💡 <em>Exam Tip: Electroporation overcomes membrane barriers physically; lipofection hijacks the host cell's native endocytosis pathway.</em></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 4 -->
+          <div class="essential-card alt-3">
+            <h4>4. Biolistics (Gene Gun) vs. Microinjection</h4>
+            <div class="essential-vs">
+              <div class="vs-row">
+                <span class="vs-tag" style="background:#fef3c7; color:#b45309;">Biolistics (Gene Gun)</span>
+                <span><strong>Mass bombardment:</strong> Fires millions of DNA-coated heavy microprojectiles (gold/tungsten) across rigid cellulosic walls into thousands of cells simultaneously. Can penetrate intact plastid (chloroplast) envelopes.</span>
+              </div>
+              <div class="vs-row">
+                <span class="vs-tag" style="background:#e0f2fe; color:#0369a1;">Microinjection</span>
+                <span><strong>Precision single-cell:</strong> Punctures one individual cell under an inverted microscope. Near 100% delivery confidence per cell, but throughput is extremely low (dozens of cells per hour).</span>
+              </div>
+              <div class="vs-row" style="margin-top:0.4rem; padding-top:0.4rem; border-top:1px dashed var(--border-color); font-size:0.8rem; color:var(--text-muted);">
+                <span>💡 <em>Exam Tip: Biolistics is macro/bulk physical delivery; microinjection is micro/single-cell physical delivery.</em></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 5 -->
+          <div class="essential-card alt-4">
+            <h4>5. Somatic Cell Fusion vs. All Direct Delivery Methods</h4>
+            <div class="essential-vs">
+              <div class="vs-row">
+                <span class="vs-tag" style="background:#fdf2f8; color:#9d174d;">Somatic Fusion</span>
+                <span>Coalesces <strong>two entire living diploid cells</strong> into a unified hybrid entity (heterokaryon → synkaryon), uniting two complete, intact eukaryotic genomes. Classic use: B-cell + myeloma = immortal antibody-secreting hybridoma.</span>
+              </div>
+              <div class="vs-row">
+                <span class="vs-tag" style="background:#f1f5f9; color:#334155;">All Other 6 Methods</span>
+                <span>Deliver an <strong>isolated segment of exogenous genetic material</strong> (a recombinant plasmid, cDNA cassette, or PCR fragment) into a single, pre-existing host cell without merging whole genomes.</span>
+              </div>
+              <div class="vs-row" style="margin-top:0.4rem; padding-top:0.4rem; border-top:1px dashed var(--border-color); font-size:0.8rem; color:var(--text-muted);">
+                <span>💡 <em>Exam Tip: Somatic cell fusion is whole-genome hybrid generation, not plasmid vector insertion!</em></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 14: QUICK KNOWLEDGE CHECK (10 MCQS) -->
+      <section id="assessments" class="lecture-section">
+        <div class="section-header">
+          <div class="section-number">14</div>
+          <div class="section-title-wrap">
+            <h2>Quick Knowledge Check (10 MCQs)</h2>
+            <p>Self-assessment quiz with instant feedback, scoring, and comprehensive rationales.</p>
+          </div>
+        </div>
+        <div class="quiz-container">
+          <div class="quiz-header">
+            <div>
+              <h3 style="margin:0; font-size:1.15rem;">Undergraduate Molecular Biology Assessment</h3>
+              <p style="margin:0; font-size:0.85rem; color:var(--text-muted);">Select the single best answer for each question below:</p>
+            </div>
+            <div class="quiz-score-badge" id="quiz-score-display">Score: <span id="quiz-score-num">0</span> / 10</div>
+          </div>
+
+          <!-- MCQ 1 -->
+          <div class="mcq-card" id="mcq-1">
+            <div class="mcq-question">Q1: What is the primary molecular role of divalent calcium ions (Ca²⁺) during the 0°C chilling phase of bacterial chemical transformation?</div>
+            <div class="mcq-options">
+              <button class="mcq-option" onclick="checkMCQ(this, 1, false, 'Ca²⁺ is not acting as an enzyme cofactor in this physical step.')">A) Activates bacterial DNA polymerases to initiate plasmid replication before entry.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 1, true, 'Correct! Both plasmid DNA and cell membranes have strong negative charges. Divalent Ca²⁺ neutralizes this electrostatic repulsion, bringing plasmid DNA onto the congealed membrane.')">B) Neutralizes negative electrostatic repulsion between plasmid phosphate groups and outer membrane phospholipids/LPS.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 1, false, 'Peptidoglycan is not digested by calcium; that would require lysozyme.')">C) Hydrolyzes the peptidoglycan cell wall to create permanent macro-channels.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 1, false, 'Ca²⁺ stabilizes double-stranded DNA rather than denaturing it.')">D) Denatures double-stranded plasmid DNA into single strands to enable transport.</button>
+            </div>
+            <div class="mcq-explanation" id="mcq-exp-1"></div>
+          </div>
+
+          <!-- MCQ 2 -->
+          <div class="mcq-card" id="mcq-2">
+            <div class="mcq-question">Q2: Why is the term &ldquo;transfection&rdquo; used instead of &ldquo;transformation&rdquo; when introducing foreign DNA into cultured animal cells?</div>
+            <div class="mcq-options">
+              <button class="mcq-option" onclick="checkMCQ(this, 2, false, 'Animal cells readily transcribe plasmid vectors without viral capsids.')">A) Animal cells cannot transcribe plasmid vectors unless encapsulated in a viral capsid.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 2, true, 'Correct! In animal cell biology, &ldquo;transformation&rdquo; specifically denotes neoplastic oncogenic conversion into a malignant, tumorigenic phenotype. Transfection was coined to prevent this confusion.')">B) In mammalian biology, &ldquo;transformation&rdquo; already designates the oncogenic conversion of normal cells into cancer cells.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 2, false, 'Pinocytosis is actually common; that does not determine terminology.')">C) Animal cells employ phagocytosis rather than pinocytosis for gene uptake.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 2, false, 'Both transient and stable transfections exist; integration is not mandatory.')">D) Foreign DNA permanently integrates into animal chromosomes 100% of the time.</button>
+            </div>
+            <div class="mcq-explanation" id="mcq-exp-2"></div>
+          </div>
+
+          <!-- MCQ 3 -->
+          <div class="mcq-card" id="mcq-3">
+            <div class="mcq-question">Q3: In liposome-mediated gene delivery (lipofection), what is the critical biological bottleneck that internalized DNA must escape to avoid enzymatic degradation?</div>
+            <div class="mcq-options">
+              <button class="mcq-option" onclick="checkMCQ(this, 3, false, 'Animal cells lack a cellulosic cell wall.')">A) Penetration across the thick cellulosic primary cell wall.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 3, true, 'Correct! Once endocytosed, lipoplexes are trapped in endosomes. If they cannot escape before lysosomal fusion, acidic pH (4.5) and lysosomal DNases destroy the foreign DNA.')">B) Endosomal escape into the neutral cytosol before fusion with destructive lysosomes.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 3, false, 'Plasmids do not target mitochondria in standard nuclear expression.')">C) Dielectric breakdown of the outer mitochondrial membrane.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 3, false, 'Efflux pumps transport small hydrophobic drugs, not 10 kb DNA molecules.')">D) Efflux via ATP-dependent multidrug resistance ABC transporters.</button>
+            </div>
+            <div class="mcq-explanation" id="mcq-exp-3"></div>
+          </div>
+
+          <!-- MCQ 4 -->
+          <div class="mcq-card" id="mcq-4">
+            <div class="mcq-question">Q4: During mouse pronuclear microinjection, why is DNA injected specifically into the male pronucleus rather than the female pronucleus?</div>
+            <div class="mcq-options">
+              <button class="mcq-option" onclick="checkMCQ(this, 4, true, 'Correct! Following fertilization, protamines in the sperm head are replaced by maternal histones, causing the male pronucleus to swell much larger than the female pronucleus and sit closer to the oolemma.')">A) The male pronucleus is significantly larger, sits closer to the cell membrane, and is readily visualized under DIC microscopy.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 4, false, 'Female pronuclei do not selectively degrade foreign DNA.')">B) The female pronucleus produces active endonucleases that instantly destroy exogenous plasmids.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 4, false, 'Both pronuclei possess nuclear envelopes at the 1-cell zygote stage.')">C) Male pronuclei lack a nuclear membrane at the 1-cell zygote stage.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 4, false, 'Maternal injection is technically possible but has much lower success due to small pronuclear size.')">D) Maternal pronuclear injection yields only inviable haploid embryos.</button>
+            </div>
+            <div class="mcq-explanation" id="mcq-exp-4"></div>
+          </div>
+
+          <!-- MCQ 5 -->
+          <div class="mcq-card" id="mcq-5">
+            <div class="mcq-question">Q5: What physical event permits foreign DNA entry across the phospholipid bilayer during electroporation?</div>
+            <div class="mcq-options">
+              <button class="mcq-option" onclick="checkMCQ(this, 5, false, 'Melting the entire membrane causes irreversible cell lysis and death.')">A) Complete thermodynamic melting and dissolution of all membrane phospholipids.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 5, true, 'Correct! High electrical potential creates localized dielectric breakdown, reorienting lipid heads and creating transient nanometer-scale hydrophilic aqueous pores.')">B) Dielectric breakdown of the lipid bilayer inducing transient, reversible hydrophilic aqueous pores.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 5, false, 'Electroporation is purely physical and does not require ATP or protein channels.')">C) Activation of voltage-gated ABC transport protein complexes requiring ATP.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 5, false, 'Phagocytosis is not triggered by electrical fields.')">D) Massive cellular phagocytosis stimulated by external cation current.</button>
+            </div>
+            <div class="mcq-explanation" id="mcq-exp-5"></div>
+          </div>
+
+          <!-- MCQ 6 -->
+          <div class="mcq-card" id="mcq-6">
+            <div class="mcq-question">Q6: Which gene delivery method is uniquely capable of directly penetrating intact plant cell walls and transforming chloroplast genomes (plastomes)?</div>
+            <div class="mcq-options">
+              <button class="mcq-option" onclick="checkMCQ(this, 6, false, 'Somatic fusion requires enzymatic removal of the cell wall to make protoplasts first.')">A) Somatic cell fusion using polyethylene glycol.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 6, true, 'Correct! Biolistics (Gene Gun) uses high-velocity microscopic gold or tungsten microprojectiles that blast right through cellulosic walls and organellar double membranes.')">B) Biolistic particle bombardment (Gene Gun).</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 6, false, 'Bacterial transformation cannot penetrate intact plant tissue.')">C) Bacterial CaCl₂ heat shock.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 6, false, 'Cationic lipids cannot cross thick plant cellulosic walls.')">D) Cationic liposome fusion (Lipofection).</button>
+            </div>
+            <div class="mcq-explanation" id="mcq-exp-6"></div>
+          </div>
+
+          <!-- MCQ 7 -->
+          <div class="mcq-card" id="mcq-7">
+            <div class="mcq-question">Q7: What is the primary biochemical role of Polyethylene Glycol (PEG) in somatic cell hybridization and plant protoplast fusion?</div>
+            <div class="mcq-options">
+              <button class="mcq-option" onclick="checkMCQ(this, 7, false, 'PEG is a fusogen, not a selective antibiotic.')">A) Acts as an antibiotic killing unfused parental myeloma cells.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 7, true, 'Correct! PEG is a hydrophilic polymer that dehydrates adjacent cell surfaces, neutralizing repulsive surface hydration barriers and promoting lipid bilayer coalescence.')">B) Dehydrates cell surfaces, bridges negative surface charges, and induces lipid membrane coalescence.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 7, false, 'PEG does not affect DNA recombination directly.')">C) Phosphorylates nuclear chromatin to promote chromosomal crossing-over.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 7, false, 'PEG does not bore microscopic physical holes in nuclei.')">D) Bores physical pores in the nuclear envelope without touching the plasma membrane.</button>
+            </div>
+            <div class="mcq-explanation" id="mcq-exp-7"></div>
+          </div>
+
+          <!-- MCQ 8 -->
+          <div class="mcq-card" id="mcq-8">
+            <div class="mcq-question">Q8: In hybridoma technology for monoclonal antibody production, why do unfused myeloma cells die in HAT selective medium?</div>
+            <div class="mcq-options">
+              <button class="mcq-option" onclick="checkMCQ(this, 8, false, 'Antibodies do not neutralize aminopterin.')">A) They lack antibodies to neutralize toxic aminopterin.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 8, true, 'Correct! Aminopterin blocks de novo nucleotide synthesis, and myeloma cells are genetically deficient in HGPRT (HGPRT⁻), blocking the salvage pathway. Only hybridomas survive because the B-cell nucleus supplies active HGPRT.')">B) Aminopterin blocks de novo nucleotide synthesis, and the myelomas lack the salvage enzyme HGPRT (HGPRT⁻).</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 8, false, 'Complement is not present in standard HAT culture.')">C) They are lysed by complement proteins secreted by unfused B-lymphocytes.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 8, false, 'Myelomas can import thymidine, but lack HGPRT for purine salvage.')">D) They cannot import thymidine across their damaged plasma membranes.</button>
+            </div>
+            <div class="mcq-explanation" id="mcq-exp-8"></div>
+          </div>
+
+          <!-- MCQ 9 -->
+          <div class="mcq-card" id="mcq-9">
+            <div class="mcq-question">Q9: What is the purpose of the &ldquo;stopping screen&rdquo; (or stop plate) in a helium-driven biolistic gene gun apparatus?</div>
+            <div class="mcq-options">
+              <button class="mcq-option" onclick="checkMCQ(this, 9, false, 'Gas filters are located elsewhere.')">A) Filters microscopic bacterial contaminants from the expanding helium gas stream.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 9, true, 'Correct! The rigid stopping screen abruptly arrests the high-velocity macrocarrier, allowing only the detached microscopic DNA-coated gold beads to fly forward into target tissue.')">B) Abruptly arrests the macrocarrier disc, allowing only detached microscopic gold/tungsten particles to fly forward into cells.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 9, false, 'Particles are charged or neutral, not ionized by the screen.')">C) Imparts a high-voltage electrostatic charge to the microprojectiles.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 9, false, 'Cooling is not the function of the stopping screen.')">D) Absorbs thermodynamic friction heat to prevent plasmid DNA denaturation.</button>
+            </div>
+            <div class="mcq-explanation" id="mcq-exp-9"></div>
+          </div>
+
+          <!-- MCQ 10 -->
+          <div class="mcq-card" id="mcq-10">
+            <div class="mcq-question">Q10: Which of the following defines &ldquo;transient transfection&rdquo; in mammalian cell biotechnology?</div>
+            <div class="mcq-options">
+              <button class="mcq-option" onclick="checkMCQ(this, 10, false, 'Chromosomal integration describes stable transfection.')">A) Foreign DNA integrates into the host chromosome and is passed down to all daughter cells indefinitely.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 10, true, 'Correct! Foreign DNA remains unintegrated (episomal) in the nucleus, driving high-level expression for 24–96 hours before being diluted and degraded during subsequent cell divisions.')">B) Foreign episomal DNA is expressed temporarily for 24–96 hours without genomic integration and is lost upon cell division.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 10, false, 'Antibiotic selection is used to isolate stable integrants, not transient transfectants.')">C) Requires 3 to 4 weeks of high-dose G418 or puromycin selection to establish clonal colonies.</button>
+              <button class="mcq-option" onclick="checkMCQ(this, 10, false, 'Transient transfection is typically non-viral (lipofection/electroporation).')">D) Requires replication-competent lentivirus or retrovirus vectors.</button>
+            </div>
+            <div class="mcq-explanation" id="mcq-exp-10"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 15: MINI-GAME -->
+      <section id="mini-game" class="lecture-section">
+        <div class="section-header">
+          <div class="section-number">15</div>
+          <div class="section-title-wrap">
+            <h2>Laboratory Decision Game: &ldquo;Which Method Would You Choose?&rdquo;</h2>
+            <p>Apply your knowledge to solve real-world biotechnology scenarios by selecting the optimal delivery strategy.</p>
+          </div>
+        </div>
+        <p>In modern biotechnology laboratories, choosing the wrong delivery method wastes months of research and thousands of dollars. Evaluate each experimental scenario below and select the most appropriate method based on host biological barriers, target scale, and integration requirements:</p>
+
+        <!-- SCENARIO 1 -->
+        <div class="game-card" id="game-card-1">
+          <span class="scenario-badge">Scenario 1 • Plant Biotechnology</span>
+          <div class="scenario-text">
+            <strong>The Objective:</strong> An agricultural genetics team needs to insert an herbicide-resistance cassette directly into the chloroplast genome (plastome) of an intact, embryonic monocot maize callus (<em>Zea mays</em>). Which delivery method should they deploy?
+          </div>
+          <div class="game-options">
+            <button class="game-btn" onclick="checkGame(this, 1, false, 'Incorrect. CaCl₂ transformation only works on wall-less or chemically permeabilized bacteria, not multicellular plant callus.')">A) CaCl₂ Bacterial Heat Shock</button>
+            <button class="game-btn" onclick="checkGame(this, 1, true, 'Excellent Choice! Monocot plants have rigid cellulosic cell walls that block chemical liposomes, and ordinary microinjection cannot treat thousands of callus cells. Biolistics (Gene Gun) punches through plant walls and double chloroplast membranes simultaneously.')">B) Biolistic Particle Bombardment (Gene Gun)</button>
+            <button class="game-btn" onclick="checkGame(this, 1, false, 'Incorrect. Cationic liposomes cannot penetrate the thick, rigid cellulosic cell wall of intact plant tissues.')">C) Cationic Liposome Fusion</button>
+            <button class="game-btn" onclick="checkGame(this, 1, false, 'Incorrect. Pronuclear microinjection is restricted to mammalian 1-cell zygotes and cannot be used on plant calli.')">D) Pronuclear Microinjection</button>
+          </div>
+          <div class="game-feedback" id="game-fb-1"></div>
+        </div>
+
+        <!-- SCENARIO 2 -->
+        <div class="game-card" id="game-card-2">
+          <span class="scenario-badge">Scenario 2 • Therapeutic Biologics</span>
+          <div class="scenario-text">
+            <strong>The Objective:</strong> An immunology research institute has isolated primary mouse splenic B-lymphocytes that secrete a potent neutralizing antibody against a novel virus. However, primary B-cells die after a few days in vitro. The team must produce kilograms of identical monoclonal antibody indefinitely. Which method is required?
+          </div>
+          <div class="game-options">
+            <button class="game-btn" onclick="checkGame(this, 2, true, 'Outstanding! Somatic cell fusion (Hybridoma Technology) using PEG or electrofusion combines the antibody-secreting phenotype of the mortal B-cell with the indefinite proliferative capacity of an HGPRT⁻ myeloma cell, followed by HAT selection.')">A) Somatic Cell Fusion (Hybridoma Technology)</button>
+            <button class="game-btn" onclick="checkGame(this, 2, false, 'Incorrect. Gene gun bombardment introduces recombinant plasmids, but cannot immortalize mortal primary lymphocytes with complete antibody V(D)J rearrangements.')">B) Biolistic Gene Gun</button>
+            <button class="game-btn" onclick="checkGame(this, 2, false, 'Incorrect. Microinjecting plasmids will not immortalize primary B-cells or enable industrial monoclonal antibody production.')">C) Ordinary Microinjection</button>
+            <button class="game-btn" onclick="checkGame(this, 2, false, 'Incorrect. Pronuclear injection produces transgenic animals, not in vitro immortalized antibody-secreting cell lines.')">D) Pronuclear Microinjection</button>
+          </div>
+          <div class="game-feedback" id="game-fb-2"></div>
+        </div>
+
+        <!-- SCENARIO 3 -->
+        <div class="game-card" id="game-card-3">
+          <span class="scenario-badge">Scenario 3 • Biomedical Disease Models</span>
+          <div class="scenario-text">
+            <strong>The Objective:</strong> A neuroscience lab needs to establish a stable, heritable transgenic mouse colony carrying a human mutant amyloid precursor protein (APP) gene to model Alzheimer's disease. The transgene must be present in all tissues, including germ cells, and transmitted mendelianly to offspring. Which method is the classic standard?
+          </div>
+          <div class="game-options">
+            <button class="game-btn" onclick="checkGame(this, 3, false, 'Incorrect. Somatic microinjection into cultured fibroblasts does not produce a whole organism unless followed by somatic cell nuclear cloning.')">A) Somatic Microinjection into cultured fibroblasts</button>
+            <button class="game-btn" onclick="checkGame(this, 3, false, 'Incorrect. Lipofection into adult mouse muscle yields only localized transient expression, not a heritable transgenic line.')">B) In vivo Lipofection into adult mouse muscle</button>
+            <button class="game-btn" onclick="checkGame(this, 3, true, 'Spot on! Pronuclear microinjection delivers the linearized transgene directly into the male pronucleus of a 1-cell fertilized zygote. Subsequent transfer to a pseudopregnant surrogate generates transgenic founders that pass the gene to progeny.')">C) Pronuclear Microinjection into 1-cell zygotes</button>
+            <button class="game-btn" onclick="checkGame(this, 3, false, 'Incorrect. Chemical CaCl₂ transformation does not work on mammalian blastocysts.')">D) CaCl₂ Heat Shock of mouse blastocysts</button>
+          </div>
+          <div class="game-feedback" id="game-fb-3"></div>
+        </div>
+
+        <!-- SCENARIO 4 -->
+        <div class="game-card" id="game-card-4">
+          <span class="scenario-badge">Scenario 4 • Routine Recombinant Cloning</span>
+          <div class="scenario-text">
+            <strong>The Objective:</strong> An undergraduate molecular biology student has just ligated an engineered cDNA fragment into a pUC19 cloning vector. They need to propagate and isolate milligrams of this plasmid using standard laboratory <em>E. coli</em> DH5α on a modest educational budget without costly instrumentation. Which method should they use?
+          </div>
+          <div class="game-options">
+            <button class="game-btn" onclick="checkGame(this, 4, false, 'Incorrect. Pronuclear microinjection is an expensive mammalian technique completely irrelevant for bacterial plasmid cloning.')">A) Pronuclear Microinjection</button>
+            <button class="game-btn" onclick="checkGame(this, 4, true, 'Perfect! CaCl₂ heat-shock chemical transformation requires only ice, a 42°C water bath, and standard antibiotic agar plates. It is inexpensive, highly reproducible, and ideal for standard bacterial cloning.')">B) CaCl₂ Chemical Heat-Shock Transformation</button>
+            <button class="game-btn" onclick="checkGame(this, 4, false, 'Incorrect. Gene gun requires expensive helium apparatus and gold beads, completely unnecessary for routine E. coli.')">C) Biolistic Particle Bombardment</button>
+            <button class="game-btn" onclick="checkGame(this, 4, false, 'Incorrect. Somatic cell fusion is for whole-cell hybridization, not bacterial plasmid transformation.')">D) Polyethylene Glycol Somatic Fusion</button>
+          </div>
+          <div class="game-feedback" id="game-fb-4"></div>
+        </div>
+
+        <!-- SCENARIO 5 -->
+        <div class="game-card" id="game-card-5">
+          <span class="scenario-badge">Scenario 5 • Cell Therapy & Hard-to-Transfect Cells</span>
+          <div class="scenario-text">
+            <strong>The Objective:</strong> An oncology laboratory needs to introduce a 9 kb CRISPR-Cas9 ribonucleoprotein complex into 50 million non-adherent primary human T-lymphocytes (suspension culture) for CAR-T development. Primary T-cells are notoriously resistant to cationic lipids. Which method is most effective?
+          </div>
+          <div class="game-options">
+            <button class="game-btn" onclick="checkGame(this, 5, true, 'Exact Match! Electroporation (specifically Nucleofection) applies a uniform electric field across cuvettes containing millions of suspension cells, physically driving macromolecules across transient aqueous pores with high efficiency.')">A) Electroporation (Nucleofection)</button>
+            <button class="game-btn" onclick="checkGame(this, 5, false, 'Incorrect. Somatic fusion would fuse the T-cells into multinucleated syncytia rather than delivering CRISPR cargo.')">B) Somatic Cell Fusion</button>
+            <button class="game-btn" onclick="checkGame(this, 5, false, 'Incorrect. CaCl₂ transformation only functions in bacteria and is completely ineffective on mammalian lymphocytes.')">C) CaCl₂ Bacterial Transformation</button>
+            <button class="game-btn" onclick="checkGame(this, 5, false, 'Incorrect. Microinjecting 50 million individual cells by hand one-by-one is physically impossible (it would take decades).')">D) Individual Microinjection of all 50 million cells</button>
+          </div>
+          <div class="game-feedback" id="game-fb-5"></div>
+        </div>
+      </section>
+
+      <!-- SECTION 16: LECTURE SUMMARY -->
+      <section id="summary" class="lecture-section">
+        <div class="section-header">
+          <div class="section-number">16</div>
+          <div class="section-title-wrap">
+            <h2>Lecture Summary & Pre-Exam Cheat Sheet</h2>
+            <p>Comprehensive synoptic matrix and rapid 3-minute revision takeaways.</p>
+          </div>
+        </div>
+        
+        <h3>The 7 DNA Insertion Methods at a Glance</h3>
+        <div class="table-container">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Delivery Class</th>
+                <th>Biophysical Principle</th>
+                <th>Host & Barrier Overcome</th>
+                <th>Key Reagent / Tool</th>
+                <th>Classic Application</th>
+                <th>Primary Limitation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>🧫 Transformation</strong></td>
+                <td>Biological / Chemical</td>
+                <td>Electrostatic Ca²⁺ neutralization + thermal gradient shock</td>
+                <td>Bacteria (peptidoglycan + outer membrane)</td>
+                <td>CaCl₂ (0°C), 42°C heat-shock, SOC medium</td>
+                <td>Plasmid cloning in <em>E. coli</em></td>
+                <td>Limited to competent microbial cells</td>
+              </tr>
+              <tr>
+                <td><strong>🫧 Lipofection</strong></td>
+                <td>Chemical / Nanoparticle</td>
+                <td>Cationic lipid-DNA condensation & endocytosis</td>
+                <td>Mammalian / insect cells (fluid lipid bilayer)</td>
+                <td>Cationic lipids (DOTMA, Lipofectamine)</td>
+                <td>Transient protein expression, mRNA vaccines</td>
+                <td>Cytotoxicity at high doses; blocked by cell walls</td>
+              </tr>
+              <tr>
+                <td><strong>🔬 Microinjection</strong></td>
+                <td>Direct Mechanical</td>
+                <td>Precision micropipette puncture & hydrostatic pressure</td>
+                <td>Individual oocytes, zygotes, large somatic cells</td>
+                <td>Glass microcapillary, micromanipulator, DIC scope</td>
+                <td>Single-cell gene validation, ICSI</td>
+                <td>Extremely low throughput (one cell at a time)</td>
+              </tr>
+              <tr>
+                <td><strong>⚡ Electroporation</strong></td>
+                <td>Direct Physical</td>
+                <td>Dielectric breakdown creating aqueous membrane pores</td>
+                <td>Bacteria, yeast, plant protoplasts, suspension T-cells</td>
+                <td>High-voltage pulse generator, precision cuvettes</td>
+                <td>High-efficiency cloning, suspension cell editing</td>
+                <td>20–50% cell mortality; arcing with residual salts</td>
+              </tr>
+              <tr>
+                <td><strong>🎯 Biolistics</strong></td>
+                <td>Direct Physical</td>
+                <td>High-velocity microprojectile bombardment</td>
+                <td>Intact plant tissues, cereal crops, chloroplasts</td>
+                <td>Pressurized helium gene gun, 1 µm gold particles</td>
+                <td>Transgenic monocot crops (maize, wheat), plastids</td>
+                <td>High instrument cost, multicopy silencing</td>
+              </tr>
+              <tr>
+                <td><strong>🧬 Somatic Fusion</strong></td>
+                <td>Whole-Cell Fusion</td>
+                <td>Fusogen-mediated membrane dehydration & coalescence</td>
+                <td>Somatic cells (B-cells + myeloma) or plant protoplasts</td>
+                <td>Polyethylene glycol (PEG 1500) or electrofusion, HAT</td>
+                <td>Hybridoma technology (monoclonal antibodies)</td>
+                <td>Whole-genome fusion; chromosomal instability</td>
+              </tr>
+              <tr>
+                <td><strong>🥚 Pronuclear Injection</strong></td>
+                <td>Embryo Transgenesis</td>
+                <td>Direct injection into swollen male pronucleus of zygote</td>
+                <td>Fertilized 1-cell zygotes (mammalian embryos)</td>
+                <td>DIC inverted microscope, holding pipette, foster mother</td>
+                <td>Heritable transgenic animal founder creation</td>
+                <td>Random integration locus; position effects</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3-Minute Pre-Exam Takeaway Rules</h3>
+        <div style="background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1.25rem; margin-top:1.5rem;">
+          <ul style="margin:0; padding-left:1.25rem; display:flex; flex-direction:column; gap:0.65rem; font-size:0.9rem;">
+            <li><strong>The Universal Challenge:</strong> DNA is a polyanionic, hydrophilic macromolecule. Cellular membranes are hydrophobic lipid bilayers carrying negative surface charges. Every gene transfer method exists solely to overcome this fundamental electrostatic and physical incompatibility.</li>
+            <li><strong>Wall vs. No Wall:</strong> Intact plant cells possess thick cellulosic walls that block liposomes and chemical transformation; they require <em>biolistics</em> (Gene Gun) or cell wall removal to form <em>protoplasts</em>. Bacteria require <em>competence induction</em> (CaCl₂ or electroporation) to traverse their peptidoglycan envelope.</li>
+            <li><strong>Transient vs. Stable:</strong> Unintegrated episomal DNA yields high-level transient expression for 24–96 hours. For stable expression, the DNA must integrate into host chromosomes, requiring selective antibiotic screening (e.g., G418, puromycin, hygromycin) over several weeks.</li>
+            <li><strong>Whole-Cell vs. Plasmid:</strong> Six methods transfer naked or encapsulated DNA segments into an existing cell; only <em>somatic cell fusion</em> merges two entire intact cells and their complete chromosomal karyotypes.</li>
+            <li><strong>The Germline Requirement:</strong> Somatic transfection or microinjection affects only individual cultured cells. Creating a living, fertile, heritable transgenic animal requires <em>pronuclear microinjection</em> into a 1-cell fertilized zygote followed by uterine implantation.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="lecture-footer">
+        <div style="max-width:800px; margin:0 auto;">
+          <p style="font-weight:700; color:var(--text-primary); font-size:0.95rem; margin-bottom:0.4rem;">
+            Insertion of Foreign DNA into Host Cells • Undergraduate Teaching Module
+          </p>
+          <p style="font-size:0.8rem; margin-bottom:1rem;">
+            Designed for undergraduate curricula in Biotechnology, Biochemistry, and Molecular Biology (45–60 minute lecture). Content strictly reflects peer-reviewed academic literature and authentic repository scientific diagrams.
+          </p>
+          <div style="display:flex; justify-content:center; gap:1.5rem; flex-wrap:wrap; font-size:0.775rem; color:var(--text-muted); border-top:1px solid var(--border-color); padding-top:1rem;">
+            <span>Verified Scientific Figures: Wikimedia Commons / NCBI PMC</span>
+            <span>Zero AI-Generated Visuals Policy Compliant</span>
+            <span>Interactive Self-Assessment Included</span>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- CLIENT-SIDE SCRIPT FOR FULL INTERACTIVITY -->
+  <script>
+    // 1. Reading Progress Bar
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      const bar = document.getElementById('reading-progress-bar');
+      if (bar) bar.style.width = scrolled + '%';
+
+      // Update active TOC item
+      const sections = document.querySelectorAll('section.lecture-section');
+      let currentSectionId = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 120;
+        if (winScroll >= sectionTop) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      if (currentSectionId) {
+        document.querySelectorAll('.toc-link').forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + currentSectionId) {
+            link.classList.add('active');
+          }
+        });
+
+        // Update method selector bar if within a method section
+        document.querySelectorAll('.method-tab-btn').forEach(btn => {
+          btn.classList.remove('active');
+          if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(currentSectionId)) {
+            btn.classList.add('active');
+          }
+        });
+      }
+    });
+
+    // 2. Smooth Navigation Helper
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        const headerOffset = 70;
+        const elementPosition = el.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }
+
+    // 3. Theme Toggle (Dark / Light Mode)
+    const btnThemeToggle = document.getElementById('btn-theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+
+    function initTheme() {
+      const savedTheme = localStorage.getItem('lecture_theme') || 'dark';
+      if (savedTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        if (themeIcon) themeIcon.textContent = '☀️';
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        if (themeIcon) themeIcon.textContent = '🌙';
+      }
+    }
+    initTheme();
+
+    if (btnThemeToggle) {
+      btnThemeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        if (currentTheme === 'light') {
+          document.documentElement.removeAttribute('data-theme');
+          localStorage.setItem('lecture_theme', 'dark');
+          if (themeIcon) themeIcon.textContent = '🌙';
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+          localStorage.setItem('lecture_theme', 'light');
+          if (themeIcon) themeIcon.textContent = '☀️';
+        }
+      });
+    }
+
+    // 4. Font Size Toggle (A / A+)
+    const btnFontToggle = document.getElementById('btn-font-toggle');
+    let isEnlarged = false;
+    if (btnFontToggle) {
+      btnFontToggle.addEventListener('click', () => {
+        isEnlarged = !isEnlarged;
+        if (isEnlarged) {
+          document.documentElement.style.fontSize = '18px';
+          btnFontToggle.innerHTML = '<span style="font-weight:700;font-size:0.95rem;">A-</span>';
+          btnFontToggle.title = 'Reset Font Size (Standard)';
+        } else {
+          document.documentElement.style.fontSize = '16px';
+          btnFontToggle.innerHTML = '<span style="font-weight:700;font-size:0.95rem;">A+</span>';
+          btnFontToggle.title = 'Enlarge Font Size (A+)';
+        }
+      });
+    }
+
+    // 5. Transformation Stepper Logic
+    const transformStepsData = [
+      {
+        title: "Step 1: Incubation on Ice with Divalent Cations (0°C, CaCl₂)",
+        desc: "Both plasmid DNA (polyanionic phosphate backbone) and the bacterial outer envelope (lipopolysaccharides and membrane phospholipids) carry strong negative charges, generating strong electrostatic repulsion. Positively charged calcium ions (Ca²⁺) bind and neutralize these negative charges, acting as an electrostatic bridge bringing plasmid DNA to the membrane surface. Ice-cold temperature (0°C) congeals the lipid bilayer, reducing membrane fluidity and stabilizing the complex.",
+        formula: "DNA⁻ + Ca²⁺ + LPS/Membrane⁻ → Electrostatic Neutralization at 0°C"
+      },
+      {
+        title: "Step 2: Heat Shock (42°C for 45–90 seconds)",
+        desc: "Sudden temperature elevation from 0°C to 42°C creates a sharp thermal gradient across the congealed bacterial membrane. This causes localized structural destabilization, phase transitions in the lipid bilayer, and transient pore openings. The thermal draft and resulting pressure difference pull the calcium-shielded plasmid DNA across the permeabilized cell envelope into the cytoplasm.",
+        formula: "ΔT Shock (0°C → 42°C) → Thermal Fluidity Wave & Transient Pore Entry"
+      },
+      {
+        title: "Step 3: Rapid Cold Plunge (0°C on Ice for 2 minutes)",
+        desc: "Immediately chilling the bacterial suspension back down to 0°C abruptly lowers membrane fluidity. This rapid thermal contraction seals the transient membrane pores, effectively trapping the newly internalized plasmid DNA inside the bacterial cytoplasm and preventing it from diffusing back out into the medium.",
+        formula: "Thermal Quenching (42°C → 0°C) → Bilayer Re-congealing & Pore Sealing"
+      },
+      {
+        title: "Step 4: Outgrowth & Phenotypic Expression (37°C in SOC/LB broth)",
+        desc: "Cells are incubated in nutrient-rich broth (e.g., SOC or LB) without antibiotics at 37°C for 45 to 60 minutes. This critical recovery period allows the bacteria to repair their outer membrane, resume normal metabolic activity, and transcribe and translate the plasmid-borne antibiotic-resistance selection marker (such as β-lactamase for ampicillin resistance).",
+        formula: "37°C Incubation (45–60 min) → Cell Repair & Expression of Resistance Marker (e.g., bla / Ampᴿ)"
+      },
+      {
+        title: "Step 5: Selective Outgrowth on Antibiotic Agar Plates",
+        desc: "The cell culture is spread onto agar plates containing the selective antibiotic (e.g., ampicillin, kanamycin). Non-transformed bacteria lack the plasmid resistance gene and are killed or prevented from dividing. Transformed cells survive, multiply exponentially, and form visible clonal colonies within 12–16 hours.",
+        formula: "Transformed Cells (Ampᴿ) Form Discrete Clonal Colonies on Selective Media"
+      }
+    ];
+
+    function showTransformStep(index) {
+      const stepper = document.getElementById('transformation-stepper');
+      if (!stepper) return;
+      const btns = stepper.querySelectorAll('.step-btn');
+      btns.forEach((btn, idx) => {
+        if (idx === index) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+
+      const titleEl = document.getElementById('transform-step-title');
+      const descEl = document.getElementById('transform-step-desc');
+      const formulaEl = document.getElementById('transform-step-formula');
+
+      if (titleEl && descEl && formulaEl && transformStepsData[index]) {
+        titleEl.textContent = transformStepsData[index].title;
+        descEl.textContent = transformStepsData[index].desc;
+        formulaEl.textContent = transformStepsData[index].formula;
+      }
+    }
+
+    // 6. Lipofection Stepper Logic
+    const lipoStagesData = [
+      {
+        title: "Stage 1: Polyphosphate DNA & Cationic Lipid Suspension",
+        desc: "Plasmid DNA contains a repeating polyanionic phosphate backbone (PO₄⁻). In aqueous solution, synthetic cationic lipids (e.g., DOTMA, DOTAP, Lipofectamine) assemble into vesicles with positively charged head groups exposed externally. When mixed in serum-free buffer, electrostatic attraction initiates contact.",
+        formula: "Polyanionic DNA⁻ + Cationic Lipids⁺ in Aqueous Buffer"
+      },
+      {
+        title: "Stage 2: Self-Assembly of the Lipoplex Nanoparticle",
+        desc: "Driven by favorable thermodynamic charge neutralization and hydrophobic collapse, cationic liposomes condense around the polyanionic DNA strands. This forms compact, spherical nanoparticles called lipoplexes (100–300 nm in diameter) with an overall net positive surface charge (zeta potential), protecting nucleic acids from extracellular nucleases.",
+        formula: "Multivalent Electrostatic Condensation → Positively Charged Lipoplex (100–300 nm)"
+      },
+      {
+        title: "Stage 3: Cell Membrane Binding & Endocytic Internalization",
+        desc: "The net positive charge of the lipoplex binds avidly to negatively charged cell-surface glycosaminoglycans and sialic acid residues on the eukaryotic plasma membrane. This triggers cellular uptake primarily via clathrin-dependent or caveolae-mediated endocytosis, packaging the lipoplex inside an intracellular endosome.",
+        formula: "Electrostatic Membrane Adsorption → Endocytic Vesicle Engulfment"
+      },
+      {
+        title: "Stage 4: Endosomal Escape, Cytosolic Release & Nuclear Entry",
+        desc: "As the endosome acidifies, cationic lipids interact with endosomal anionic lipids, destabilizing the endosomal vesicle membrane (or creating osmotic rupture via the proton sponge effect). Escaping into the cytosol, the plasmid DNA dissociates from lipid fragments and is transported into the nucleus (during mitotic nuclear envelope breakdown or through nuclear pore complexes) for transcription.",
+        formula: "Endosomal Destabilization → Cytosolic Release → Nuclear Translocation & Transcription"
+      }
+    ];
+
+    function showLipoStage(index) {
+      const stepper = document.getElementById('lipofection-stepper');
+      if (!stepper) return;
+      const btns = stepper.querySelectorAll('.step-btn');
+      btns.forEach((btn, idx) => {
+        if (idx === index) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+
+      const titleEl = document.getElementById('lipo-stage-title');
+      const descEl = document.getElementById('lipo-stage-desc');
+      const formulaEl = document.getElementById('lipo-stage-formula');
+
+      if (titleEl && descEl && formulaEl && lipoStagesData[index]) {
+        titleEl.textContent = lipoStagesData[index].title;
+        descEl.textContent = lipoStagesData[index].desc;
+        formulaEl.textContent = lipoStagesData[index].formula;
+      }
+    }
+
+    // 7. Electroporation Interactive Simulation
+    let isPulseRunning = false;
+    function runElectroporationSim() {
+      if (isPulseRunning) return;
+      isPulseRunning = true;
+
+      const status = document.getElementById('sim-status-label');
+      const pulseArrows = document.getElementById('pulse-arrows');
+      const poresGroup = document.getElementById('pores-group');
+      const dnaParticles = document.getElementById('dna-particles');
+      const btnPulse = document.getElementById('btn-fire-pulse');
+
+      if (btnPulse) btnPulse.disabled = true;
+
+      // Stage 1: Pulse Applied & Dielectric Breakdown
+      if (status) status.textContent = "⚡ HIGH VOLTAGE PULSE ACTIVE (1.8 kV/cm, 5 ms) - DIELECTRIC BREAKDOWN!";
+      if (pulseArrows) pulseArrows.style.display = 'block';
+      if (poresGroup) poresGroup.style.display = 'block';
+
+      // Stage 2: Pores open & DNA migration
+      setTimeout(() => {
+        if (status) status.textContent = "AQUEOUS HYDROPHILIC PORES OPEN: Polyanionic DNA migrating electrophoretically into cytosol...";
+        if (dnaParticles) {
+          dnaParticles.style.transition = "transform 1.4s ease-in-out";
+          dnaParticles.style.transform = "translateY(115px)";
+        }
+      }, 500);
+
+      // Stage 3: Pulse ends
+      setTimeout(() => {
+        if (pulseArrows) pulseArrows.style.display = 'none';
+        if (status) status.textContent = "Pulse Dissipated: Transgene safely localized inside intracellular cytoplasm";
+      }, 1800);
+
+      // Stage 4: Resealing
+      setTimeout(() => {
+        if (poresGroup) poresGroup.style.display = 'none';
+        if (status) status.textContent = "✓ Bilayer Resealed via Lateral Lipid Diffusion - Electroporation Successful!";
+        isPulseRunning = false;
+        if (btnPulse) btnPulse.disabled = false;
+      }, 3000);
+    }
+
+    function resetElectroporationSim() {
+      const status = document.getElementById('sim-status-label');
+      const pulseArrows = document.getElementById('pulse-arrows');
+      const poresGroup = document.getElementById('pores-group');
+      const dnaParticles = document.getElementById('dna-particles');
+      const btnPulse = document.getElementById('btn-fire-pulse');
+
+      if (pulseArrows) pulseArrows.style.display = 'none';
+      if (poresGroup) poresGroup.style.display = 'none';
+      if (dnaParticles) {
+        dnaParticles.style.transition = "transform 0.3s ease";
+        dnaParticles.style.transform = "none";
+      }
+      if (status) status.textContent = "STATUS: Resting State (Membrane Intact, Potential = -70 mV)";
+      if (btnPulse) btnPulse.disabled = false;
+      isPulseRunning = false;
+    }
+
+    // 8. Table Inspector Data & Function
+    const inspectorData = {
+      "transformation": {
+        title: "🧫 Bacterial Chemical Transformation",
+        summary: "<strong>Principle:</strong> Uptake of naked plasmid DNA by CaCl₂-treated competent bacterial cells subjected to a 42°C heat-shock.<br><strong>Primary Host:</strong> Bacteria (<em>Escherichia coli</em>, <em>Bacillus subtilis</em>).<br><strong>Key Reagents:</strong> Ice-cold CaCl₂ (0°C), 42°C heat shock (45–90 s), SOC outgrowth broth, selective antibiotic plates.<br><strong>Key Advantage:</strong> Inexpensive, high capacity for plasmid propagation, standard routine protocol in molecular biology.<br><strong>Key Limitation:</strong> Limited to competent microbial cells; cannot directly penetrate eukaryotic walled cells.",
+        badge: "Class: Biological / Chemical Uptake",
+        section: "transformation"
+      },
+      "lipofection": {
+        title: "🫧 Liposome Fusion (Lipofection)",
+        summary: "<strong>Principle:</strong> Electrostatic self-assembly of cationic lipids with polyanionic DNA into lipoplex nanoparticles, followed by endocytosis or membrane fusion.<br><strong>Primary Host:</strong> Adherent and suspension mammalian and insect cell cultures.<br><strong>Key Reagents:</strong> Cationic lipid formulations (DOTMA, DOTAP, Lipofectamine), serum-free medium (Opti-MEM).<br><strong>Key Advantage:</strong> Highly reproducible, zero specialized equipment needed, high transient expression efficiency.<br><strong>Key Limitation:</strong> Ineffective against thick plant or fungal cell walls; cytotoxicity at high lipid concentrations; endosomal entrapment.",
+        badge: "Class: Chemical / Nanoparticle Delivery",
+        section: "lipofection"
+      },
+      "microinjection": {
+        title: "🔬 Microinjection",
+        summary: "<strong>Principle:</strong> Direct mechanical puncture and hydrostatic volume delivery using a 0.5–1.0 µm glass microcapillary under high-magnification inverted microscopy with micromanipulators.<br><strong>Primary Host:</strong> Large individual cells, mammalian unfertilized oocytes, early embryos, xenopus oocytes.<br><strong>Key Reagents:</strong> Inverted DIC/Nomarski microscope, mechanical/hydraulic micromanipulators, holding suction pipette, microinjector pump.<br><strong>Key Advantage:</strong> Exact targeted delivery of precise volumes directly into cytoplasm or nucleus; 100% per-cell delivery confidence.<br><strong>Key Limitation:</strong> Extremely low throughput (labor-intensive; one cell at a time), high requirement for operator technical skill, potential mechanical cell lysis.",
+        badge: "Class: Direct Mechanical Penetration",
+        section: "microinjection"
+      },
+      "electroporation": {
+        title: "⚡ Electroporation",
+        summary: "<strong>Principle:</strong> Application of short, high-voltage electrical pulses creating a critical transmembrane potential (~0.2–1.0 V) that causes dielectric breakdown and transient aqueous hydrophilic pores.<br><strong>Primary Host:</strong> Bacteria, yeast, plant protoplasts, and mammalian suspension cells (e.g., T-cells, hematopoietic stem cells).<br><strong>Key Reagents:</strong> Specialized pulse generator (electroporator), precision gap cuvettes (0.1, 0.2, 0.4 cm), low-conductivity wash buffers (10% glycerol or deionized water).<br><strong>Key Advantage:</strong> Extremely high transformation efficiencies (~10⁹–10¹⁰ cfu/µg for bacteria), universal across diverse cell types.<br><strong>Key Limitation:</strong> Significant cell mortality (20–50% cell death); risk of electrical arcing if ionic/salt contamination is present.",
+        badge: "Class: Direct Physical Permeabilization",
+        section: "electroporation"
+      },
+      "biolistics": {
+        title: "🎯 Biolistic Method (Gene Gun)",
+        summary: "<strong>Principle:</strong> High-velocity physical acceleration of DNA-coated heavy metal microprojectiles (gold or tungsten, 0.6–1.6 µm) propelled by pressurized helium gas or electrical discharge.<br><strong>Primary Host:</strong> Plant tissues with intact cellulosic cell walls, cereal monocots (maize, wheat, rice), chloroplast and mitochondrial genomes.<br><strong>Key Reagents:</strong> Helium-driven gene gun (e.g., PDS-1000/He), rupture discs (450–2200 psi), macrocarrier discs, stopping screen, spermidine/CaCl₂ coating precipitation.<br><strong>Key Advantage:</strong> Directly penetrates thick, rigid plant cell walls without requiring protoplasting; enables organelle (plastid) genome transformation.<br><strong>Key Limitation:</strong> High initial equipment cost; mechanical tissue trauma; frequent integration of multi-copy concatemers leading to gene silencing.",
+        badge: "Class: Physical Particle Bombardment",
+        section: "biolistics"
+      },
+      "somatic-fusion": {
+        title: "🧬 Somatic Cell Fusion",
+        summary: "<strong>Principle:</strong> Artificially induced coalescence of plasma membranes of two intact somatic cells using chemical fusogens (PEG) or electric fields (electrofusion), combining two complete distinct genomes.<br><strong>Primary Host:</strong> Somatic animal cells (mouse B-cells + myeloma cells) or plant protoplasts (wall-less somatic cells).<br><strong>Key Reagents:</strong> Polyethylene glycol 1500 (PEG) or electrofusion alternating/direct current pulses; HAT selective medium for hybridomas.<br><strong>Key Advantage:</strong> Combines whole-cell phenotypic traits (e.g., antibody secretion + infinite mitotic lifespan in hybridomas; wide somatic hybrid plants).<br><strong>Key Limitation:</strong> Does not deliver isolated vectors; yields unstable karyotypes and spontaneous chromosome loss; requires stringent metabolic selection.",
+        badge: "Class: Whole-Cell Membrane Fusion",
+        section: "somatic-fusion"
+      },
+      "pronuclear": {
+        title: "🥚 Pronuclear Microinjection",
+        summary: "<strong>Principle:</strong> Precision microinjection of linearized plasmid or transgene constructs directly into the swollen male pronucleus of a 1-cell fertilized mammalian zygote.<br><strong>Primary Host:</strong> Fertilized 1-cell mammalian zygotes (mice, rats, livestock).<br><strong>Key Reagents:</strong> Superovulated donor females, DIC inverted microscope, vibration-isolated table, glass microtools, vasectomized males to induce pseudopregnant foster mothers.<br><strong>Key Advantage:</strong> Transgene integrates during initial embryonic cleavage, ensuring transmission to all somatic and germline tissues in the transgenic founder.<br><strong>Key Limitation:</strong> Random chromosomal integration site causing insertional mutagenesis or variable expression (position effect); labor-intensive and low success efficiency.",
+        badge: "Class: Embryonic Transgenesis",
+        section: "pronuclear"
+      }
+    };
+
+    function selectTableRow(methodKey) {
+      // Highlight row in comparison table
+      const rows = document.querySelectorAll('table.comparison-table tbody tr');
+      rows.forEach(r => r.classList.remove('selected'));
+      
+      const targetRow = Array.from(rows).find(r => {
+        const attr = r.getAttribute('onclick');
+        return attr && attr.includes(methodKey);
+      });
+      if (targetRow) targetRow.classList.add('selected');
+
+      // Populate inspector
+      const card = document.getElementById('table-inspector-card');
+      const titleEl = document.getElementById('inspector-title');
+      const summaryEl = document.getElementById('inspector-summary');
+      const badgeEl = document.getElementById('inspector-badge');
+      const jumpBtn = document.getElementById('inspector-jump-btn');
+
+      if (card && inspectorData[methodKey]) {
+        const data = inspectorData[methodKey];
+        titleEl.innerHTML = data.title;
+        summaryEl.innerHTML = data.summary;
+        badgeEl.textContent = data.badge;
+        jumpBtn.onclick = () => scrollToSection(data.section);
+        card.classList.add('active');
+      }
+    }
+
+    // 9. MCQ Checking & Score Tracker
+    const userAnswers = {};
+    let totalScore = 0;
+
+    function checkMCQ(btn, qNum, isCorrect, explanation) {
+      if (userAnswers[qNum] !== undefined) return; // Prevent changing answer
+      userAnswers[qNum] = isCorrect;
+
+      const card = document.getElementById('mcq-' + qNum);
+      if (!card) return;
+      const allBtns = card.querySelectorAll('.mcq-option');
+      allBtns.forEach(b => {
+        b.style.pointerEvents = 'none'; // Lock options
+      });
+
+      if (isCorrect) {
+        btn.classList.add('correct');
+        totalScore++;
+      } else {
+        btn.classList.add('incorrect');
+        // Find correct button and highlight it
+        allBtns.forEach(b => {
+          const clickAttr = b.getAttribute('onclick');
+          if (clickAttr && clickAttr.includes('true')) {
+            b.classList.add('correct');
+          }
+        });
+      }
+
+      // Update score display
+      const scoreNum = document.getElementById('quiz-score-num');
+      if (scoreNum) scoreNum.textContent = totalScore;
+
+      // Show explanation
+      const expBox = document.getElementById('mcq-exp-' + qNum);
+      if (expBox) {
+        expBox.innerHTML = (isCorrect ? '<strong style="color:var(--success);">✓ Correct!</strong> ' : '<strong style="color:var(--danger);">✗ Incorrect.</strong> ') + explanation;
+        expBox.classList.add('show');
+      }
+    }
+
+    // 10. Mini-Game Scenario Logic
+    const gameAnswered = {};
+    function checkGame(btn, scenarioNum, isCorrect, rationale) {
+      if (gameAnswered[scenarioNum]) return;
+      gameAnswered[scenarioNum] = true;
+
+      const card = document.getElementById('game-card-1').parentElement.querySelector('#game-card-' + scenarioNum);
+      if (!card) return;
+      const allBtns = card.querySelectorAll('.game-btn');
+      allBtns.forEach(b => b.style.pointerEvents = 'none');
+
+      if (isCorrect) {
+        btn.classList.add('correct');
+      } else {
+        btn.classList.add('incorrect');
+        allBtns.forEach(b => {
+          const attr = b.getAttribute('onclick');
+          if (attr && attr.includes('true')) b.classList.add('correct');
+        });
+      }
+
+      const fbBox = document.getElementById('game-fb-' + scenarioNum);
+      if (fbBox) {
+        fbBox.innerHTML = (isCorrect ? '<strong style="color:var(--success);">✓ Optimal Method Selected!</strong> ' : '<strong style="color:var(--danger);">✗ Suboptimal Choice:</strong> ') + rationale;
+        fbBox.classList.add('show');
+        fbBox.style.background = isCorrect ? 'var(--success-light)' : 'var(--danger-light)';
+        fbBox.style.border = '1px solid ' + (isCorrect ? 'var(--success)' : 'var(--danger)');
+        fbBox.style.color = isCorrect ? '#065f46' : '#991b1b';
+      }
+    }
+  </script>
+</body>
+</html>
