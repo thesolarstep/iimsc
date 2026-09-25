@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autoradiography — MSc Microbiology</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap');
+
+:root {
+  --bg: #050a06;
+  --bg2: #080f09;
+  --bg3: #0d1a0f;
+  --green: #39ff14;
+  --green-dim: #1a7a08;
+  --green-mid: #22c006;
+  --amber: #ff9900;
+  --red-glow: #ff2200;
+  --film-dark: #0a0a0a;
+  --film-mid: #1a1a1a;
+  --text: #c8e8c0;
+  --text-dim: #6a9060;
+  --border: #1f3a22;
+  --glow: 0 0 8px #39ff1466, 0 0 20px #39ff1422;
+  --glow-strong: 0 0 12px #39ff14aa, 0 0 30px #39ff1455, 0 0 60px #39ff1422;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
+
+/* Scan lines */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* ── HEADER ── */
+header {
+  padding: 3rem 2rem 2rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  background: radial-gradient(ellipse at 50% -20%, #0d2e1022 0%, transparent 70%);
+}
+
+.header-badge {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--green-dim);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+h1 {
+  font-family: 'Orbitron', monospace;
+  font-weight: 900;
+  font-size: clamp(1.6rem, 4vw, 3rem);
+  color: var(--green);
+  text-shadow: var(--glow-strong);
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+}
+
+h1 span {
+  display: block;
+  font-size: 0.45em;
+  font-weight: 400;
+  color: var(--text-dim);
+  letter-spacing: 0.2em;
+  margin-top: 0.5rem;
+  text-shadow: none;
+}
+
+.nav-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.5rem 2rem 0;
+}
+
+.nav-pill {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.nav-pill:hover {
+  border-color: var(--green-dim);
+  color: var(--green);
+  box-shadow: var(--glow);
+  background: #39ff1408;
+}
+
+/* ── LAYOUT ── */
+main { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+
+section {
+  margin: 3rem 0;
+  padding: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--green-dim), transparent);
+}
+
+.section-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: var(--green-dim);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+h2 {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--green);
+  text-shadow: 0 0 12px #39ff1444;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.05em;
+}
+
+h3 {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--green-mid);
+  margin-bottom: 0.7rem;
+}
+
+p { line-height: 1.7; color: var(--text); font-size: 0.9rem; margin-bottom: 0.8rem; }
+
+/* ── INTRO ── */
+.intro-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1rem;
+}
+
+.intro-card {
+  padding: 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: rgba(57,255,20,0.03);
+  transition: all 0.3s;
+}
+.intro-card:hover {
+  border-color: var(--green-dim);
+  background: rgba(57,255,20,0.06);
+  box-shadow: var(--glow);
+}
+
+.intro-card .icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.6rem;
+  display: block;
+  filter: drop-shadow(0 0 6px var(--green));
+}
+
+/* ── SIMULATION ── */
+.sim-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 768px) { .sim-wrapper { grid-template-columns: 1fr; } }
+
+.canvas-stack {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/3;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  background: #000;
+}
+
+canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#canvas-bg { z-index: 1; }
+#canvas-molecules { z-index: 2; }
+#canvas-particles { z-index: 3; }
+#canvas-film { z-index: 4; }
+#canvas-overlay { z-index: 5; }
+
+.film-label {
+  position: absolute;
+  top: 8px; right: 8px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--green-dim);
+  z-index: 10;
+  text-transform: uppercase;
+}
+
+.controls-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.control-group label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+}
+
+.control-group label span {
+  color: var(--green);
+  text-shadow: 0 0 6px #39ff1466;
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 2px;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  cursor: pointer;
+}
+
+.btn {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid var(--green-dim);
+  border-radius: 2px;
+  background: rgba(57,255,20,0.05);
+  color: var(--green);
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+.btn:hover {
+  background: rgba(57,255,20,0.12);
+  box-shadow: var(--glow);
+}
+.btn.active {
+  background: rgba(57,255,20,0.15);
+  box-shadow: var(--glow-strong);
+}
+.btn.amber {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: rgba(255,153,0,0.05);
+}
+.btn.amber:hover { background: rgba(255,153,0,0.12); box-shadow: 0 0 12px #ff990066; }
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+.toggle {
+  width: 36px; height: 18px;
+  background: var(--border);
+  border-radius: 9px;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.toggle.on { background: var(--green-dim); box-shadow: 0 0 8px var(--green-dim); }
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.2s;
+}
+.toggle.on::after { left: 20px; }
+
+/* Readouts */
+.readouts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.readout {
+  padding: 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: #000;
+  text-align: center;
+}
+
+.readout .label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.readout .value {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--green);
+  text-shadow: var(--glow);
+}
+
+/* ── CONTEXT PANEL ── */
+#context-display {
+  padding: 1.2rem;
+  border: 1px solid var(--green-dim);
+  border-radius: 3px;
+  background: rgba(57,255,20,0.04);
+  min-height: 80px;
+  transition: all 0.4s;
+}
+
+#context-display .context-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.8rem;
+  color: var(--green);
+  margin-bottom: 0.5rem;
+}
+
+#context-display .context-body {
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ── STEPS ── */
+.steps-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.step-tab {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.step-tab .num {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  transition: all 0.2s;
+}
+.step-tab.active, .step-tab:hover {
+  border-color: var(--green-dim);
+  color: var(--green);
+}
+.step-tab.active .num {
+  background: var(--green);
+  color: #000;
+  box-shadow: var(--glow);
+}
+
+.step-content {
+  display: none;
+  padding: 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: rgba(57,255,20,0.02);
+  animation: fadeIn 0.3s ease;
+}
+.step-content.active { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+.step-diagram {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.step-box {
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--green-dim);
+  border-radius: 2px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--green);
+  background: rgba(57,255,20,0.05);
+}
+
+.step-arrow { color: var(--green-dim); font-size: 1.2rem; }
+
+/* ── APPLICATIONS ── */
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.app-card {
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: rgba(57,255,20,0.02);
+}
+.app-card:hover, .app-card.active {
+  border-color: var(--green);
+  background: rgba(57,255,20,0.08);
+  box-shadow: var(--glow);
+}
+
+.app-card .app-icon { font-size: 2rem; margin-bottom: 0.5rem; display: block; }
+.app-card .app-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
+.app-detail {
+  display: none;
+  margin-top: 1rem;
+  padding: 1.2rem;
+  border: 1px solid var(--green-dim);
+  border-radius: 3px;
+  background: rgba(57,255,20,0.04);
+  animation: fadeIn 0.3s ease;
+}
+.app-detail.active { display: block; }
+
+.detail-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+}
+.detail-row .key {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--green-dim);
+  text-transform: uppercase;
+  width: 80px;
+  flex-shrink: 0;
+  padding-top: 0.15rem;
+}
+
+/* ── LIMITATIONS ── */
+.limits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.limit-item {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-start;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: rgba(255,34,0,0.03);
+  border-left: 2px solid #ff220044;
+}
+
+.limit-item .limit-icon { font-size: 1.2rem; flex-shrink: 0; }
+.limit-item .limit-text { font-size: 0.85rem; line-height: 1.5; }
+
+/* ── QUIZ ── */
+.quiz-q {
+  margin-bottom: 1.5rem;
+  padding: 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: rgba(57,255,20,0.02);
+}
+
+.quiz-q .q-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.8rem;
+  line-height: 1.5;
+}
+
+.quiz-q .q-num {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--green-dim);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+.options { display: flex; flex-direction: column; gap: 0.4rem; }
+
+.opt-btn {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.85rem;
+  text-align: left;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.opt-btn:hover:not(:disabled) {
+  border-color: var(--green-dim);
+  background: rgba(57,255,20,0.05);
+}
+.opt-btn.correct { border-color: var(--green); background: rgba(57,255,20,0.1); color: var(--green); }
+.opt-btn.wrong { border-color: var(--red-glow); background: rgba(255,34,0,0.08); color: var(--red-glow); }
+.opt-btn:disabled { cursor: default; }
+
+.feedback {
+  margin-top: 0.7rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 2px;
+  font-size: 0.8rem;
+  display: none;
+  line-height: 1.5;
+}
+.feedback.show { display: block; animation: fadeIn 0.3s ease; }
+.feedback.ok { background: rgba(57,255,20,0.08); border-left: 2px solid var(--green); color: var(--green-mid); }
+.feedback.bad { background: rgba(255,34,0,0.06); border-left: 2px solid var(--red-glow); color: #ff6644; }
+
+.quiz-score {
+  display: none;
+  text-align: center;
+  padding: 1.5rem;
+  border: 1px solid var(--green);
+  border-radius: 3px;
+  background: rgba(57,255,20,0.06);
+  box-shadow: var(--glow);
+  margin-top: 1rem;
+}
+.quiz-score.show { display: block; animation: fadeIn 0.5s ease; }
+.quiz-score .score-num {
+  font-family: 'Orbitron', monospace;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--green);
+  text-shadow: var(--glow-strong);
+}
+
+/* ── COMPARISON ── */
+.compare-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.compare-item { text-align: center; }
+.compare-item canvas {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/2;
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+}
+.compare-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  margin-top: 0.4rem;
+  text-transform: uppercase;
+}
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 2rem;
+  border-top: 1px solid var(--border);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 0.15em;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 1.5rem 0;
+}
+
+/* Signal bar */
+.signal-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  margin-top: 0.3rem;
+  overflow: hidden;
+}
+.signal-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--green-dim), var(--green));
+  box-shadow: 0 0 6px var(--green);
+  transition: width 0.3s;
+}
+
+/* Timeline */
+.timeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 1rem 0;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+.tl-item {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.tl-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--green-dim);
+  box-shadow: 0 0 6px var(--green-dim);
+  flex-shrink: 0;
+  position: relative;
+}
+.tl-dot.active { background: var(--green); box-shadow: var(--glow-strong); }
+.tl-line {
+  width: 60px; height: 1px;
+  background: var(--border);
+}
+.tl-line.active { background: var(--green-dim); }
+.tl-label {
+  position: absolute;
+  top: 14px; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.55rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+}
+.tl-label.active { color: var(--green); }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="header-badge">MSc Microbiology — Laboratory Methods</span>
+  <h1>Autoradiography<span>Visualizing Radioactive Molecules</span></h1>
+  <nav class="nav-pills">
+    <a href="#intro" class="nav-pill">Introduction</a>
+    <a href="#simulation" class="nav-pill">Simulation</a>
+    <a href="#steps" class="nav-pill">Protocol</a>
+    <a href="#applications" class="nav-pill">Applications</a>
+    <a href="#limitations" class="nav-pill">Limitations</a>
+    <a href="#quiz" class="nav-pill">Quiz</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- ── INTRODUCTION ── -->
+<section id="intro">
+  <span class="section-label">01 // Introduction</span>
+  <h2>What is Autoradiography?</h2>
+  <p>Autoradiography is a technique that uses radioactively labeled molecules to produce an image on photographic film or a phosphor screen. The position of the dark spots on the film directly reveals where the labeled molecule is located — in a cell, tissue, or gel.</p>
+  <div class="intro-grid">
+    <div class="intro-card">
+      <span class="icon">🧬</span>
+      <h3>Radiolabeled Molecules</h3>
+      <p>DNA, RNA, or proteins are tagged with radioactive isotopes such as ³H (tritium), ¹⁴C, ³²P, or ³⁵S. These replace normal atoms in the molecule without altering its biological function.</p>
+    </div>
+    <div class="intro-card">
+      <span class="icon">⚡</span>
+      <h3>Radiation Emission</h3>
+      <p>The radioactive atoms decay and emit beta particles (electrons). These particles carry energy and travel outward from the molecule in all directions.</p>
+    </div>
+    <div class="intro-card">
+      <span class="icon">🎞️</span>
+      <h3>Film Detection</h3>
+      <p>A photographic film or phosphor screen is placed over the sample. Beta particles activate silver halide crystals in the film emulsion, creating dark spots after chemical development.</p>
+    </div>
+    <div class="intro-card">
+      <span class="icon">🔬</span>
+      <h3>Biological Insight</h3>
+      <p>The pattern of dark spots reveals <strong>where</strong> the labeled molecule is, <strong>how much</strong> is present, and <strong>when</strong> it was active — making autoradiography a powerful tool for studying replication, transcription, and protein localization.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── SIMULATION ── -->
+<section id="simulation">
+  <span class="section-label">02 // Interactive Simulation</span>
+  <h2>Live Autoradiography Simulation</h2>
+
+  <div class="sim-wrapper">
+    <div>
+      <div class="canvas-stack" id="canvasWrap">
+        <canvas id="canvas-bg"></canvas>
+        <canvas id="canvas-molecules"></canvas>
+        <canvas id="canvas-particles"></canvas>
+        <canvas id="canvas-film"></canvas>
+        <canvas id="canvas-overlay"></canvas>
+        <div class="film-label" id="film-status">◉ LIVE</div>
+      </div>
+
+      <div class="readouts">
+        <div class="readout">
+          <span class="label">Signal Intensity</span>
+          <div class="value" id="readout-intensity">LOW</div>
+        </div>
+        <div class="readout">
+          <span class="label">Image Clarity</span>
+          <div class="value" id="readout-clarity">FAINT</div>
+        </div>
+        <div class="readout">
+          <span class="label">Particles Emitted</span>
+          <div class="value" id="readout-particles">0</div>
+        </div>
+        <div class="readout">
+          <span class="label">Film Exposure</span>
+          <div class="value" id="readout-exposure">0%</div>
+        </div>
+      </div>
+
+      <div style="margin-top:0.8rem;">
+        <div style="display:flex; justify-content:space-between; font-family:'Share Tech Mono',monospace; font-size:0.65rem; color:var(--text-dim); margin-bottom:0.3rem; letter-spacing:0.08em;">
+          <span>SIGNAL ACCUMULATION</span><span id="sig-pct">0%</span>
+        </div>
+        <div class="signal-bar"><div class="signal-fill" id="sig-fill" style="width:0%"></div></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- CONTEXT -->
+      <div id="context-display">
+        <div class="context-title">🔬 Biological Context</div>
+        <div class="context-body" id="context-body">Adjust the controls to begin. The biological interpretation will update as you change label concentration and exposure time.</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls-panel">
+      <div class="control-group">
+        <label>Radiolabel Amount <span id="label-val">30%</span></label>
+        <input type="range" id="label-slider" min="5" max="100" value="30">
+        <div style="display:flex; justify-content:space-between; font-family:'Share Tech Mono',monospace; font-size:0.55rem; color:var(--text-dim); letter-spacing:0.08em;">
+          <span>LOW</span><span>HIGH</span>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label>Exposure Time <span id="exp-val">30%</span></label>
+        <input type="range" id="exp-slider" min="5" max="100" value="30">
+        <div style="display:flex; justify-content:space-between; font-family:'Share Tech Mono',monospace; font-size:0.55rem; color:var(--text-dim); letter-spacing:0.08em;">
+          <span>SHORT</span><span>LONG</span>
+        </div>
+      </div>
+
+      <button class="btn" id="btn-startstop">▶ Start Simulation</button>
+      <button class="btn amber" id="btn-develop">⬛ Develop Film</button>
+      <button class="btn" id="btn-reset" style="border-color:var(--text-dim);color:var(--text-dim);">↺ Reset</button>
+
+      <div class="toggle-row" id="toggle-particles" onclick="toggleParticles()">
+        <div class="toggle on" id="particle-toggle"></div>
+        <span>Show Radiation Particles</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div style="font-family:'Share Tech Mono',monospace; font-size:0.65rem; letter-spacing:0.08em; color:var(--text-dim);">
+        <div style="margin-bottom:0.6rem; color:var(--green-dim);">ISOTOPE LEGEND</div>
+        <div style="margin-bottom:0.3rem;">³H — low energy β⁻</div>
+        <div style="margin-bottom:0.3rem;">³²P — high energy β⁻</div>
+        <div style="margin-bottom:0.3rem;">³⁵S — medium energy β⁻</div>
+        <div>¹⁴C — medium energy β⁻</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STEPS ── -->
+<section id="steps">
+  <span class="section-label">03 // Protocol</span>
+  <h2>Step-by-Step Process</h2>
+
+  <div class="steps-tabs">
+    <button class="step-tab active" onclick="showStep(0, this)"><span class="num">1</span>Labeling</button>
+    <button class="step-tab" onclick="showStep(1, this)"><span class="num">2</span>Sample Prep</button>
+    <button class="step-tab" onclick="showStep(2, this)"><span class="num">3</span>Exposure</button>
+    <button class="step-tab" onclick="showStep(3, this)"><span class="num">4</span>Development</button>
+    <button class="step-tab" onclick="showStep(4, this)"><span class="num">5</span>Analysis</button>
+  </div>
+
+  <div class="step-content active" id="step-0">
+    <h3>Step 1: Labeling Molecules</h3>
+    <p>Radiolabeled precursors are introduced to the biological system. The cell incorporates these into its macromolecules during normal biosynthesis.</p>
+    <div class="step-diagram">
+      <div class="step-box">³H-Thymidine<br><span style="font-size:0.6rem;color:var(--text-dim)">DNA precursor</span></div>
+      <span class="step-arrow">→</span>
+      <div class="step-box">Cell Uptake<br><span style="font-size:0.6rem;color:var(--text-dim)">via transport</span></div>
+      <span class="step-arrow">→</span>
+      <div class="step-box">Incorporated<br><span style="font-size:0.6rem;color:var(--text-dim)">into new DNA</span></div>
+    </div>
+    <p><strong>Common radiolabels:</strong> ³H-thymidine for DNA replication; ³H-uridine for RNA transcription; ³⁵S-methionine for protein synthesis; ³²P-nucleotides for blotting experiments.</p>
+    <p><strong>Key concept:</strong> The label is incorporated only during active synthesis. Cells that are not dividing or transcribing will not incorporate the label, giving spatial and temporal specificity.</p>
+  </div>
+
+  <div class="step-content" id="step-1">
+    <h3>Step 2: Sample Preparation</h3>
+    <p>After adequate labeling time, the sample is fixed to halt all biological activity and preserve the spatial location of labeled molecules.</p>
+    <div class="step-diagram">
+      <div class="step-box">Fix sample<br><span style="font-size:0.6rem;color:var(--text-dim)">formalin/ethanol</span></div>
+      <span class="step-arrow">→</span>
+      <div class="step-box">Section/Process<br><span style="font-size:0.6rem;color:var(--text-dim)">cryostat/paraffin</span></div>
+      <span class="step-arrow">→</span>
+      <div class="step-box">Mount on slide<br><span style="font-size:0.6rem;color:var(--text-dim)">or membrane</span></div>
+    </div>
+    <p><strong>For tissues:</strong> Sections are cut (5–10 µm), mounted on glass slides, and may be stained with hematoxylin for structural reference.</p>
+    <p><strong>For gels:</strong> After electrophoresis (Southern, Northern, Western blot), the gel or membrane is dried and placed directly against film.</p>
+  </div>
+
+  <div class="step-content" id="step-2">
+    <h3>Step 3: Exposure to Film</h3>
+    <p>In complete darkness, photographic film (X-ray film) or a phosphor screen is placed directly against the sample. The assembly is sealed and stored in a light-tight cassette.</p>
+    <div class="step-diagram">
+      <div class="step-box">Sample + Film<br><span style="font-size:0.6rem;color:var(--text-dim)">in cassette</span></div>
+      <span class="step-arrow">→</span>
+      <div class="step-box">Storage<br><span style="font-size:0.6rem;color:var(--text-dim)">−70°C or RT</span></div>
+      <span class="step-arrow">→</span>
+      <div class="step-box">Hours → Weeks<br><span style="font-size:0.6rem;color:var(--text-dim)">depends on isotope</span></div>
+    </div>
+    <p><strong>Exposure time</strong> depends on the amount of radioactivity (specific activity), the isotope used, and the required signal. ³²P may expose in hours; ³H may require weeks.</p>
+    <p><strong>Temperature:</strong> Cold (−70°C) exposure with intensifying screens improves sensitivity for weak signals; room temperature gives better resolution for strong emitters.</p>
+  </div>
+
+  <div class="step-content" id="step-3">
+    <h3>Step 4: Film Development</h3>
+    <p>The exposed film is processed in a darkroom using photographic developer and fixer solutions, similar to conventional film photography.</p>
+    <div class="step-diagram">
+      <div class="step-box">Developer<br><span style="font-size:0.6rem;color:var(--text-dim)">reduces Ag⁺ → Ag°</span></div>
+      <span class="step-arrow">→</span>
+      <div class="step-box">Stop Bath<br><span style="font-size:0.6rem;color:var(--text-dim)">halts reaction</span></div>
+      <span class="step-arrow">→</span>
+      <div class="step-box">Fixer<br><span style="font-size:0.6rem;color:var(--text-dim)">removes unexposed Ag⁺</span></div>
+    </div>
+    <p><strong>Mechanism:</strong> Beta particles activate silver halide crystals in the film emulsion (latent image). Developer reduces activated Ag⁺ ions to metallic silver (Ag°), which appears black. Unexposed crystals are washed away by the fixer.</p>
+    <p><strong>Modern alternative:</strong> Phosphorimager plates (phosphor screens) can be scanned digitally, offering wider dynamic range and no chemical development.</p>
+  </div>
+
+  <div class="step-content" id="step-4">
+    <h3>Step 5: Analysis</h3>
+    <p>The developed film is analyzed visually or by densitometry. Dark spots indicate radioactivity; their density and position are the data.</p>
+    <div class="step-diagram">
+      <div class="step-box">Visual inspection<br><span style="font-size:0.6rem;color:var(--text-dim)">spot location</span></div>
+      <span class="step-arrow">→</span>
+      <div class="step-box">Densitometry<br><span style="font-size:0.6rem;color:var(--text-dim)">quantify bands</span></div>
+      <span class="step-arrow">→</span>
+      <div class="step-box">Interpretation<br><span style="font-size:0.6rem;color:var(--text-dim)">biology inferred</span></div>
+    </div>
+    <p><strong>Densitometry:</strong> A scanner measures optical density at each position. This converts the image to numerical data, allowing comparison between lanes or samples.</p>
+    <p><strong>Co-localization:</strong> Comparing autoradiographic image with histological stain (or gel marker) allows precise identification of which cells or bands contain the labeled molecule.</p>
+  </div>
+</section>
+
+<!-- ── APPLICATIONS ── -->
+<section id="applications">
+  <span class="section-label">04 // Applications</span>
+  <h2>Biological Applications</h2>
+  <p>Click any application to see what is labeled, what is detected, and why it matters.</p>
+
+  <div class="apps-grid" style="margin-top:1rem;">
+    <div class="app-card" onclick="showApp('dna')">
+      <span class="app-icon">🧬</span>
+      <div class="app-title">DNA Replication</div>
+      <p style="font-size:0.8rem; color:var(--text-dim);">Thymidine pulse-chase to track active replication forks.</p>
+    </div>
+    <div class="app-card" onclick="showApp('southern')">
+      <span class="app-icon">📊</span>
+      <div class="app-title">Southern Blot</div>
+      <p style="font-size:0.8rem; color:var(--text-dim);">Detecting specific DNA sequences after gel electrophoresis.</p>
+    </div>
+    <div class="app-card" onclick="showApp('northern')">
+      <span class="app-icon">📈</span>
+      <div class="app-title">Northern Blot</div>
+      <p style="font-size:0.8rem; color:var(--text-dim);">Detecting mRNA transcripts to study gene expression.</p>
+    </div>
+    <div class="app-card" onclick="showApp('protein')">
+      <span class="app-icon">🔗</span>
+      <div class="app-title">Protein Tracking</div>
+      <p style="font-size:0.8rem; color:var(--text-dim);">Following newly synthesized proteins to their final locations.</p>
+    </div>
+  </div>
+
+  <div class="app-detail" id="app-dna">
+    <h3>🧬 DNA Replication Tracking</h3>
+    <div class="detail-row"><div class="key">Labeled</div><div>³H-thymidine — incorporated into newly synthesized DNA strands only during S-phase of the cell cycle.</div></div>
+    <div class="detail-row"><div class="key">Detected</div><div>Dark grains over nuclei of cells that were dividing during the labeling period. Non-dividing cells remain unlabeled.</div></div>
+    <div class="detail-row"><div class="key">Why it matters</div><div>Determines the fraction of actively dividing cells (labeling index), identifies cells in S-phase, and was critical for establishing the semi-conservative model of DNA replication (Meselson-Stahl principle, autoradiographic version by Taylor, 1957).</div></div>
+    <div class="detail-row"><div class="key">Pulse-chase</div><div>A short pulse of ³H-thymidine labels cells in S-phase. Chasing with unlabeled thymidine and sampling at intervals reveals how labeled cells progress through the cell cycle.</div></div>
+  </div>
+
+  <div class="app-detail" id="app-southern">
+    <h3>📊 Southern Blot Autoradiography</h3>
+    <div class="detail-row"><div class="key">Labeled</div><div>³²P-labeled DNA probe — a short single-stranded DNA complementary to the target sequence.</div></div>
+    <div class="detail-row"><div class="key">Detected</div><div>Specific DNA fragments on a nylon membrane after restriction digestion and gel electrophoresis. Hybridized probe emits ³²P and exposes film at the band position.</div></div>
+    <div class="detail-row"><div class="key">Why it matters</div><div>Identifies gene copy number, detects specific restriction fragment length polymorphisms (RFLPs), confirms transgene integration, and diagnoses genetic diseases. Foundational to molecular biology before PCR became routine.</div></div>
+  </div>
+
+  <div class="app-detail" id="app-northern">
+    <h3>📈 Northern Blot Autoradiography</h3>
+    <div class="detail-row"><div class="key">Labeled</div><div>³²P or ³⁵S-labeled RNA or DNA probe complementary to the target mRNA sequence.</div></div>
+    <div class="detail-row"><div class="key">Detected</div><div>Specific mRNA bands on a membrane after denaturing gel electrophoresis and transfer. Band intensity reflects transcript abundance.</div></div>
+    <div class="detail-row"><div class="key">Why it matters</div><div>Measures gene expression at the mRNA level, determines transcript size, detects splice variants, and compares expression across tissues or treatment conditions. Still used as a gold standard when quantitative PCR results require orthogonal confirmation.</div></div>
+  </div>
+
+  <div class="app-detail" id="app-protein">
+    <h3>🔗 Protein Synthesis and Localization</h3>
+    <div class="detail-row"><div class="key">Labeled</div><div>³⁵S-methionine or ³H-leucine — radiolabeled amino acids incorporated into newly synthesized proteins during the labeling period.</div></div>
+    <div class="detail-row"><div class="key">Detected</div><div>In tissue sections: dark grains over specific organelles or cell regions revealing protein secretion pathways. In gels (SDS-PAGE): radioactive bands reveal newly synthesized proteins.</div></div>
+    <div class="detail-row"><div class="key">Why it matters</div><div>Palade's early autoradiographic work (Nobel Prize, 1974) demonstrated that secretory proteins are synthesized in the rough ER, transported through the Golgi, and secreted — establishing the secretory pathway.</div></div>
+  </div>
+</section>
+
+<!-- ── LIMITATIONS ── -->
+<section id="limitations">
+  <span class="section-label">05 // Limitations</span>
+  <h2>Limitations of Autoradiography</h2>
+  <div class="limits-grid">
+    <div class="limit-item">
+      <span class="limit-icon">☢️</span>
+      <div class="limit-text"><strong>Radiation Safety</strong><br>Handling radioactive isotopes requires licensed facilities, dosimetry, waste disposal protocols, and trained personnel. Regulatory compliance adds significant cost and administrative burden.</div>
+    </div>
+    <div class="limit-item">
+      <span class="limit-icon">🔍</span>
+      <div class="limit-text"><strong>Resolution Constraints</strong><br>Beta particles scatter before hitting the film, spreading the signal. Resolution is limited (especially for ³²P with high-energy particles). Fluorescence microscopy or FISH offers superior spatial resolution for localization studies.</div>
+    </div>
+    <div class="limit-item">
+      <span class="limit-icon">⏱️</span>
+      <div class="limit-text"><strong>Long Exposure Times</strong><br>Weak signals (low specific activity or scarce targets) may require days to weeks of exposure. Modern phosphorimager plates reduce this but do not eliminate the fundamental time constraint.</div>
+    </div>
+    <div class="limit-item">
+      <span class="limit-icon">📉</span>
+      <div class="limit-text"><strong>Signal Saturation</strong><br>Overexposure causes the film to saturate — too many dark spots overlap and the image loses quantitative meaning. Finding the optimal exposure window often requires multiple exposures.</div>
+    </div>
+    <div class="limit-item">
+      <span class="limit-icon">📐</span>
+      <div class="limit-text"><strong>Limited Dynamic Range</strong><br>Film has a narrow linear response range. Phosphorimager systems largely solved this, but classical film-based autoradiography cannot accurately quantify signals differing by more than ~2 orders of magnitude simultaneously.</div>
+    </div>
+    <div class="limit-item">
+      <span class="limit-icon">🌡️</span>
+      <div class="limit-text"><strong>Isotope Half-Life</strong><br>Radioactive isotopes decay continuously. ³²P (t½ = 14 days) decays rapidly; labeled samples lose activity and must be used quickly. ³H (t½ = 12 years) is more stable but less energetic.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── QUIZ ── -->
+<section id="quiz">
+  <span class="section-label">06 // Assessment</span>
+  <h2>Conceptual Quiz</h2>
+  <p style="margin-bottom:1.5rem;">Test your understanding. Each question has one correct answer.</p>
+
+  <div id="quiz-container"></div>
+  <div class="quiz-score" id="quiz-score">
+    <div class="score-num" id="score-display">0/5</div>
+    <p style="color:var(--text); margin-top:0.5rem; font-size:0.9rem;" id="score-msg"></p>
+    <button class="btn" onclick="resetQuiz()" style="margin-top:1rem; max-width:200px;">↺ Retry Quiz</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  ☢ Autoradiography Interactive Tool — MSc Microbiology &nbsp;|&nbsp; For Educational Use
+</footer>
+
+<script>
+// ════════════════════════════════════════════════════
+// SIMULATION ENGINE
+// ════════════════════════════════════════════════════
+
+const canvases = {
+  bg: document.getElementById('canvas-bg'),
+  mol: document.getElementById('canvas-molecules'),
+  par: document.getElementById('canvas-particles'),
+  film: document.getElementById('canvas-film'),
+  overlay: document.getElementById('canvas-overlay')
+};
+
+const ctxs = {};
+Object.keys(canvases).forEach(k => { ctxs[k] = canvases[k].getContext('2d'); });
+
+let W, H;
+function resizeCanvases() {
+  const wrap = document.getElementById('canvasWrap');
+  W = wrap.clientWidth;
+  H = wrap.clientHeight;
+  Object.values(canvases).forEach(c => { c.width = W; c.height = H; });
+  drawBG();
+  drawMolecules();
+  drawFilmLayer();
+}
+
+// State
+let simRunning = false;
+let showParticles = true;
+let labelAmt = 0.3;
+let expTime = 0.3;
+let particles = [];
+let filmSpots = [];
+let totalParticlesEmitted = 0;
+let exposurePct = 0;
+let animFrameId = null;
+let filmDeveloped = false;
+
+// Molecule positions (simulating a cell)
+let molecules = [];
+
+function generateMolecules() {
+  molecules = [];
+  const cx = W * 0.5, cy = H * 0.52;
+  const cellR = Math.min(W, H) * 0.25;
+  const count = Math.floor(labelAmt * 80 + 5);
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const r = Math.random() * cellR * 0.85;
+    molecules.push({
+      x: cx + Math.cos(angle) * r,
+      y: cy + Math.sin(angle) * r,
+      size: 2 + Math.random() * 3,
+      pulse: Math.random() * Math.PI * 2
+    });
+  }
+}
+
+function drawBG() {
+  const ctx = ctxs.bg;
+  ctx.clearRect(0, 0, W, H);
+
+  // background
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+
+  // Film zone (top 30%)
+  const filmH = H * 0.3;
+  const grad = ctx.createLinearGradient(0, 0, 0, filmH);
+  grad.addColorStop(0, '#1a1a1a');
+  grad.addColorStop(1, '#0d0d0d');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, filmH);
+
+  // Film/Sample separator line
+  ctx.strokeStyle = '#39ff1444';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 6]);
+  ctx.beginPath();
+  ctx.moveTo(0, filmH);
+  ctx.lineTo(W, filmH);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Labels
+  ctx.font = `${W * 0.022}px 'Share Tech Mono', monospace`;
+  ctx.fillStyle = '#39ff1466';
+  ctx.letterSpacing = '0.1em';
+  ctx.fillText('PHOTOGRAPHIC FILM', 10, 20);
+  ctx.fillText('BIOLOGICAL SAMPLE', 10, filmH + 20);
+
+  // Cell outline
+  const cx = W * 0.5, cy = H * 0.52 + filmH * 0.1;
+  const cellR = Math.min(W, H) * 0.25;
+  ctx.strokeStyle = '#39ff1433';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, cellR * 1.1, cellR, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Nucleus
+  ctx.strokeStyle = '#39ff1422';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, cellR * 0.38, cellR * 0.35, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.font = `${W * 0.018}px 'Share Tech Mono', monospace`;
+  ctx.fillStyle = '#39ff1433';
+  ctx.fillText('NUCLEUS', cx - 28, cy + 4);
+
+  // Grain noise on film area
+  for (let i = 0; i < 400; i++) {
+    const x = Math.random() * W;
+    const y = Math.random() * filmH;
+    const alpha = Math.random() * 0.06;
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+    ctx.fillRect(x, y, 1, 1);
+  }
+}
+
+function drawMolecules() {
+  const ctx = ctxs.mol;
+  ctx.clearRect(0, 0, W, H);
+  const t = Date.now() * 0.002;
+  molecules.forEach(m => {
+    const pulse = 0.5 + 0.5 * Math.sin(t + m.pulse);
+    ctx.save();
+    ctx.shadowBlur = 8 + pulse * 6;
+    ctx.shadowColor = '#39ff14';
+    ctx.fillStyle = `rgba(57,255,20,${0.5 + pulse * 0.4})`;
+    ctx.beginPath();
+    ctx.arc(m.x, m.y, m.size * (0.8 + pulse * 0.3), 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  });
+}
+
+// Particle system
+class Particle {
+  constructor(src) {
+    this.x = src.x; this.y = src.y;
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 1 + Math.random() * 3;
+    this.vx = Math.cos(angle) * speed;
+    this.vy = Math.sin(angle) * speed * 0.7 - 2;
+    this.life = 1;
+    this.maxLife = 0.3 + Math.random() * 0.7;
+    this.hitFilm = false;
+    this.targetX = this.x + this.vx * 80 + (Math.random() - 0.5) * 40;
+    this.targetY = H * 0.28 + Math.random() * H * 0.04;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.life -= 0.025;
+    if (this.y <= H * 0.31 && !this.hitFilm) {
+      this.hitFilm = true;
+      filmSpots.push({ x: this.x, y: this.y, alpha: 0, target: 0.7 + Math.random() * 0.3, size: 1 + Math.random() * 3 });
+      exposurePct = Math.min(100, exposurePct + 0.1 * expTime);
+    }
+    return this.life > 0;
+  }
+  draw(ctx) {
+    if (!showParticles) return;
+    const a = Math.max(0, this.life);
+    ctx.save();
+    ctx.globalAlpha = a * 0.8;
+    ctx.strokeStyle = `rgba(57,255,20,${a})`;
+    ctx.shadowBlur = 4;
+    ctx.shadowColor = '#39ff14';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(this.x, this.y);
+    ctx.lineTo(this.x - this.vx * 5, this.y - this.vy * 5);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+function drawParticles() {
+  const ctx = ctxs.par;
+  ctx.clearRect(0, 0, W, H);
+  particles = particles.filter(p => {
+    const alive = p.update();
+    p.draw(ctx);
+    return alive;
+  });
+}
+
+function drawFilmLayer() {
+  const ctx = ctxs.film;
+  ctx.clearRect(0, 0, W, H);
+  filmSpots.forEach(s => {
+    if (s.alpha < s.target) s.alpha += 0.02;
+    ctx.save();
+    ctx.globalAlpha = s.alpha;
+    ctx.fillStyle = '#000';
+    ctx.shadowBlur = 2;
+    ctx.shadowColor = '#000';
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  });
+}
+
+function drawOverlay() {
+  const ctx = ctxs.overlay;
+  ctx.clearRect(0, 0, W, H);
+  if (filmDeveloped) {
+    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+    ctx.fillRect(0, 0, W, H * 0.31);
+    filmSpots.forEach(s => {
+      ctx.save();
+      ctx.globalAlpha = Math.min(1, s.alpha * 2);
+      ctx.fillStyle = '#000';
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.size * 1.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+    ctx.font = `${W * 0.025}px 'Share Tech Mono', monospace`;
+    ctx.fillStyle = '#39ff1488';
+    ctx.fillText('DEVELOPED FILM', W / 2 - 60, H * 0.16);
+  }
+}
+
+function emitParticles() {
+  if (!simRunning) return;
+  const count = Math.floor(labelAmt * expTime * 3 + 1);
+  for (let i = 0; i < count; i++) {
+    if (molecules.length > 0) {
+      const src = molecules[Math.floor(Math.random() * molecules.length)];
+      particles.push(new Particle(src));
+      totalParticlesEmitted++;
+    }
+  }
+}
+
+function updateReadouts() {
+  const sig = labelAmt * expTime;
+  let intensity = 'LOW', clarity = 'FAINT';
+  if (sig > 0.4) { intensity = 'MEDIUM'; clarity = 'CLEAR'; }
+  if (sig > 0.7) { intensity = 'HIGH'; clarity = 'SATURATED'; }
+  if (sig > 0.9) intensity = 'SATURATED';
+
+  document.getElementById('readout-intensity').textContent = intensity;
+  document.getElementById('readout-clarity').textContent = clarity;
+  document.getElementById('readout-particles').textContent = totalParticlesEmitted.toLocaleString();
+  document.getElementById('readout-exposure').textContent = Math.round(exposurePct) + '%';
+
+  const pct = Math.min(100, Math.round(sig * 100));
+  document.getElementById('sig-fill').style.width = pct + '%';
+  document.getElementById('sig-pct').textContent = pct + '%';
+
+  updateContext(sig, intensity);
+}
+
+function updateContext(sig, intensity) {
+  const body = document.getElementById('context-body');
+  const label = labelAmt, exp = expTime;
+
+  if (sig < 0.2) {
+    body.innerHTML = `<strong style="color:var(--green-dim)">Weak signal detected.</strong> Low radiolabel concentration results in sparse film exposure. This may represent a small number of dividing cells (low labeling index) or minimal transcriptional activity. In practice: may require extended exposure time or higher specific activity probe.`;
+  } else if (sig < 0.5) {
+    body.innerHTML = `<strong style="color:var(--green-mid)">Moderate signal.</strong> Sufficient for detecting active DNA synthesis (S-phase cells) or gene expression via Northern blot. Optimal for most quantitative studies — the signal is above background but not saturated. Bands or grains are clearly countable.`;
+  } else if (sig < 0.8) {
+    body.innerHTML = `<strong style="color:var(--green)">Strong signal.</strong> High labeling efficiency indicates abundant labeled molecules. Useful for rapid screening or detection of highly expressed genes. Risk of film grain overlap beginning — nearby molecules may appear as a single dense region.`;
+  } else {
+    body.innerHTML = `<strong style="color:var(--amber)">Signal saturation warning.</strong> Overexposure causes neighboring spots to merge and the film response enters its nonlinear range. Quantitative interpretation is compromised. Reduce exposure time or radiolabel amount for accurate data. The biological information is present but obscured.`;
+  }
+}
+
+let lastFrame = 0;
+function animLoop(ts) {
+  if (!simRunning) return;
+  if (ts - lastFrame > 50) {
+    emitParticles();
+    lastFrame = ts;
+  }
+  drawMolecules();
+  drawParticles();
+  drawFilmLayer();
+  drawOverlay();
+  updateReadouts();
+  animFrameId = requestAnimationFrame(animLoop);
+}
+
+// Controls
+document.getElementById('label-slider').addEventListener('input', function() {
+  labelAmt = this.value / 100;
+  document.getElementById('label-val').textContent = this.value + '%';
+  generateMolecules();
+  drawBG();
+  drawMolecules();
+});
+
+document.getElementById('exp-slider').addEventListener('input', function() {
+  expTime = this.value / 100;
+  document.getElementById('exp-val').textContent = this.value + '%';
+});
+
+document.getElementById('btn-startstop').addEventListener('click', function() {
+  simRunning = !simRunning;
+  this.textContent = simRunning ? '⏸ Pause Simulation' : '▶ Start Simulation';
+  this.classList.toggle('active', simRunning);
+  document.getElementById('film-status').textContent = simRunning ? '◉ LIVE' : '◻ PAUSED';
+  if (simRunning) {
+    filmDeveloped = false;
+    ctxs.overlay.clearRect(0, 0, W, H);
+    requestAnimationFrame(animLoop);
+  } else {
+    cancelAnimationFrame(animFrameId);
+  }
+});
+
+document.getElementById('btn-develop').addEventListener('click', function() {
+  simRunning = false;
+  cancelAnimationFrame(animFrameId);
+  document.getElementById('btn-startstop').textContent = '▶ Start Simulation';
+  document.getElementById('btn-startstop').classList.remove('active');
+  document.getElementById('film-status').textContent = '◻ DEVELOPED';
+  filmDeveloped = true;
+  drawOverlay();
+  updateReadouts();
+});
+
+document.getElementById('btn-reset').addEventListener('click', function() {
+  simRunning = false;
+  filmDeveloped = false;
+  cancelAnimationFrame(animFrameId);
+  particles = [];
+  filmSpots = [];
+  totalParticlesEmitted = 0;
+  exposurePct = 0;
+  document.getElementById('btn-startstop').textContent = '▶ Start Simulation';
+  document.getElementById('btn-startstop').classList.remove('active');
+  document.getElementById('film-status').textContent = '◉ LIVE';
+  generateMolecules();
+  drawBG();
+  drawMolecules();
+  ctxs.par.clearRect(0, 0, W, H);
+  ctxs.film.clearRect(0, 0, W, H);
+  ctxs.overlay.clearRect(0, 0, W, H);
+  updateReadouts();
+});
+
+function toggleParticles() {
+  showParticles = !showParticles;
+  document.getElementById('particle-toggle').classList.toggle('on', showParticles);
+}
+
+// ════════════════════════════════════════════════════
+// STEPS
+// ════════════════════════════════════════════════════
+function showStep(i, btn) {
+  document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.step-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('step-' + i).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ════════════════════════════════════════════════════
+// APPLICATIONS
+// ════════════════════════════════════════════════════
+function showApp(id) {
+  document.querySelectorAll('.app-detail').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.app-card').forEach(el => el.classList.remove('active'));
+  const det = document.getElementById('app-' + id);
+  if (det) { det.classList.add('active'); det.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  document.querySelectorAll('.app-card').forEach(el => {
+    if (el.getAttribute('onclick') === `showApp('${id}')`) el.classList.add('active');
+  });
+}
+
+// ════════════════════════════════════════════════════
+// QUIZ
+// ════════════════════════════════════════════════════
+const quizData = [
+  {
+    q: "What causes the dark spots on autoradiographic film?",
+    opts: ["Heat from the sample activates film chemicals", "Beta particles activate silver halide crystals in the emulsion", "UV light from labeled molecules exposes the film", "Enzymes in the sample react with the film developer"],
+    correct: 1,
+    exp: "Beta particles emitted by radioactive isotopes activate silver halide crystals in the film emulsion. These crystals form a latent image that is made visible when the developer reduces activated Ag⁺ ions to metallic silver (black)."
+  },
+  {
+    q: "What happens if the exposure time is too long?",
+    opts: ["No image forms because the label decays completely", "The film remains clear due to background radiation washing out signal", "Signal saturates — spots overlap and quantitative accuracy is lost", "Spatial resolution improves as more particles hit the film"],
+    correct: 2,
+    exp: "Prolonged exposure causes dense signal accumulation where spots overlap and merge. The film enters a nonlinear response range, making it impossible to distinguish 'more activity' from 'maximal density.' This is called overexposure or saturation."
+  },
+  {
+    q: "Why are radiolabels used instead of regular (non-radioactive) molecules for this technique?",
+    opts: ["Radiolabeled molecules have different biological functions", "They are cheaper than fluorescent alternatives", "Radiation can be detected externally without altering or destroying the sample", "Radioactive molecules are incorporated faster into biological macromolecules"],
+    correct: 2,
+    exp: "The key advantage is that radioactive decay produces detectable emissions (beta particles) that pass through the sample and hit film above it — without requiring illumination, antibodies, or any other detection reagent. The sample can remain intact while the signal is recorded passively."
+  },
+  {
+    q: "In a pulse-chase experiment using ³H-thymidine, what does a 'chase' step achieve?",
+    opts: ["It increases the amount of radiolabel incorporated into DNA", "It washes out the radiolabel so only cells actively dividing at that moment are tracked", "It replaces radioactive thymidine with normal thymidine, allowing tracking of labeled cells through subsequent cell cycle stages", "It develops the autoradiographic film immediately after exposure"],
+    correct: 2,
+    exp: "The 'chase' involves replacing radiolabeled thymidine with cold (non-radioactive) thymidine. Cells already labeled in S-phase continue dividing normally, but no new cells become labeled. Taking samples at intervals shows how the original cohort of S-phase cells progresses — through G2, mitosis, and into G1 — revealing cell cycle kinetics."
+  },
+  {
+    q: "Which isotope is MOST suitable when high spatial resolution is needed in cellular autoradiography?",
+    opts: ["³²P — high energy beta emitter, strong signal", "¹²⁵I — gamma emitter, penetrates well", "³H — low energy beta emitter, particles travel very short distances", "¹⁴C — medium energy, long half-life"],
+    correct: 2,
+    exp: "³H (tritium) emits very low-energy beta particles that travel only micrometers before stopping. This short path length means each particle hits the film almost directly above the labeled molecule, producing a tight spot with high spatial resolution. ³²P emits high-energy particles that scatter widely, producing blurred results in cellular autoradiography."
+  }
+];
+
+let quizAnswered = [];
+let quizScore = 0;
+
+function buildQuiz() {
+  quizAnswered = new Array(quizData.length).fill(false);
+  quizScore = 0;
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = quizData.map((q, qi) => `
+    <div class="quiz-q" id="qq-${qi}">
+      <span class="q-num">QUESTION ${qi + 1} OF ${quizData.length}</span>
+      <div class="q-text">${q.q}</div>
+      <div class="options">
+        ${q.opts.map((o, oi) => `
+          <button class="opt-btn" onclick="answerQ(${qi}, ${oi})">${String.fromCharCode(65 + oi)}. ${o}</button>
+        `).join('')}
+      </div>
+      <div class="feedback" id="fb-${qi}"></div>
+    </div>
+  `).join('');
+  document.getElementById('quiz-score').classList.remove('show');
+}
+
+function answerQ(qi, oi) {
+  if (quizAnswered[qi]) return;
+  quizAnswered[qi] = true;
+  const q = quizData[qi];
+  const container = document.getElementById('qq-' + qi);
+  const btns = container.querySelectorAll('.opt-btn');
+  btns.forEach((b, i) => {
+    b.disabled = true;
+    if (i === q.correct) b.classList.add('correct');
+    else if (i === oi) b.classList.add('wrong');
+  });
+  const fb = document.getElementById('fb-' + qi);
+  const correct = oi === q.correct;
+  if (correct) quizScore++;
+  fb.className = 'feedback show ' + (correct ? 'ok' : 'bad');
+  fb.innerHTML = (correct ? '✓ Correct. ' : '✗ Incorrect. ') + q.exp;
+
+  if (quizAnswered.every(Boolean)) showFinalScore();
+}
+
+function showFinalScore() {
+  const scoreEl = document.getElementById('quiz-score');
+  document.getElementById('score-display').textContent = quizScore + '/' + quizData.length;
+  const pct = quizScore / quizData.length;
+  let msg = '';
+  if (pct === 1) msg = 'Perfect. You have a clear grasp of the principles.';
+  else if (pct >= 0.8) msg = 'Strong performance. Review the questions you missed.';
+  else if (pct >= 0.6) msg = 'Adequate. Go back through the simulation and steps sections.';
+  else msg = 'Needs work. Revisit the core concepts before the next session.';
+  document.getElementById('score-msg').textContent = msg;
+  scoreEl.classList.add('show');
+}
+
+function resetQuiz() { buildQuiz(); }
+
+// ════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════
+window.addEventListener('resize', () => { resizeCanvases(); generateMolecules(); drawMolecules(); });
+window.addEventListener('load', () => {
+  resizeCanvases();
+  generateMolecules();
+  drawMolecules();
+  buildQuiz();
+  updateReadouts();
+  // Animate molecules even when not running
+  function idleAnim() {
+    if (!simRunning) drawMolecules();
+    requestAnimationFrame(idleAnim);
+  }
+  idleAnim();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geiger-Müller Counter — MSc Microbiology</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;900&family=Inter:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0a0c0e;
+    --surface: #111416;
+    --surface2: #181c1f;
+    --border: #1e2428;
+    --green: #39ff14;
+    --green-dim: #1a7a06;
+    --amber: #ffb300;
+    --amber-dim: #7a5500;
+    --red: #ff3b3b;
+    --cyan: #00e5ff;
+    --text: #c8d6df;
+    --text-dim: #5a7080;
+    --font-mono: 'Share Tech Mono', monospace;
+    --font-display: 'Orbitron', monospace;
+    --font-body: 'Inter', sans-serif;
+    --glow-green: 0 0 8px #39ff14, 0 0 20px #39ff1455;
+    --glow-amber: 0 0 8px #ffb300, 0 0 20px #ffb30055;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.65;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Scanline overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 28px 40px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+  }
+  .header-badge {
+    background: var(--green);
+    color: #000;
+    font-family: var(--font-display);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    padding: 4px 10px;
+    border-radius: 2px;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+  header h1 {
+    font-family: var(--font-display);
+    font-size: clamp(18px, 3vw, 28px);
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 1px;
+    text-shadow: var(--glow-green);
+  }
+  header h1 span { color: var(--green); }
+  header p {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── NAV TABS ── */
+  nav {
+    display: flex;
+    gap: 2px;
+    padding: 0 40px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  .nav-tab {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 14px 20px;
+    cursor: pointer;
+    color: var(--text-dim);
+    border-bottom: 2px solid transparent;
+    transition: all .2s;
+    white-space: nowrap;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    outline: none;
+  }
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active {
+    color: var(--green);
+    border-bottom-color: var(--green);
+    text-shadow: var(--glow-green);
+  }
+
+  /* ── SECTIONS ── */
+  .section { display: none; padding: 32px 40px 60px; max-width: 1100px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* ── INTRO ── */
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 24px;
+  }
+  @media(max-width:700px) { .intro-grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--green), var(--cyan));
+  }
+  .card h3 {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green);
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  .card p { font-size: 14px; color: var(--text); margin-bottom: 10px; }
+  .card p:last-child { margin-bottom: 0; }
+
+  .flow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .flow-step {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    background: var(--surface2);
+    border-radius: 4px;
+    border-left: 3px solid var(--green-dim);
+    font-size: 14px;
+    transition: border-color .2s;
+  }
+  .flow-step:hover { border-left-color: var(--green); }
+  .flow-step .step-num {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--green);
+    min-width: 28px;
+    text-shadow: var(--glow-green);
+  }
+
+  /* ── SIMULATION ── */
+  .sim-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 24px;
+    margin-top: 24px;
+  }
+  @media(max-width:860px) { .sim-layout { grid-template-columns: 1fr; } }
+
+  #tube-canvas-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  #tube-canvas-wrap::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--green), var(--amber));
+  }
+
+  canvas#gm-canvas {
+    display: block;
+    width: 100%;
+    height: 320px;
+    border-radius: 4px;
+    background: #060809;
+  }
+
+  .controls-panel { display: flex; flex-direction: column; gap: 16px; }
+
+  .readout-box {
+    background: var(--surface);
+    border: 1px solid var(--green-dim);
+    border-radius: 6px;
+    padding: 18px 20px;
+    text-align: center;
+    box-shadow: inset 0 0 20px #39ff1408;
+  }
+  .readout-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .readout-value {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--green);
+    text-shadow: var(--glow-green);
+    letter-spacing: 2px;
+    transition: color .2s;
+  }
+  .readout-value.amber { color: var(--amber); text-shadow: var(--glow-amber); }
+  .readout-value.red { color: var(--red); text-shadow: 0 0 8px #ff3b3b, 0 0 20px #ff3b3b55; }
+  .readout-unit {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .ctrl-group {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 18px;
+  }
+  .ctrl-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ctrl-label span { color: var(--amber); font-size: 13px; }
+
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: var(--glow-amber);
+    cursor: pointer;
+    transition: transform .1s;
+  }
+  input[type=range]::-webkit-slider-thumb:active { transform: scale(1.2); }
+
+  .btn-row { display: flex; gap: 8px; }
+
+  .btn {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 8px;
+    border-radius: 4px;
+    border: 1px solid;
+    cursor: pointer;
+    transition: all .15s;
+    outline: none;
+  }
+  .btn-green {
+    background: transparent;
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .btn-green:hover, .btn-green.active {
+    background: var(--green);
+    color: #000;
+    box-shadow: var(--glow-green);
+  }
+  .btn-amber {
+    background: transparent;
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+  .btn-amber:hover {
+    background: var(--amber);
+    color: #000;
+    box-shadow: var(--glow-amber);
+  }
+  .btn-dim {
+    background: transparent;
+    border-color: var(--text-dim);
+    color: var(--text-dim);
+  }
+  .btn-dim:hover { border-color: var(--text); color: var(--text); }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    margin-top: 6px;
+  }
+  .toggle {
+    width: 38px; height: 20px;
+    background: var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    transition: background .2s;
+    border: none;
+    outline: none;
+  }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 14px; height: 14px;
+    background: var(--text-dim);
+    border-radius: 50%;
+    transition: all .2s;
+  }
+  .toggle.on { background: var(--green-dim); }
+  .toggle.on::after { left: 21px; background: var(--green); box-shadow: var(--glow-green); }
+
+  /* ── BIOLOGY PANEL ── */
+  .bio-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+  @media(max-width:700px) { .bio-grid { grid-template-columns: 1fr; } }
+
+  .bio-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    transition: border-color .2s;
+  }
+  .bio-card h4 {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: var(--cyan);
+  }
+  .bio-card p { font-size: 13px; color: var(--text-dim); }
+  .impact-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-top: 12px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    transition: all .3s;
+  }
+  .impact-low { background: #0d3a0d; color: var(--green); border: 1px solid var(--green-dim); }
+  .impact-med { background: #3a2c00; color: var(--amber); border: 1px solid var(--amber-dim); }
+  .impact-high { background: #3a0d0d; color: var(--red); border: 1px solid #7a1b1b; }
+
+  #bio-summary {
+    margin-top: 24px;
+    padding: 20px 24px;
+    background: var(--surface);
+    border-radius: 6px;
+    border-left: 4px solid var(--green);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    transition: all .4s;
+  }
+
+  /* ── CONCEPT EXPLAINER ── */
+  .concept-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 24px; }
+  .concept-tab-btn {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 10px 18px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all .2s;
+    outline: none;
+  }
+  .concept-tab-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+  .concept-tab-btn.active { background: var(--cyan); color: #000; border-color: var(--cyan); font-weight: 600; }
+
+  .concept-content {
+    display: none;
+    margin-top: 16px;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    animation: fadeIn .25s ease;
+  }
+  .concept-content.active { display: block; }
+  .concept-content h3 {
+    font-family: var(--font-display);
+    font-size: 14px;
+    color: var(--cyan);
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
+  .concept-content p { font-size: 14px; margin-bottom: 10px; }
+  .concept-content ul { padding-left: 20px; font-size: 14px; }
+  .concept-content li { margin-bottom: 6px; }
+  .highlight { color: var(--green); font-weight: 500; }
+
+  /* ── LIMITATIONS ── */
+  .limit-list {
+    list-style: none;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .limit-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 14px;
+    border-left: 3px solid var(--amber-dim);
+    transition: border-left-color .2s;
+  }
+  .limit-list li:hover { border-left-color: var(--amber); }
+  .limit-icon { font-size: 20px; flex-shrink: 0; }
+  .limit-title { font-weight: 600; color: var(--amber); display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: 1px; margin-bottom: 4px; }
+
+  /* ── QUIZ ── */
+  .quiz-wrap { margin-top: 24px; }
+  .quiz-question {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: border-color .2s;
+  }
+  .quiz-question.correct { border-color: var(--green); background: #0a1f0a; }
+  .quiz-question.wrong { border-color: var(--red); background: #1f0a0a; }
+  .q-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+  .q-text { font-size: 15px; font-weight: 500; margin-bottom: 16px; color: #fff; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option-btn {
+    font-family: var(--font-body);
+    font-size: 14px;
+    text-align: left;
+    padding: 10px 16px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface2);
+    color: var(--text);
+    cursor: pointer;
+    transition: all .15s;
+    outline: none;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--cyan); color: var(--cyan); }
+  .option-btn.correct { border-color: var(--green); background: #0d3a0d; color: var(--green); }
+  .option-btn.wrong { border-color: var(--red); background: #3a0d0d; color: var(--red); }
+  .option-btn:disabled { cursor: default; }
+  .q-feedback {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    display: none;
+  }
+  .q-feedback.show { display: block; }
+  .q-feedback.correct { background: #0d3a0d; color: var(--green); border-left: 3px solid var(--green); }
+  .q-feedback.wrong { background: #3a0d0d; color: var(--red); border-left: 3px solid var(--red); }
+
+  .quiz-score {
+    display: none;
+    text-align: center;
+    padding: 32px;
+    background: var(--surface);
+    border: 1px solid var(--green-dim);
+    border-radius: 6px;
+    margin-top: 24px;
+  }
+  .quiz-score.show { display: block; }
+  .score-val {
+    font-family: var(--font-display);
+    font-size: 64px;
+    font-weight: 900;
+    color: var(--green);
+    text-shadow: var(--glow-green);
+  }
+  .quiz-reset-btn {
+    margin-top: 20px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    padding: 12px 32px;
+    border: 1px solid var(--green);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--green);
+    cursor: pointer;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all .15s;
+  }
+  .quiz-reset-btn:hover { background: var(--green); color: #000; box-shadow: var(--glow-green); }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(14px, 2vw, 18px);
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .section-sub { font-size: 13px; color: var(--text-dim); }
+
+  @keyframes fadeIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }
+
+  /* Particle flash */
+  .flash {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: flashAnim .4s ease-out forwards;
+  }
+  @keyframes flashAnim {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(3); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-badge">MSc · MICROBIOLOGY</div>
+  <div>
+    <h1><span>Geiger-Müller</span> Counter</h1>
+    <p>Interactive learning module · Radiation Detection &amp; Biological Impact</p>
+  </div>
+</header>
+
+<nav>
+  <button class="nav-tab active" onclick="showSection('intro',this)">Introduction</button>
+  <button class="nav-tab" onclick="showSection('sim',this)">Simulation</button>
+  <button class="nav-tab" onclick="showSection('bio',this)">Biology Connection</button>
+  <button class="nav-tab" onclick="showSection('concepts',this)">Concepts</button>
+  <button class="nav-tab" onclick="showSection('limits',this)">Limitations</button>
+  <button class="nav-tab" onclick="showSection('quiz',this)">Quiz Mode</button>
+</nav>
+
+<!-- ═══ INTRO ═══ -->
+<div id="intro" class="section active">
+  <div class="section-title">What is a Geiger-Müller Counter?</div>
+  <div class="section-sub">Understanding radiation detection through a biology lens</div>
+
+  <div class="intro-grid">
+    <div class="card">
+      <h3>The Core Idea</h3>
+      <p>A Geiger-Müller (GM) counter is a device that detects ionising radiation — including alpha (α), beta (β), and gamma (γ) radiation — by sensing the electrical pulses each particle creates.</p>
+      <p>In microbiology, we care about radiation because it damages DNA, kills or mutates microorganisms, and is used in sterilisation and research (e.g., radiolabelled tracers, irradiation sterilisation).</p>
+      <p>Every <strong style="color:var(--green)">audible click</strong> = one ionisation event inside the tube.</p>
+    </div>
+    <div class="card">
+      <h3>From Radiation → Biology</h3>
+      <div class="flow-steps">
+        <div class="flow-step"><span class="step-num">①</span><div><strong>Radiation enters</strong> — particle or photon passes through matter</div></div>
+        <div class="flow-step"><span class="step-num">②</span><div><strong>Ionisation occurs</strong> — electrons stripped from atoms, creating ion pairs</div></div>
+        <div class="flow-step"><span class="step-num">③</span><div><strong>DNA damage</strong> — ionisation breaks sugar-phosphate backbone or causes base modification</div></div>
+        <div class="flow-step"><span class="step-num">④</span><div><strong>GM tube detects</strong> — ion pairs produce an amplified electrical pulse → one click</div></div>
+        <div class="flow-step"><span class="step-num">⑤</span><div><strong>Dose measurement</strong> — more clicks = higher dose = greater biological risk</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Inside the GM Tube</h3>
+      <p>The tube contains an inert gas (e.g., argon + halogen quench gas) at low pressure, with a central anode wire and an outer cathode cylinder, held at ~400–900 V.</p>
+      <p>When a radiation particle enters through the thin mica window, it ionises gas atoms. The electric field accelerates freed electrons toward the anode, triggering a cascade called a <strong style="color:var(--amber)">Townsend avalanche</strong>.</p>
+      <p>This cascade produces a measurable voltage pulse — <em>one click</em> — regardless of the original particle's energy.</p>
+    </div>
+    <div class="card">
+      <h3>Why It Matters in Microbiology</h3>
+      <p>🧫 <strong>Sterilisation:</strong> Gamma irradiation (25 kGy) sterilises medical equipment — GM counters verify safe exposure levels.</p>
+      <p>🧬 <strong>Radiolabelling:</strong> ³H, ¹⁴C, ³²P tracers used in molecular biology are quantified using Geiger counters or liquid scintillation.</p>
+      <p>⚠️ <strong>Lab safety:</strong> Monitoring contamination in radioisotope labs protects researchers from chronic low-dose exposure.</p>
+      <p>🦠 <strong>Mutation studies:</strong> Controlled radiation experiments induce mutations for genetic research.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SIMULATION ═══ -->
+<div id="sim" class="section">
+  <div class="section-title">Interactive Simulation</div>
+  <div class="section-sub">Observe how radiation intensity affects ionisation events in real time</div>
+
+  <div class="sim-layout">
+    <div id="tube-canvas-wrap">
+      <canvas id="gm-canvas"></canvas>
+    </div>
+
+    <div class="controls-panel">
+      <div class="readout-box">
+        <div class="readout-label">Total Counts</div>
+        <div class="readout-value" id="total-counts">0</div>
+        <div class="readout-unit">events detected</div>
+      </div>
+      <div class="readout-box">
+        <div class="readout-label">Count Rate</div>
+        <div class="readout-value" id="cps-display">0</div>
+        <div class="readout-unit">counts per second</div>
+      </div>
+
+      <div class="ctrl-group">
+        <div class="ctrl-label">RADIATION INTENSITY <span id="intensity-label">LOW</span></div>
+        <input type="range" id="intensity-slider" min="1" max="10" value="2" step="1">
+        <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;color:var(--text-dim);margin-top:6px;">
+          <span>LOW</span><span>MEDIUM</span><span>HIGH</span>
+        </div>
+      </div>
+
+      <div class="ctrl-group">
+        <div class="ctrl-label" style="margin-bottom:12px;">CONTROLS</div>
+        <div class="btn-row">
+          <button class="btn btn-green" id="start-btn" onclick="toggleSim()">▶ START</button>
+          <button class="btn btn-amber" onclick="resetCounter()">↺ RESET</button>
+        </div>
+        <div class="toggle-row" style="margin-top:12px;">
+          <span>IONISATION ANIMATION</span>
+          <button class="toggle on" id="anim-toggle" onclick="toggleAnim(this)"></button>
+        </div>
+        <div class="toggle-row" style="margin-top:8px;">
+          <span>SOUND</span>
+          <button class="toggle on" id="sound-toggle" onclick="toggleSound(this)"></button>
+        </div>
+      </div>
+
+      <div class="ctrl-group" style="font-size:13px;">
+        <div class="ctrl-label">RADIATION LEVEL</div>
+        <div id="level-indicator" style="font-family:var(--font-mono);color:var(--green);font-size:13px;padding:8px 0;transition:color .3s;">● BACKGROUND / SAFE</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BIOLOGY CONNECTION ═══ -->
+<div id="bio" class="section">
+  <div class="section-title">Biological Impact of Radiation</div>
+  <div class="section-sub">Use the slider in the Simulation tab to change intensity — this panel updates dynamically</div>
+
+  <div class="bio-grid">
+    <div class="bio-card">
+      <h4>DNA Damage</h4>
+      <p>Ionising radiation breaks chemical bonds in DNA. Single-strand breaks (SSBs) are usually repaired, but double-strand breaks (DSBs) can be lethal or mutagenic if misrepaired.</p>
+      <p id="dna-text" style="font-size:13px;color:var(--text-dim);margin-top:8px;">At low doses, cellular repair mechanisms (e.g., BER, NHEJ) are sufficient.</p>
+      <span class="impact-badge impact-low" id="dna-badge">MINIMAL IMPACT</span>
+    </div>
+    <div class="bio-card">
+      <h4>Mutation Rate</h4>
+      <p>Point mutations, frameshifts, and chromosomal rearrangements increase proportionally with dose. Bacteria show measurable mutation rate increases above background radiation.</p>
+      <p id="mut-text" style="font-size:13px;color:var(--text-dim);margin-top:8px;">Background radiation contributes ~1 mutation per cell genome per day.</p>
+      <span class="impact-badge impact-low" id="mut-badge">WITHIN NORMAL RANGE</span>
+    </div>
+    <div class="bio-card">
+      <h4>Sterilisation / Lethality</h4>
+      <p>High doses kill microorganisms by overwhelming repair pathways. D10 value (dose to kill 90% of organisms) varies: <em>Deinococcus radiodurans</em> D10 ≈ 11 kGy; <em>E. coli</em> D10 ≈ 0.7 kGy.</p>
+      <p id="steril-text" style="font-size:13px;color:var(--text-dim);margin-top:8px;">Gamma sterilisation uses 25 kGy for medical devices (ISO 11137).</p>
+      <span class="impact-badge impact-low" id="steril-badge">NO LETHALITY</span>
+    </div>
+  </div>
+
+  <div id="bio-summary" style="border-left-color:var(--green);">
+    <span style="font-family:var(--font-display);font-size:11px;letter-spacing:2px;color:var(--green);">CURRENT ASSESSMENT: </span>
+    <span id="bio-summary-text">Radiation level is within background range. Cellular DNA repair mechanisms can effectively manage this exposure. No significant biological risk expected.</span>
+  </div>
+
+  <div style="margin-top:28px;" class="card">
+    <h3>Radiation Types &amp; Biological Relevance</h3>
+    <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;">
+      <thead>
+        <tr style="border-bottom:1px solid var(--border);">
+          <th style="text-align:left;padding:10px 12px;font-family:var(--font-mono);color:var(--text-dim);font-size:11px;letter-spacing:1px;">TYPE</th>
+          <th style="text-align:left;padding:10px 12px;font-family:var(--font-mono);color:var(--text-dim);font-size:11px;letter-spacing:1px;">SYMBOL</th>
+          <th style="text-align:left;padding:10px 12px;font-family:var(--font-mono);color:var(--text-dim);font-size:11px;letter-spacing:1px;">PENETRATION</th>
+          <th style="text-align:left;padding:10px 12px;font-family:var(--font-mono);color:var(--text-dim);font-size:11px;letter-spacing:1px;">GM DETECTS?</th>
+          <th style="text-align:left;padding:10px 12px;font-family:var(--font-mono);color:var(--text-dim);font-size:11px;letter-spacing:1px;">BIOLOGICAL IMPACT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:10px 12px;color:#fff;">Alpha</td>
+          <td style="padding:10px 12px;color:var(--amber);font-weight:600;">α</td>
+          <td style="padding:10px 12px;">Low — stopped by skin/paper</td>
+          <td style="padding:10px 12px;color:var(--green);">Yes (thin window)</td>
+          <td style="padding:10px 12px;">High LET — severe if inhaled/ingested</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:10px 12px;color:#fff;">Beta</td>
+          <td style="padding:10px 12px;color:var(--amber);font-weight:600;">β</td>
+          <td style="padding:10px 12px;">Medium — penetrates skin</td>
+          <td style="padding:10px 12px;color:var(--green);">Yes</td>
+          <td style="padding:10px 12px;">Skin burns, thyroid uptake (¹³¹I)</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 12px;color:#fff;">Gamma</td>
+          <td style="padding:10px 12px;color:var(--amber);font-weight:600;">γ</td>
+          <td style="padding:10px 12px;">High — penetrates body/walls</td>
+          <td style="padding:10px 12px;color:var(--green);">Yes</td>
+          <td style="padding:10px 12px;">Deep tissue damage; used in sterilisation</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONCEPTS ═══ -->
+<div id="concepts" class="section">
+  <div class="section-title">Concept Explainer</div>
+  <div class="section-sub">Click any topic to expand the explanation</div>
+
+  <div class="concept-tabs">
+    <button class="concept-tab-btn active" onclick="showConcept('c1',this)">What is ionisation?</button>
+    <button class="concept-tab-btn" onclick="showConcept('c2',this)">What does each click mean?</button>
+    <button class="concept-tab-btn" onclick="showConcept('c3',this)">Why is it random?</button>
+    <button class="concept-tab-btn" onclick="showConcept('c4',this)">What is dead time?</button>
+    <button class="concept-tab-btn" onclick="showConcept('c5',this)">GM vs Scintillation</button>
+  </div>
+
+  <div id="c1" class="concept-content active">
+    <h3>What is Ionisation?</h3>
+    <p>Ionisation is the process of <span class="highlight">removing an electron from a neutral atom</span>, creating a positively charged ion and a free electron.</p>
+    <p>Ionising radiation carries enough energy to do this spontaneously as it passes through matter — unlike visible light or radio waves, which cannot ionise atoms.</p>
+    <ul>
+      <li>Alpha particles: directly ionise by electrostatic repulsion</li>
+      <li>Beta particles: directly ionise via collisions</li>
+      <li>Gamma rays: indirectly ionise through photoelectric effect, Compton scattering, or pair production</li>
+    </ul>
+    <p style="margin-top:12px;"><span class="highlight">In biological terms:</span> ionisation in water produces free radicals (·OH) that attack DNA. Direct ionisation of DNA bases also occurs.</p>
+  </div>
+
+  <div id="c2" class="concept-content">
+    <h3>What Does Each Click Mean?</h3>
+    <p>Each click represents a <span class="highlight">single radiation detection event</span> — one particle (or photon) has entered the GM tube and created enough ionisation to trigger the Townsend avalanche.</p>
+    <p>Importantly: the GM tube <strong>cannot tell you</strong> what type of particle caused the click, nor how much energy it carried. All it reports is <em>that an event happened</em>.</p>
+    <p>In dose assessment: counts alone are insufficient. You need to know:</p>
+    <ul>
+      <li>The <strong>type</strong> of radiation (to apply quality factor Q)</li>
+      <li>The <strong>energy</strong> of the radiation</li>
+      <li>The <strong>geometry</strong> (distance, shielding, body part exposed)</li>
+    </ul>
+    <p style="margin-top:12px;">That's why GM counters are <span class="highlight">radiation detectors</span>, not dosimeters — they indicate presence and rough intensity, not precise dose.</p>
+  </div>
+
+  <div id="c3" class="concept-content">
+    <h3>Why is it Random?</h3>
+    <p>Radioactive decay is governed by <span class="highlight">quantum mechanical probability</span>. It is fundamentally impossible to predict exactly when any individual nucleus will decay — even for identical nuclei under identical conditions.</p>
+    <p>What we can predict is the <strong>average rate</strong> (via the decay constant λ and half-life t½). The actual number of decays in any time window follows a <strong>Poisson distribution</strong>.</p>
+    <p>This is why:</p>
+    <ul>
+      <li>Clicks are irregular — sometimes clustered, sometimes spaced far apart</li>
+      <li>Even at low activity, occasional bursts occur</li>
+      <li>You must take <strong>long count times</strong> or repeat measurements to get accurate averages</li>
+      <li>Statistical uncertainty = √N (where N = number of counts)</li>
+    </ul>
+    <p style="margin-top:12px;"><span class="highlight">Biological implication:</span> no safe "zero-risk" threshold exists in the absolute sense — even one ionisation event has a nonzero probability of causing a relevant mutation.</p>
+  </div>
+
+  <div id="c4" class="concept-content">
+    <h3>What is Dead Time?</h3>
+    <p>After each detection event, the GM tube requires a recovery period called the <span class="highlight">dead time</span> (typically 50–500 µs) before it can detect the next particle.</p>
+    <p>During dead time, any radiation entering the tube is <strong>missed entirely</strong>. At very high count rates, this leads to significant <strong>count losses</strong> and underestimation of true activity.</p>
+    <p>The corrected true count rate (n) from observed rate (m) and dead time (τ):</p>
+    <div style="background:var(--surface2);border-radius:4px;padding:12px 16px;font-family:var(--font-mono);color:var(--amber);font-size:14px;margin:12px 0;">n = m / (1 − m·τ)</div>
+    <p>This is why GM counters <strong>must not be used at very high dose rates</strong> — they will dramatically undercount and give a false sense of safety.</p>
+  </div>
+
+  <div id="c5" class="concept-content">
+    <h3>GM Counter vs Liquid Scintillation Counter</h3>
+    <p>Both detect radiation, but they work differently and suit different applications in microbiology:</p>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;">
+      <tr style="border-bottom:1px solid var(--border);">
+        <th style="text-align:left;padding:8px;font-family:var(--font-mono);font-size:11px;color:var(--text-dim);">FEATURE</th>
+        <th style="text-align:left;padding:8px;font-family:var(--font-mono);font-size:11px;color:var(--cyan);">GM COUNTER</th>
+        <th style="text-align:left;padding:8px;font-family:var(--font-mono);font-size:11px;color:var(--amber);">LIQUID SCINTILLATION</th>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;color:var(--text-dim);">Best for</td>
+        <td style="padding:8px;color:var(--cyan);">γ, β, α surveys</td>
+        <td style="padding:8px;color:var(--amber);">³H, ¹⁴C (low-energy β)</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;color:var(--text-dim);">Energy info</td>
+        <td style="padding:8px;">No</td>
+        <td style="padding:8px;">Yes (energy spectrum)</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;color:var(--text-dim);">Sensitivity</td>
+        <td style="padding:8px;">Moderate</td>
+        <td style="padding:8px;">Very high</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;color:var(--text-dim);">Use in lab</td>
+        <td style="padding:8px;">Contamination surveys, external dose</td>
+        <td style="padding:8px;">Radiolabelled assays (e.g. ³H-thymidine incorporation)</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ LIMITATIONS ═══ -->
+<div id="limits" class="section">
+  <div class="section-title">Limitations of the GM Counter</div>
+  <div class="section-sub">Understanding what this instrument cannot tell you</div>
+
+  <ul class="limit-list">
+    <li>
+      <span class="limit-icon">🔲</span>
+      <div>
+        <span class="limit-title">CANNOT IDENTIFY RADIATION TYPE</span>
+        Every click looks the same regardless of whether it was caused by an alpha, beta, or gamma particle. Distinguishing types requires absorbers, energy spectroscopy, or different detector types.
+      </div>
+    </li>
+    <li>
+      <span class="limit-icon">⚡</span>
+      <div>
+        <span class="limit-title">DOES NOT MEASURE ENERGY</span>
+        The output pulse amplitude is the same for a low-energy beta and a high-energy gamma. Energy determination requires NaI(Tl) scintillation detectors or semiconductor detectors.
+      </div>
+    </li>
+    <li>
+      <span class="limit-icon">⏱️</span>
+      <div>
+        <span class="limit-title">DEAD TIME / COUNT LOSSES</span>
+        After each pulse, the tube is unresponsive for ~50–500 µs. At high count rates (>10,000 cps), significant undercounting occurs. Corrections must be applied or the counter becomes unreliable.
+      </div>
+    </li>
+    <li>
+      <span class="limit-icon">💀</span>
+      <div>
+        <span class="limit-title">NOT A TRUE DOSIMETER</span>
+        Counts alone ≠ absorbed dose. Converting counts to dose equivalent (Sv) requires knowledge of radiation type, energy, and geometry — none of which the GM counter provides alone.
+      </div>
+    </li>
+    <li>
+      <span class="limit-icon">📉</span>
+      <div>
+        <span class="limit-title">POOR LOW-ENERGY BETA DETECTION</span>
+        ³H (tritium, 18.6 keV max) cannot penetrate the mica window of most GM tubes. Liquid scintillation counting is required for tritium and other low-energy beta emitters common in molecular biology.
+      </div>
+    </li>
+    <li>
+      <span class="limit-icon">🌡️</span>
+      <div>
+        <span class="limit-title">TEMPERATURE &amp; PRESSURE SENSITIVITY</span>
+        The gas pressure inside the tube affects avalanche behaviour. Extreme environmental conditions can shift calibration. Most lab-grade instruments are compensated, but field instruments may drift.
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- ═══ QUIZ ═══ -->
+<div id="quiz" class="section">
+  <div class="section-title">Quiz Mode</div>
+  <div class="section-sub">Test your understanding — select the best answer for each question</div>
+
+  <div class="quiz-wrap" id="quiz-wrap">
+    <!-- questions injected by JS -->
+  </div>
+  <div class="quiz-score" id="quiz-score">
+    <div style="font-family:var(--font-mono);font-size:12px;color:var(--text-dim);letter-spacing:2px;margin-bottom:8px;">FINAL SCORE</div>
+    <div class="score-val" id="score-val">0/5</div>
+    <div style="font-size:14px;color:var(--text-dim);margin-top:8px;" id="score-msg"></div>
+    <button class="quiz-reset-btn" onclick="resetQuiz()">↺ Retake Quiz</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════
+function showSection(id, tab) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  tab.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════
+// CONCEPT TABS
+// ═══════════════════════════════════════════════
+function showConcept(id, btn) {
+  document.querySelectorAll('.concept-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.concept-tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════
+// AUDIO ENGINE
+// ═══════════════════════════════════════════════
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let soundEnabled = true;
+
+function playClick() {
+  if (!soundEnabled) return;
+  const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.04, audioCtx.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < data.length; i++) {
+    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (audioCtx.sampleRate * 0.008));
+  }
+  const src = audioCtx.createBufferSource();
+  const gain = audioCtx.createGain();
+  const filter = audioCtx.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.value = 1800 + Math.random() * 400;
+  filter.Q.value = 0.8;
+  gain.gain.value = 0.55;
+  src.buffer = buf;
+  src.connect(filter);
+  filter.connect(gain);
+  gain.connect(audioCtx.destination);
+  src.start();
+}
+
+function toggleSound(btn) {
+  soundEnabled = !soundEnabled;
+  btn.classList.toggle('on', soundEnabled);
+}
+
+// ═══════════════════════════════════════════════
+// SIMULATION
+// ═══════════════════════════════════════════════
+const canvas = document.getElementById('gm-canvas');
+const ctx = canvas.getContext('2d');
+
+let simRunning = false;
+let totalCounts = 0;
+let animEnabled = true;
+let intensity = 2;
+let lastCpsTime = performance.now();
+let cpsBuffer = [];
+let particles = [];
+let ionFlashes = [];
+let rafId = null;
+let scheduleId = null;
+
+// Resize canvas
+function resizeCanvas() {
+  const wrap = document.getElementById('tube-canvas-wrap');
+  canvas.width = wrap.clientWidth - 40;
+  canvas.height = 320;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// Tube geometry
+function getTubeRect() {
+  const w = canvas.width, h = canvas.height;
+  return {
+    x: w * 0.05, y: h * 0.28,
+    width: w * 0.9, height: h * 0.44,
+    rx: 22
+  };
+}
+
+class Particle {
+  constructor(intensity) {
+    const t = getTubeRect();
+    this.y = t.y + Math.random() * t.height;
+    this.x = -12;
+    this.speed = 2.5 + Math.random() * 2 + intensity * 0.3;
+    this.size = 3 + Math.random() * 2.5;
+    this.color = Math.random() > 0.5 ? '#39ff14' : '#ffb300';
+    this.trail = [];
+    this.hit = false;
+    this.hitX = null;
+  }
+  update() {
+    this.trail.push({ x: this.x, y: this.y });
+    if (this.trail.length > 18) this.trail.shift();
+    this.x += this.speed;
+    const t = getTubeRect();
+    if (!this.hit && this.x > t.x + t.width * (0.15 + Math.random() * 0.7)) {
+      this.hit = true;
+      this.hitX = this.x;
+      triggerEvent(this.x, this.y);
+    }
+  }
+  draw() {
+    const t = getTubeRect();
+    if (this.x < t.x || this.x > t.x + t.width + 16) return;
+    // Trail
+    for (let i = 0; i < this.trail.length; i++) {
+      const alpha = (i / this.trail.length) * 0.5;
+      ctx.beginPath();
+      ctx.arc(this.trail[i].x, this.trail[i].y, this.size * 0.5, 0, Math.PI * 2);
+      ctx.fillStyle = this.color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
+      ctx.fill();
+    }
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = this.color;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+}
+
+class IonFlash {
+  constructor(x, y, color) {
+    this.x = x; this.y = y;
+    this.color = color;
+    this.r = 2;
+    this.maxR = 22 + Math.random() * 16;
+    this.alpha = 1;
+    this.spikes = [];
+    const numSpikes = 6 + Math.floor(Math.random() * 4);
+    for (let i = 0; i < numSpikes; i++) {
+      this.spikes.push({
+        angle: (Math.PI * 2 / numSpikes) * i + Math.random() * 0.4,
+        len: 10 + Math.random() * 22,
+        speed: 1.5 + Math.random()
+      });
+    }
+  }
+  update() {
+    this.r += 1.8;
+    this.alpha -= 0.055;
+    this.spikes.forEach(s => s.len += s.speed);
+    return this.alpha > 0;
+  }
+  draw() {
+    const a = Math.max(0, this.alpha);
+    // Ring
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.strokeStyle = this.color + Math.floor(a * 200).toString(16).padStart(2, '0');
+    ctx.lineWidth = 2;
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = this.color;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    // Spikes
+    this.spikes.forEach(s => {
+      ctx.beginPath();
+      ctx.moveTo(this.x, this.y);
+      ctx.lineTo(
+        this.x + Math.cos(s.angle) * s.len,
+        this.y + Math.sin(s.angle) * s.len
+      );
+      ctx.strokeStyle = this.color + Math.floor(a * 180).toString(16).padStart(2, '0');
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    });
+  }
+}
+
+function drawTube() {
+  const w = canvas.width, h = canvas.height;
+  const t = getTubeRect();
+
+  // Background
+  ctx.fillStyle = '#060809';
+  ctx.fillRect(0, 0, w, h);
+
+  // Label
+  ctx.font = '11px Share Tech Mono';
+  ctx.fillStyle = '#2a4060';
+  ctx.fillText('GEIGER-MÜLLER TUBE — CROSS SECTION', t.x, t.y - 14);
+
+  // Outer cylinder (cathode)
+  const catGrad = ctx.createLinearGradient(0, t.y, 0, t.y + t.height);
+  catGrad.addColorStop(0, '#1a2530');
+  catGrad.addColorStop(0.3, '#0d1518');
+  catGrad.addColorStop(0.7, '#0d1518');
+  catGrad.addColorStop(1, '#1a2530');
+  ctx.beginPath();
+  ctx.roundRect(t.x, t.y, t.width, t.height, t.rx);
+  ctx.fillStyle = catGrad;
+  ctx.fill();
+  ctx.strokeStyle = '#2a4060';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Window (left entry)
+  ctx.beginPath();
+  ctx.roundRect(t.x - 6, t.y + t.height * 0.3, 10, t.height * 0.4, 3);
+  const winGrad = ctx.createLinearGradient(t.x - 6, 0, t.x + 10, 0);
+  winGrad.addColorStop(0, '#1a3a3a');
+  winGrad.addColorStop(1, '#0d2a2a');
+  ctx.fillStyle = winGrad;
+  ctx.fill();
+  ctx.strokeStyle = '#39ff1444';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.font = '9px Share Tech Mono';
+  ctx.fillStyle = '#39ff1488';
+  ctx.fillText('MICA', t.x - 5, t.y + t.height * 0.3 - 5);
+  ctx.fillText('WINDOW', t.x - 5, t.y + t.height * 0.3 - 5 + 9);
+
+  // Central anode wire
+  const anodeY = t.y + t.height / 2;
+  ctx.beginPath();
+  ctx.moveTo(t.x + 10, anodeY);
+  ctx.lineTo(t.x + t.width - 10, anodeY);
+  ctx.strokeStyle = '#ffb30088';
+  ctx.lineWidth = 1.5;
+  ctx.shadowBlur = 6;
+  ctx.shadowColor = '#ffb300';
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+  ctx.font = '9px Share Tech Mono';
+  ctx.fillStyle = '#ffb30099';
+  ctx.fillText('ANODE (+)', t.x + t.width * 0.6, anodeY - 7);
+
+  // Gas label
+  ctx.font = '10px Share Tech Mono';
+  ctx.fillStyle = '#1a3a5a';
+  ctx.fillText('ARGON/HALOGEN GAS (LOW PRESSURE)', t.x + 20, anodeY + 26);
+
+  // Cathode label
+  ctx.fillStyle = '#1e3a50';
+  ctx.fillText('CATHODE (−)', t.x + 20, t.y + 16);
+
+  // High voltage label
+  ctx.font = '9px Share Tech Mono';
+  ctx.fillStyle = '#ff3b3b55';
+  const hvX = t.x + t.width - 2;
+  ctx.fillText('~500V', hvX - 20, t.y + t.height / 2 - 6);
+
+  // Avalanche cascade lines (decorative)
+  if (simRunning) {
+    for (let i = 0; i < 3; i++) {
+      const ax = t.x + t.width * (0.3 + i * 0.2);
+      const ay = anodeY;
+      ctx.beginPath();
+      ctx.moveTo(ax, t.y + 8);
+      ctx.lineTo(ax + (Math.random() - 0.5) * 6, ay);
+      ctx.moveTo(ax, t.y + t.height - 8);
+      ctx.lineTo(ax + (Math.random() - 0.5) * 6, ay);
+      ctx.strokeStyle = `rgba(57,255,20,0.04)`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+
+  // Count-rate arrow indicator
+  const arrow = Math.min(t.width * 0.9, t.width * 0.1 + (intensity / 10) * t.width * 0.7);
+  ctx.beginPath();
+  ctx.moveTo(t.x + t.width * 0.1, t.y + t.height + 18);
+  ctx.lineTo(t.x + arrow, t.y + t.height + 18);
+  ctx.strokeStyle = intensity <= 3 ? '#39ff14' : intensity <= 7 ? '#ffb300' : '#ff3b3b';
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+  ctx.font = '10px Share Tech Mono';
+  ctx.fillStyle = '#3a5060';
+  ctx.fillText('INTENSITY', t.x + t.width * 0.1, t.y + t.height + 34);
+}
+
+function triggerEvent(x, y) {
+  totalCounts++;
+  cpsBuffer.push(performance.now());
+  document.getElementById('total-counts').textContent = totalCounts;
+  playClick();
+
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+
+  if (animEnabled) {
+    const color = Math.random() > 0.4 ? '#39ff14' : '#ffb300';
+    ionFlashes.push(new IonFlash(x, y, color));
+  }
+
+  // Update readout colour
+  const cpsEl = document.getElementById('cps-display');
+  const cps = getCPS();
+  cpsEl.className = 'readout-value' + (cps > 15 ? ' red' : cps > 6 ? ' amber' : '');
+}
+
+function getCPS() {
+  const now = performance.now();
+  cpsBuffer = cpsBuffer.filter(t => now - t < 1000);
+  return cpsBuffer.length;
+}
+
+function loop() {
+  drawTube();
+
+  // Particles
+  particles.forEach(p => p.update());
+  particles = particles.filter(p => p.x < canvas.width + 30);
+  if (animEnabled) particles.forEach(p => p.draw());
+
+  // Flashes
+  ionFlashes = ionFlashes.filter(f => f.update());
+  if (animEnabled) ionFlashes.forEach(f => f.draw());
+
+  // Update CPS display
+  const cps = getCPS();
+  document.getElementById('cps-display').textContent = cps;
+
+  rafId = requestAnimationFrame(loop);
+}
+
+function scheduleParticle() {
+  if (!simRunning) return;
+  const baseInterval = 1200;
+  const interval = baseInterval / (intensity * intensity * 0.08 + 0.5);
+  const jitter = (Math.random() - 0.5) * interval * 0.8;
+  const t = getTubeRect();
+  particles.push(new Particle(intensity));
+  scheduleId = setTimeout(scheduleParticle, Math.max(80, interval + jitter));
+}
+
+function toggleSim() {
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  simRunning = !simRunning;
+  const btn = document.getElementById('start-btn');
+  if (simRunning) {
+    btn.textContent = '⏸ STOP';
+    btn.classList.add('active');
+    if (!rafId) loop();
+    scheduleParticle();
+  } else {
+    btn.textContent = '▶ START';
+    btn.classList.remove('active');
+    clearTimeout(scheduleId);
+  }
+}
+
+function resetCounter() {
+  totalCounts = 0;
+  cpsBuffer = [];
+  particles = [];
+  ionFlashes = [];
+  document.getElementById('total-counts').textContent = '0';
+  document.getElementById('cps-display').textContent = '0';
+  document.getElementById('cps-display').className = 'readout-value';
+}
+
+function toggleAnim(btn) {
+  animEnabled = !animEnabled;
+  btn.classList.toggle('on', animEnabled);
+  if (!animEnabled) { particles = []; ionFlashes = []; }
+}
+
+// Intensity slider
+document.getElementById('intensity-slider').addEventListener('input', function() {
+  intensity = parseInt(this.value);
+  updateIntensityUI(intensity);
+  if (simRunning) {
+    clearTimeout(scheduleId);
+    scheduleParticle();
+  }
+});
+
+function updateIntensityUI(v) {
+  const labels = ['','BACKGROUND','LOW','LOW','MODERATE','MODERATE','ELEVATED','ELEVATED','HIGH','HIGH','EXTREME'];
+  const colors = ['','#39ff14','#39ff14','#39ff14','#a8d400','#ffb300','#ffb300','#ff7800','#ff4400','#ff3b3b','#ff3b3b'];
+  document.getElementById('intensity-label').textContent = labels[v];
+  document.getElementById('intensity-label').style.color = colors[v];
+
+  const levelEl = document.getElementById('level-indicator');
+  if (v <= 3) {
+    levelEl.textContent = '● BACKGROUND / SAFE';
+    levelEl.style.color = 'var(--green)';
+  } else if (v <= 6) {
+    levelEl.textContent = '◉ ELEVATED — MONITOR EXPOSURE';
+    levelEl.style.color = 'var(--amber)';
+  } else {
+    levelEl.textContent = '⊗ DANGER — HIGH RADIATION LEVEL';
+    levelEl.style.color = 'var(--red)';
+  }
+
+  updateBioPanel(v);
+}
+
+// Initial draw
+loop();
+updateIntensityUI(2);
+
+// ═══════════════════════════════════════════════
+// BIOLOGY PANEL DYNAMIC UPDATE
+// ═══════════════════════════════════════════════
+function updateBioPanel(v) {
+  const dnaText = document.getElementById('dna-text');
+  const mutText = document.getElementById('mut-text');
+  const sterilText = document.getElementById('steril-text');
+  const dnaBadge = document.getElementById('dna-badge');
+  const mutBadge = document.getElementById('mut-badge');
+  const sterilBadge = document.getElementById('steril-badge');
+  const summary = document.getElementById('bio-summary');
+  const summaryText = document.getElementById('bio-summary-text');
+
+  if (v <= 3) {
+    dnaText.textContent = 'At low doses, cellular repair mechanisms (e.g., BER, NHEJ) are sufficient. SSBs are repaired within hours.';
+    mutText.textContent = 'Background radiation contributes ~1 mutation per cell genome per day. Repair fidelity is high.';
+    sterilText.textContent = 'Dose is far below any lethal threshold. No sterilisation effect. Normal microbial growth expected.';
+    dnaBadge.textContent = 'MINIMAL IMPACT'; dnaBadge.className = 'impact-badge impact-low';
+    mutBadge.textContent = 'WITHIN NORMAL RANGE'; mutBadge.className = 'impact-badge impact-low';
+    sterilBadge.textContent = 'NO LETHALITY'; sterilBadge.className = 'impact-badge impact-low';
+    summary.style.borderLeftColor = 'var(--green)';
+    summaryText.innerHTML = '<span style="color:var(--green)">LOW INTENSITY:</span> Radiation level is within background range. Cellular DNA repair mechanisms can effectively manage this exposure. No significant biological risk expected.';
+  } else if (v <= 6) {
+    dnaText.textContent = 'Moderate dose may cause DSBs exceeding rapid repair capacity. Risk of misrepair increases, potentially leading to chromosomal aberrations.';
+    mutText.textContent = 'Mutation probability is significantly elevated. Error-prone repair (SOS response in bacteria) may be activated, increasing insertion/deletion frequency.';
+    sterilText.textContent = 'Below sterilisation threshold, but cumulative exposure reduces viable cell counts. Sensitive organisms (no radiation resistance) begin to show reduced growth.';
+    dnaBadge.textContent = 'ELEVATED RISK'; dnaBadge.className = 'impact-badge impact-med';
+    mutBadge.textContent = 'INCREASED MUTATIONS'; mutBadge.className = 'impact-badge impact-med';
+    sterilBadge.textContent = 'SUBLETHAL DOSES'; sterilBadge.className = 'impact-badge impact-med';
+    summary.style.borderLeftColor = 'var(--amber)';
+    summaryText.innerHTML = '<span style="color:var(--amber)">MEDIUM INTENSITY:</span> Increased mutation probability. Error-prone repair pathways may be activated. Cumulative chronic exposure at this level poses significant biological risk. Lab safety protocols required.';
+  } else {
+    dnaText.textContent = 'Severe DSB burden overwhelms repair. Chromosome fragmentation, loss of genomic integrity. Cell death via apoptosis/necrosis in eukaryotes; membrane disruption in bacteria.';
+    mutText.textContent = 'Mutation rate far exceeds repair capacity. Lethal mutations predominate. Survivors may carry extensive genomic rearrangements — highly unstable genomes.';
+    sterilText.textContent = 'Approaching sterilisation doses. Most radiosensitive organisms will not survive extended exposure. Only radioresistant organisms (e.g., Deinococcus) can withstand high cumulative doses.';
+    dnaBadge.textContent = 'SEVERE DAMAGE'; dnaBadge.className = 'impact-badge impact-high';
+    mutBadge.textContent = 'LETHAL MUTATION LOAD'; mutBadge.className = 'impact-badge impact-high';
+    sterilBadge.textContent = 'APPROACHING STERILISATION'; sterilBadge.className = 'impact-badge impact-high';
+    summary.style.borderLeftColor = 'var(--red)';
+    summaryText.innerHTML = '<span style="color:var(--red)">HIGH INTENSITY — DANGER:</span> Severe DNA damage risk. Chromosome fragmentation and cell death predominate. Only extremophiles like <em>Deinococcus radiodurans</em> can survive. This level is used intentionally in gamma sterilisation.';
+  }
+}
+
+// ═══════════════════════════════════════════════
+// QUIZ
+// ═══════════════════════════════════════════════
+const quizData = [
+  {
+    q: "What does a single 'click' from a Geiger-Müller counter represent?",
+    options: [
+      "A complete radioactive decay chain",
+      "One ionisation event inside the tube",
+      "One unit of absorbed dose in tissue",
+      "One full rotation of a particle"
+    ],
+    correct: 1,
+    explanation: "Each click = one ionisation event inside the GM tube. A radiation particle entered, ionised gas atoms, triggered a Townsend avalanche, and produced one electrical pulse."
+  },
+  {
+    q: "Why is it impossible to predict exactly when the next click will occur?",
+    options: [
+      "The electronics have random processing delays",
+      "The tube needs to recharge between events",
+      "Radioactive decay is governed by quantum probability — it is fundamentally random",
+      "Temperature fluctuations affect the gas"
+    ],
+    correct: 2,
+    explanation: "Radioactive decay is a quantum mechanical process. Even identical nuclei decay at unpredictable times. We can only state an average rate (using half-life), not predict individual events."
+  },
+  {
+    q: "Which limitation explains why a GM counter should NOT be used in an area with extremely high radiation levels?",
+    options: [
+      "The tube will melt from the heat",
+      "Dead time causes undercounting — the true dose rate is higher than displayed",
+      "The gas inside will escape",
+      "The counter cannot detect gamma radiation at high intensities"
+    ],
+    correct: 1,
+    explanation: "Dead time (50–500 µs recovery period after each pulse) means the tube misses events that arrive too quickly. At very high dose rates, this leads to significant undercounting and dangerous underestimation of exposure."
+  },
+  {
+    q: "In a microbiology lab using ³H-thymidine incorporation assays, why is a GM counter unsuitable?",
+    options: [
+      "Tritium emits alpha radiation that destroys the mica window",
+      "Tritium's low-energy beta particles cannot penetrate the GM tube window",
+      "GM counters cannot detect beta radiation at all",
+      "Tritium is too unstable for bench work"
+    ],
+    correct: 1,
+    explanation: "³H (tritium) emits very low-energy beta particles (max 18.6 keV) that are stopped by air and cannot penetrate the mica window of a GM tube. Liquid scintillation counting is required for tritium detection."
+  },
+  {
+    q: "When radiation intensity increases from low to high, which biological outcome is most accurately described?",
+    options: [
+      "Cell mutation rate decreases as cells adapt to radiation",
+      "Only eukaryotic cells are affected; bacteria are immune",
+      "DNA damage exceeds repair capacity, increasing lethal mutations and potentially causing sterilisation",
+      "Radiation stimulates DNA repair mechanisms, making cells more resilient"
+    ],
+    correct: 2,
+    explanation: "As dose increases, double-strand DNA breaks accumulate faster than repair mechanisms can manage. This leads to chromosomal fragmentation, lethal mutations, and ultimately cell death — the principle behind radiation sterilisation."
+  }
+];
+
+let quizAnswered = new Array(quizData.length).fill(false);
+let quizScore = 0;
+
+function buildQuiz() {
+  const wrap = document.getElementById('quiz-wrap');
+  wrap.innerHTML = '';
+  quizData.forEach((item, qi) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.id = 'q' + qi;
+    div.innerHTML = `
+      <div class="q-num">QUESTION ${qi + 1} OF ${quizData.length}</div>
+      <div class="q-text">${item.q}</div>
+      <div class="options">
+        ${item.options.map((opt, oi) => `
+          <button class="option-btn" onclick="answerQ(${qi},${oi})">${opt}</button>
+        `).join('')}
+      </div>
+      <div class="q-feedback" id="fb${qi}"></div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+function answerQ(qi, oi) {
+  if (quizAnswered[qi]) return;
+  quizAnswered[qi] = true;
+
+  const qEl = document.getElementById('q' + qi);
+  const btns = qEl.querySelectorAll('.option-btn');
+  const fb = document.getElementById('fb' + qi);
+  const isCorrect = oi === quizData[qi].correct;
+
+  btns.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === quizData[qi].correct) btn.classList.add('correct');
+    else if (i === oi && !isCorrect) btn.classList.add('wrong');
+  });
+
+  fb.className = 'q-feedback show ' + (isCorrect ? 'correct' : 'wrong');
+  fb.textContent = (isCorrect ? '✓ Correct! ' : '✗ Incorrect. ') + quizData[qi].explanation;
+  qEl.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  if (isCorrect) quizScore++;
+
+  if (quizAnswered.every(Boolean)) {
+    setTimeout(() => {
+      const scoreEl = document.getElementById('quiz-score');
+      const val = document.getElementById('score-val');
+      const msg = document.getElementById('score-msg');
+      val.textContent = quizScore + '/' + quizData.length;
+      const pct = quizScore / quizData.length;
+      msg.textContent = pct === 1 ? 'Perfect score! Excellent understanding of GM counter principles.' :
+        pct >= 0.6 ? 'Good work! Review the concepts for any incorrect answers.' :
+        'Keep studying — revisit the Concepts and Simulation tabs for reinforcement.';
+      scoreEl.classList.add('show');
+    }, 600);
+  }
+}
+
+function resetQuiz() {
+  quizAnswered = new Array(quizData.length).fill(false);
+  quizScore = 0;
+  document.getElementById('quiz-score').classList.remove('show');
+  buildQuiz();
+}
+
+buildQuiz();
+</script>
+</body>
+</html>

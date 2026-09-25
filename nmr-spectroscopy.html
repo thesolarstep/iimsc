@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NMR Spectroscopy — MSc Microbiology</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --bg:       #03060f;
+  --bg2:      #060d1a;
+  --bg3:      #091224;
+  --panel:    #0b1628;
+  --cyan:     #00e5ff;
+  --cyan-dim: #007a8a;
+  --cyan-mid: #00b8cc;
+  --teal:     #00ffcc;
+  --amber:    #ffaa00;
+  --red:      #ff4455;
+  --text:     #cce8f0;
+  --text-dim: #4a7a8a;
+  --border:   #112233;
+  --border2:  #1a3344;
+  --glow:     0 0 10px #00e5ff44, 0 0 25px #00e5ff1a;
+  --glow-str: 0 0 14px #00e5ffaa, 0 0 35px #00e5ff44, 0 0 70px #00e5ff1a;
+  --teal-glow:0 0 10px #00ffcc44, 0 0 25px #00ffcc1a;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Background field lines */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 79px, #00e5ff06 80px),
+    repeating-linear-gradient(0deg, transparent, transparent 79px, #00e5ff04 80px);
+  pointer-events: none; z-index: 0;
+}
+
+/* Radial glow center */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 800px; height: 400px;
+  background: radial-gradient(ellipse at 50% 0%, #00e5ff08 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+
+/* ── HEADER ── */
+header {
+  position: relative; z-index: 1;
+  padding: 2.5rem 2rem 0;
+  border-bottom: 1px solid var(--border2);
+  background: linear-gradient(180deg, #050e1f 0%, transparent 100%);
+}
+
+.header-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: flex-end; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+  padding-bottom: 1.5rem;
+}
+
+.header-left {}
+
+.badge-row {
+  display: flex; align-items: center; gap: 0.8rem;
+  margin-bottom: 0.6rem;
+}
+
+.badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.25em;
+  color: var(--cyan-dim); text-transform: uppercase;
+}
+
+.badge-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: var(--glow);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; box-shadow: 0 0 6px var(--cyan); }
+  50% { opacity: 0.4; box-shadow: 0 0 2px var(--cyan); }
+}
+
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-shadow: 0 0 40px #00e5ff22;
+}
+
+h1 em {
+  font-style: normal;
+  color: var(--cyan);
+  text-shadow: var(--glow-str);
+}
+
+h1 small {
+  display: block;
+  font-size: 0.35em;
+  font-weight: 400;
+  color: var(--text-dim);
+  letter-spacing: 0.15em;
+  margin-top: 0.4rem;
+  font-family: 'DM Mono', monospace;
+  text-shadow: none;
+}
+
+.field-indicator {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.1em;
+  color: var(--cyan-dim);
+  border: 1px solid var(--border2);
+  padding: 0.6rem 1rem;
+  border-radius: 2px;
+  background: var(--panel);
+  display: flex; flex-direction: column; gap: 0.2rem;
+  min-width: 140px;
+}
+.field-indicator span { color: var(--cyan); font-size: 1rem; font-weight: 500; }
+
+nav {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; flex-wrap: wrap; gap: 0;
+  border-top: 1px solid var(--border);
+}
+
+.nav-item {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.7rem 1.2rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  border-right: 1px solid var(--border);
+  transition: all 0.2s;
+  position: relative;
+}
+.nav-item::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 1px; background: var(--cyan);
+  transform: scaleX(0); transition: transform 0.2s;
+}
+.nav-item:hover { color: var(--cyan); }
+.nav-item:hover::after { transform: scaleX(1); }
+
+/* ── MAIN ── */
+main {
+  max-width: 1200px; margin: 0 auto;
+  padding: 0 1.5rem 5rem;
+  position: relative; z-index: 1;
+}
+
+section {
+  margin: 2.5rem 0;
+  padding: 1.8rem 2rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: linear-gradient(135deg, var(--bg2) 0%, var(--panel) 100%);
+  position: relative; overflow: hidden;
+}
+
+section::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan-dim), transparent);
+}
+
+.sec-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--cyan-dim); margin-bottom: 0.4rem; display: block;
+}
+
+h2 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700; font-size: 1.05rem;
+  color: var(--cyan);
+  text-shadow: 0 0 15px #00e5ff44;
+  margin-bottom: 1.2rem; letter-spacing: 0.02em;
+}
+
+h3 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 600; font-size: 0.9rem;
+  color: var(--teal); margin-bottom: 0.5rem;
+}
+
+p { font-size: 0.88rem; line-height: 1.7; color: var(--text); margin-bottom: 0.6rem; }
+
+/* ── INTRO ── */
+.intro-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem; margin-top: 1rem;
+}
+
+.intro-card {
+  padding: 1.1rem;
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  background: rgba(0,229,255,0.02);
+  transition: all 0.3s;
+}
+.intro-card:hover {
+  border-color: var(--cyan-dim);
+  background: rgba(0,229,255,0.05);
+  box-shadow: var(--glow);
+}
+.intro-card .ic-icon { font-size: 1.6rem; margin-bottom: 0.5rem; display: block; }
+
+/* ── SIMULATION LAYOUT ── */
+.sim-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+@media (max-width: 800px) { .sim-grid { grid-template-columns: 1fr; } }
+
+.sim-panel {
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  overflow: hidden;
+  background: #000;
+  position: relative;
+}
+
+.sim-panel-label {
+  position: absolute; top: 8px; left: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--cyan-dim); z-index: 10;
+}
+
+canvas { display: block; width: 100%; }
+#spin-canvas { aspect-ratio: 1/1; }
+#spectrum-canvas { aspect-ratio: 3/2; }
+
+/* ── CONTROLS ── */
+.ctrl-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-top: 1.2rem;
+}
+@media (max-width: 600px) { .ctrl-grid { grid-template-columns: 1fr; } }
+
+.ctrl-group {
+  display: flex; flex-direction: column; gap: 0.35rem;
+}
+
+.ctrl-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-dim);
+  display: flex; justify-content: space-between;
+}
+.ctrl-label .val { color: var(--cyan); }
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%; height: 3px;
+  background: var(--border2); border-radius: 1.5px;
+  outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px; height: 12px; border-radius: 2px;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+  cursor: pointer;
+}
+
+.btn-row { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-top: 0.5rem; }
+
+.btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.55rem 1.2rem;
+  border: 1px solid var(--cyan-dim);
+  border-radius: 2px;
+  background: rgba(0,229,255,0.04);
+  color: var(--cyan); cursor: pointer;
+  transition: all 0.2s; flex-shrink: 0;
+}
+.btn:hover { background: rgba(0,229,255,0.1); box-shadow: var(--glow); }
+.btn.active { background: rgba(0,229,255,0.12); box-shadow: var(--glow-str); }
+.btn.teal { border-color: var(--teal); color: var(--teal); background: rgba(0,255,204,0.04); }
+.btn.teal:hover { background: rgba(0,255,204,0.1); box-shadow: var(--teal-glow); }
+.btn.red { border-color: var(--red); color: var(--red); background: rgba(255,68,85,0.04); }
+.btn.red:hover { background: rgba(255,68,85,0.1); }
+
+.toggle-row {
+  display: flex; align-items: center; gap: 0.7rem; cursor: pointer;
+  font-family: 'DM Mono', monospace; font-size: 0.65rem;
+  letter-spacing: 0.08em; color: var(--text-dim);
+}
+.toggle {
+  width: 34px; height: 16px; background: var(--border2);
+  border-radius: 8px; position: relative; transition: background 0.2s; flex-shrink: 0;
+}
+.toggle.on { background: var(--cyan-dim); }
+.toggle::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: #fff; transition: left 0.2s;
+}
+.toggle.on::after { left: 20px; }
+
+/* Readouts */
+.readout-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem; margin-top: 1rem;
+}
+
+.readout {
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--border2); border-radius: 2px;
+  background: #000; text-align: center;
+}
+.readout .rl { font-family: 'DM Mono', monospace; font-size: 0.55rem;
+  letter-spacing: 0.1em; color: var(--text-dim); text-transform: uppercase; display: block; margin-bottom: 0.2rem; }
+.readout .rv {
+  font-family: 'DM Mono', monospace; font-size: 0.8rem; font-weight: 500;
+  color: var(--cyan); text-shadow: var(--glow);
+}
+
+/* ── CONTEXT ── */
+#ctx-display {
+  padding: 1.1rem 1.3rem;
+  border: 1px solid var(--cyan-dim); border-radius: 2px;
+  background: rgba(0,229,255,0.03); min-height: 70px;
+  transition: all 0.4s;
+}
+#ctx-display .ctx-head {
+  font-family: 'DM Mono', monospace; font-size: 0.65rem;
+  color: var(--cyan); letter-spacing: 0.1em; margin-bottom: 0.4rem; display: block;
+}
+#ctx-display .ctx-body { font-size: 0.85rem; line-height: 1.6; }
+
+/* ── STEPS ── */
+.steps-tabs {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;
+}
+.step-tab {
+  font-family: 'DM Mono', monospace; font-size: 0.65rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--border2); border-radius: 2px;
+  background: transparent; color: var(--text-dim);
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.step-tab .sn {
+  width: 17px; height: 17px; border-radius: 2px;
+  background: var(--border); display: flex; align-items: center;
+  justify-content: center; font-size: 0.6rem; transition: all 0.2s;
+}
+.step-tab.active, .step-tab:hover { border-color: var(--cyan-dim); color: var(--cyan); }
+.step-tab.active .sn { background: var(--cyan); color: #000; }
+
+.step-content { display: none; animation: fadeUp 0.3s ease; }
+.step-content.active { display: block; }
+
+@keyframes fadeUp { from { opacity:0; transform: translateY(5px); } to { opacity:1; transform: none; } }
+
+.step-flow {
+  display: flex; align-items: center; gap: 0.6rem;
+  flex-wrap: wrap; margin: 0.8rem 0;
+}
+.flow-box {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--cyan-dim); border-radius: 2px;
+  font-family: 'DM Mono', monospace; font-size: 0.65rem;
+  color: var(--cyan); background: rgba(0,229,255,0.04);
+  text-align: center; line-height: 1.4;
+}
+.flow-arrow { color: var(--cyan-dim); font-size: 1rem; }
+
+/* ── APPLICATIONS ── */
+.apps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+
+.app-card {
+  border: 1px solid var(--border2); border-radius: 3px;
+  padding: 1.1rem; cursor: pointer; transition: all 0.3s;
+  background: rgba(0,229,255,0.02);
+}
+.app-card:hover, .app-card.sel {
+  border-color: var(--cyan); background: rgba(0,229,255,0.07);
+  box-shadow: var(--glow);
+}
+.app-card .ai { font-size: 1.8rem; margin-bottom: 0.4rem; display: block; }
+.app-card .at { font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 0.75rem; color: var(--cyan); letter-spacing: 0.04em; margin-bottom: 0.3rem; }
+
+.app-detail { display:none; margin-top:1rem; padding:1.1rem 1.3rem;
+  border:1px solid var(--cyan-dim); border-radius:2px;
+  background:rgba(0,229,255,0.03); animation:fadeUp 0.3s ease; }
+.app-detail.active { display: block; }
+.dr { display:flex; gap:0.5rem; margin-bottom:0.4rem; font-size:0.84rem; }
+.dk { font-family:'DM Mono',monospace; font-size:0.6rem; color:var(--cyan-dim);
+  text-transform:uppercase; width:90px; flex-shrink:0; padding-top:0.1rem; line-height:1.5; }
+
+/* ── LIMITATIONS ── */
+.lim-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap:0.8rem; }
+.lim-item {
+  display:flex; gap:0.7rem; align-items:flex-start; padding:0.9rem;
+  border:1px solid var(--border2); border-radius:2px;
+  background:rgba(255,68,85,0.03); border-left:2px solid #ff445522;
+}
+.lim-icon { font-size:1.1rem; flex-shrink:0; }
+.lim-text { font-size:0.83rem; line-height:1.5; }
+
+/* ── QUIZ ── */
+.quiz-q {
+  margin-bottom:1.3rem; padding:1.1rem 1.2rem;
+  border:1px solid var(--border2); border-radius:2px;
+  background:rgba(0,229,255,0.02);
+}
+.q-num { font-family:'DM Mono',monospace; font-size:0.6rem; color:var(--cyan-dim);
+  letter-spacing:0.12em; display:block; margin-bottom:0.3rem; }
+.q-text { font-size:0.9rem; font-weight:500; color:var(--text); margin-bottom:0.7rem; line-height:1.5; }
+.options { display:flex; flex-direction:column; gap:0.35rem; }
+.opt-btn {
+  font-family:'DM Sans',sans-serif; font-size:0.83rem;
+  text-align:left; padding:0.55rem 0.9rem;
+  border:1px solid var(--border2); border-radius:2px;
+  background:transparent; color:var(--text); cursor:pointer; transition:all 0.2s;
+}
+.opt-btn:hover:not(:disabled) { border-color:var(--cyan-dim); background:rgba(0,229,255,0.04); }
+.opt-btn.correct { border-color:var(--teal); background:rgba(0,255,204,0.08); color:var(--teal); }
+.opt-btn.wrong { border-color:var(--red); background:rgba(255,68,85,0.07); color:var(--red); }
+.opt-btn:disabled { cursor:default; }
+.feedback { margin-top:0.6rem; padding:0.55rem 0.8rem; border-radius:2px;
+  font-size:0.78rem; line-height:1.5; display:none; }
+.feedback.show { display:block; animation:fadeUp 0.3s ease; }
+.feedback.ok { background:rgba(0,255,204,0.06); border-left:2px solid var(--teal); color:#00cc99; }
+.feedback.bad { background:rgba(255,68,85,0.06); border-left:2px solid var(--red); color:#ff7788; }
+.quiz-final { display:none; text-align:center; padding:1.5rem;
+  border:1px solid var(--cyan); border-radius:3px;
+  background:rgba(0,229,255,0.05); box-shadow:var(--glow); margin-top:1rem; }
+.quiz-final.show { display:block; animation:fadeUp 0.5s ease; }
+.final-num { font-family:'Syne',sans-serif; font-weight:800; font-size:2.8rem;
+  color:var(--cyan); text-shadow:var(--glow-str); }
+
+/* Signal status strip */
+.status-strip {
+  display:flex; align-items:center; gap:1rem;
+  font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.08em;
+  color:var(--text-dim); padding:0.5rem 0; margin-bottom:0.5rem;
+  border-bottom:1px solid var(--border);
+}
+.status-light {
+  width:8px; height:8px; border-radius:50%;
+  background:var(--text-dim); transition:all 0.3s;
+}
+.status-light.on { background:var(--cyan); box-shadow:var(--glow); animation:pulse-dot 1.5s infinite; }
+
+/* Comparison */
+.compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.compare-item { text-align:center; }
+.compare-item canvas { width:100%; aspect-ratio:3/2; display:block; border:1px solid var(--border2); border-radius:2px; }
+.compare-lbl { font-family:'DM Mono',monospace; font-size:0.6rem;
+  color:var(--text-dim); letter-spacing:0.1em; margin-top:0.4rem; text-transform:uppercase; }
+
+footer {
+  text-align:center; padding:2rem; border-top:1px solid var(--border);
+  font-family:'DM Mono',monospace; font-size:0.6rem;
+  color:var(--text-dim); letter-spacing:0.15em;
+  position:relative; z-index:1;
+}
+
+.divider { height:1px; background:linear-gradient(90deg,transparent,var(--border2),transparent); margin:1.2rem 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="badge-row">
+        <div class="badge-dot"></div>
+        <span class="badge">MSc Microbiology — Spectroscopic Methods</span>
+      </div>
+      <h1><em>NMR</em> Spectroscopy<small>Understanding Molecular Environments</small></h1>
+    </div>
+    <div class="field-indicator" id="field-ind">
+      <span>B₀ FIELD</span>
+      <span id="field-mhz">300 MHz</span>
+    </div>
+  </div>
+  <nav>
+    <a href="#intro" class="nav-item">Intro</a>
+    <a href="#simulation" class="nav-item">Simulation</a>
+    <a href="#steps" class="nav-item">Protocol</a>
+    <a href="#applications" class="nav-item">Applications</a>
+    <a href="#limitations" class="nav-item">Limitations</a>
+    <a href="#quiz" class="nav-item">Quiz</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- ── INTRO ── -->
+<section id="intro">
+  <span class="sec-label">01 // Introduction</span>
+  <h2>What is NMR Spectroscopy?</h2>
+  <p>Nuclear Magnetic Resonance (NMR) spectroscopy exploits the magnetic properties of atomic nuclei to reveal the chemical environment of atoms within a molecule. Each distinct proton environment produces a unique signal — collectively forming a molecular fingerprint.</p>
+  <div class="intro-grid">
+    <div class="intro-card">
+      <span class="ic-icon">🧲</span>
+      <h3>Nuclear Magnets</h3>
+      <p>Certain nuclei (¹H, ¹³C, ³¹P) possess spin — they behave like tiny bar magnets. In no field, spins are random. In a strong external field (B₀), they align parallel or antiparallel.</p>
+    </div>
+    <div class="intro-card">
+      <span class="ic-icon">📡</span>
+      <h3>Radiofrequency Excitation</h3>
+      <p>A precisely tuned RF pulse tips the spin population away from equilibrium. The exact frequency needed depends on the nucleus and its chemical environment — this is the resonance frequency.</p>
+    </div>
+    <div class="intro-card">
+      <span class="ic-icon">〰️</span>
+      <h3>Signal & Relaxation</h3>
+      <p>After the RF pulse, spins precess (wobble) and gradually return to equilibrium, emitting an oscillating signal called the Free Induction Decay (FID). Fourier transform converts this to a spectrum.</p>
+    </div>
+    <div class="intro-card">
+      <span class="ic-icon">🔬</span>
+      <h3>Chemical Shift</h3>
+      <p>Electrons surrounding a nucleus shield it from the external field. Electron-poor nuclei (deshielded) resonate at higher frequency — higher chemical shift (ppm). This shift encodes molecular structure.</p>
+    </div>
+    <div class="intro-card">
+      <span class="ic-icon">🧬</span>
+      <h3>Biological Relevance</h3>
+      <p>NMR reveals the atomic-level structure of biomolecules in solution, identifies metabolites in complex biological mixtures, and can track enzyme reactions in real time — non-destructively.</p>
+    </div>
+    <div class="intro-card">
+      <span class="ic-icon">🏗️</span>
+      <h3>Protein Structure</h3>
+      <p>Multi-dimensional NMR (2D, 3D) can determine the complete 3D structure of small-to-medium proteins in solution, revealing folding, dynamics, and ligand binding sites.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── SIMULATION ── -->
+<section id="simulation">
+  <span class="sec-label">02 // Interactive Simulation</span>
+  <h2>NMR Principle Simulation</h2>
+
+  <div class="status-strip">
+    <div class="status-light" id="status-light"></div>
+    <span id="status-text">IDLE — Adjust controls and apply RF pulse</span>
+  </div>
+
+  <div class="sim-grid">
+    <div>
+      <div class="sim-panel">
+        <span class="sim-panel-label">SPIN DYNAMICS</span>
+        <canvas id="spin-canvas"></canvas>
+      </div>
+    </div>
+    <div>
+      <div class="sim-panel">
+        <span class="sim-panel-label">NMR SPECTRUM (ppm)</span>
+        <canvas id="spectrum-canvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="readout-row">
+    <div class="readout">
+      <span class="rl">Chemical Shift</span>
+      <div class="rv" id="rd-shift">— ppm</div>
+    </div>
+    <div class="readout">
+      <span class="rl">Peak Intensity</span>
+      <div class="rv" id="rd-int">—</div>
+    </div>
+    <div class="readout">
+      <span class="rl">Signal Count</span>
+      <div class="rv" id="rd-count">—</div>
+    </div>
+  </div>
+
+  <div class="ctrl-grid">
+    <div class="ctrl-group">
+      <label class="ctrl-label">Magnetic Field Strength <span class="val" id="v-field">300 MHz</span></label>
+      <input type="range" id="sl-field" min="60" max="1000" value="300" step="10">
+      <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--text-dim);letter-spacing:0.08em;">
+        <span>60 MHz</span><span>1000 MHz</span>
+      </div>
+    </div>
+
+    <div class="ctrl-group">
+      <label class="ctrl-label">Chemical Environment <span class="val" id="v-shield">Neutral</span></label>
+      <input type="range" id="sl-shield" min="0" max="100" value="50">
+      <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--text-dim);letter-spacing:0.08em;">
+        <span>Shielded</span><span>Deshielded</span>
+      </div>
+    </div>
+
+    <div class="ctrl-group">
+      <label class="ctrl-label">Proton Environments <span class="val" id="v-envs">2</span></label>
+      <input type="range" id="sl-envs" min="1" max="6" value="2" step="1">
+      <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--text-dim);letter-spacing:0.08em;">
+        <span>1 environment</span><span>6 environments</span>
+      </div>
+    </div>
+
+    <div class="ctrl-group" style="justify-content:flex-end;">
+      <div class="toggle-row" id="spin-toggle-row" onclick="toggleSpins()">
+        <div class="toggle on" id="spin-toggle"></div>
+        <span>Show Spin Animation</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin-top:1rem;">
+    <button class="btn teal" id="btn-rf">⚡ Apply RF Pulse</button>
+    <button class="btn red" id="btn-reset">↺ Reset</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <div id="ctx-display">
+    <span class="ctx-head">🔬 BIOLOGICAL CONTEXT</span>
+    <div class="ctx-body" id="ctx-body">Configure the simulation and apply an RF pulse to begin. The biological interpretation will update dynamically.</div>
+  </div>
+</section>
+
+<!-- ── COMPARISON ── -->
+<section>
+  <span class="sec-label">02b // Environment Comparison</span>
+  <h2>Shielded vs Deshielded Environments</h2>
+  <p>Electron density around a nucleus determines how much it is shielded from the external field. Shielded nuclei resonate at lower frequency (lower ppm); deshielded nuclei resonate at higher frequency (higher ppm).</p>
+  <div class="compare-grid">
+    <div class="compare-item">
+      <canvas id="cmp-a"></canvas>
+      <div class="compare-lbl">Shielded — high e⁻ density (e.g., CH₃ ~0.9 ppm)</div>
+    </div>
+    <div class="compare-item">
+      <canvas id="cmp-b"></canvas>
+      <div class="compare-lbl">Deshielded — low e⁻ density (e.g., CHO ~9.5 ppm)</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STEPS ── -->
+<section id="steps">
+  <span class="sec-label">03 // Protocol</span>
+  <h2>Step-by-Step NMR Process</h2>
+  <div class="steps-tabs">
+    <button class="step-tab active" onclick="showStep(0,this)"><span class="sn">1</span>Sample in Field</button>
+    <button class="step-tab" onclick="showStep(1,this)"><span class="sn">2</span>Spin Alignment</button>
+    <button class="step-tab" onclick="showStep(2,this)"><span class="sn">3</span>RF Excitation</button>
+    <button class="step-tab" onclick="showStep(3,this)"><span class="sn">4</span>Signal Detection</button>
+    <button class="step-tab" onclick="showStep(4,this)"><span class="sn">5</span>Data Processing</button>
+  </div>
+
+  <div class="step-content active" id="step-0">
+    <h3>Step 1: Sample in Magnetic Field (B₀)</h3>
+    <p>The sample (dissolved in deuterated solvent — CDCl₃, D₂O, DMSO-d₆) is placed in the bore of a superconducting magnet. Field strengths range from 60 MHz (teaching instruments) to 1.2 GHz (frontier research).</p>
+    <div class="step-flow">
+      <div class="flow-box">Sample dissolved<br><span style="font-size:0.55rem;color:var(--text-dim)">deuterated solvent</span></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Placed in magnet<br><span style="font-size:0.55rem;color:var(--text-dim)">superconducting coil</span></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Field established<br><span style="font-size:0.55rem;color:var(--text-dim)">B₀ uniform along z</span></div>
+    </div>
+    <p><strong>Why deuterated solvent?</strong> ¹H NMR detects protons. Using deuterated (²H) solvents eliminates the enormous solvent signal that would overwhelm the sample signal. D₂O is used for biological samples; CDCl₃ for organic compounds.</p>
+  </div>
+
+  <div class="step-content" id="step-1">
+    <h3>Step 2: Nuclear Spin Alignment</h3>
+    <p>In the external field B₀, ¹H nuclei (spin = ½) adopt one of two energy states: α (parallel to B₀, lower energy) or β (antiparallel, higher energy). A small but detectable excess aligns with the field — this is the net magnetization (M₀).</p>
+    <div class="step-flow">
+      <div class="flow-box">Random spins<br><span style="font-size:0.55rem;color:var(--text-dim)">no field</span></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">α and β states<br><span style="font-size:0.55rem;color:var(--text-dim)">Boltzmann distribution</span></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Net magnetization M₀<br><span style="font-size:0.55rem;color:var(--text-dim)">along +z axis</span></div>
+    </div>
+    <p><strong>Boltzmann distribution:</strong> At 300 K, 300 MHz, roughly 1 in 200,000 excess spins align with the field. This small excess is all that NMR detects — hence the relatively low sensitivity compared to fluorescence or radiometric methods.</p>
+  </div>
+
+  <div class="step-content" id="step-2">
+    <h3>Step 3: RF Excitation Pulse</h3>
+    <p>A short, intense radiofrequency pulse (typically a 90° pulse) tips the net magnetization from the z-axis into the xy-plane. The pulse contains frequencies spanning the entire ¹H chemical shift range simultaneously.</p>
+    <div class="step-flow">
+      <div class="flow-box">RF pulse applied<br><span style="font-size:0.55rem;color:var(--text-dim)">at Larmor frequency</span></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">M₀ tips to xy<br><span style="font-size:0.55rem;color:var(--text-dim)">90° rotation</span></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Magnetization precesses<br><span style="font-size:0.55rem;color:var(--text-dim)">at Larmor frequency</span></div>
+    </div>
+    <p><strong>Larmor frequency:</strong> ω₀ = γB₀, where γ is the gyromagnetic ratio of the nucleus. For ¹H, γ = 2.675 × 10⁸ rad/s/T. At 7 T, ω₀ ≈ 300 MHz. Different environments cause slight shifts around this central frequency.</p>
+  </div>
+
+  <div class="step-content" id="step-3">
+    <h3>Step 4: Signal Detection (FID)</h3>
+    <p>After the pulse, the magnetization precesses in the xy-plane and induces a voltage in the receiver coil. As spins relax back to equilibrium, the signal decays — this is the Free Induction Decay (FID).</p>
+    <div class="step-flow">
+      <div class="flow-box">FID recorded<br><span style="font-size:0.55rem;color:var(--text-dim)">voltage vs time</span></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Fourier transform<br><span style="font-size:0.55rem;color:var(--text-dim)">time → frequency</span></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">NMR spectrum<br><span style="font-size:0.55rem;color:var(--text-dim)">intensity vs ppm</span></div>
+    </div>
+    <p><strong>T₁ and T₂ relaxation:</strong> T₁ (longitudinal relaxation) is the recovery of z-magnetization. T₂ (transverse relaxation) causes loss of xy-coherence, directly determining FID decay rate and peak linewidth.</p>
+  </div>
+
+  <div class="step-content" id="step-4">
+    <h3>Step 5: Data Processing and Interpretation</h3>
+    <p>The raw FID is processed by Fourier transform, phase correction, and baseline correction to yield the final spectrum. Chemical shifts are reported relative to TMS (tetramethylsilane, 0 ppm).</p>
+    <div class="step-flow">
+      <div class="flow-box">Phase correction<br><span style="font-size:0.55rem;color:var(--text-dim)">real/imaginary</span></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Integration<br><span style="font-size:0.55rem;color:var(--text-dim)">peak area ∝ H count</span></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Structural assignment<br><span style="font-size:0.55rem;color:var(--text-dim)">environment identification</span></div>
+    </div>
+    <p><strong>Multiplicity (J-coupling):</strong> Neighboring protons split each other's peaks. A proton with n equivalent neighbors gives n+1 peaks (n+1 rule). This splitting (coupling constant J, Hz) provides connectivity information about which atoms are adjacent.</p>
+  </div>
+</section>
+
+<!-- ── APPLICATIONS ── -->
+<section id="applications">
+  <span class="sec-label">04 // Applications</span>
+  <h2>Biological Applications</h2>
+  <p>Click any card to see the analytical details and biological significance.</p>
+  <div class="apps-grid" style="margin-top:1rem;">
+    <div class="app-card" onclick="showApp('metab')">
+      <span class="ai">⚗️</span>
+      <div class="at">Metabolomics</div>
+      <p style="font-size:0.78rem;color:var(--text-dim);">Profiling metabolites in biological fluids and tissues.</p>
+    </div>
+    <div class="app-card" onclick="showApp('protein')">
+      <span class="ai">🧬</span>
+      <div class="at">Protein Structure</div>
+      <p style="font-size:0.78rem;color:var(--text-dim);">Determining 3D structure and dynamics of proteins.</p>
+    </div>
+    <div class="app-card" onclick="showApp('drug')">
+      <span class="ai">💊</span>
+      <div class="at">Drug Discovery</div>
+      <p style="font-size:0.78rem;color:var(--text-dim);">Identifying drug-target interactions and binding sites.</p>
+    </div>
+    <div class="app-card" onclick="showApp('micro')">
+      <span class="ai">🦠</span>
+      <div class="at">Microbial Metabolism</div>
+      <p style="font-size:0.78rem;color:var(--text-dim);">Tracing metabolic flux in bacteria and fungi.</p>
+    </div>
+  </div>
+
+  <div class="app-detail" id="app-metab">
+    <h3>⚗️ Metabolomics</h3>
+    <div class="dr"><div class="dk">Analyzed</div><div>Small molecules in urine, serum, cell extracts, or tissue — typically using ¹H NMR at 400–600 MHz. Single experiment detects hundreds of metabolites simultaneously.</div></div>
+    <div class="dr"><div class="dk">Information</div><div>Identity (chemical shift pattern), concentration (peak integration), and dynamic changes in metabolite levels under different physiological or pathological conditions.</div></div>
+    <div class="dr"><div class="dk">Why it matters</div><div>Metabolic fingerprinting can diagnose disease (e.g., inborn errors of metabolism from urine NMR), monitor treatment response, and characterize microbial metabolic activity without prior knowledge of what compounds are present.</div></div>
+    <div class="dr"><div class="dk">Advantage over MS</div><div>Non-destructive, quantitative without standards, reproducible, and captures labile metabolites that ionize poorly by mass spectrometry.</div></div>
+  </div>
+
+  <div class="app-detail" id="app-protein">
+    <h3>🧬 Protein Structure Analysis</h3>
+    <div class="dr"><div class="dk">Analyzed</div><div>Isotopically labeled proteins (¹⁵N, ¹³C) using multi-dimensional NMR (HSQC, NOESY, TOCSY) at 600–1000+ MHz. Practical upper limit ~50 kDa without special techniques.</div></div>
+    <div class="dr"><div class="dk">Information</div><div>Complete 3D solution-state structure, backbone dynamics (ps–ms timescales), hydrogen bonding, secondary structure elements, and changes upon ligand binding.</div></div>
+    <div class="dr"><div class="dk">Why it matters</div><div>Unlike X-ray crystallography, NMR works in solution — the native biological environment. Reveals protein dynamics and conformational flexibility that is invisible in crystal structures. Essential for understanding enzyme mechanisms and receptor-ligand interactions.</div></div>
+  </div>
+
+  <div class="app-detail" id="app-drug">
+    <h3>💊 Drug Discovery</h3>
+    <div class="dr"><div class="dk">Analyzed</div><div>Interactions between drug candidates (small molecules) and target proteins using fragment-based screening, STD-NMR, or ¹⁵N-HSQC chemical shift perturbation mapping.</div></div>
+    <div class="dr"><div class="dk">Information</div><div>Binding affinity (Kd), binding site location on the protein, binding mode (competitive vs allosteric), and lead compound optimization guidance.</div></div>
+    <div class="dr"><div class="dk">Why it matters</div><div>NMR detects weak-binding fragments (Kd ~mM) that are invisible to other screening methods. Fragment-based drug discovery (FBDD) led to clinical drugs including venetoclax (BCL-2 inhibitor for leukemia) — discovered via NMR screening.</div></div>
+  </div>
+
+  <div class="app-detail" id="app-micro">
+    <h3>🦠 Microbial Metabolism Tracing</h3>
+    <div class="dr"><div class="dk">Analyzed</div><div>¹³C-labeled substrates (e.g., [1-¹³C]-glucose) fed to bacteria or fungi; downstream metabolites analyzed by ¹³C NMR or 2D HSQC NMR to map metabolic fate.</div></div>
+    <div class="dr"><div class="dk">Information</div><div>Metabolic flux distribution — what fraction of substrate enters glycolysis vs pentose phosphate pathway, how carbon flows through the TCA cycle, and which metabolic routes are active under specific conditions.</div></div>
+    <div class="dr"><div class="dk">Why it matters</div><div>Understanding microbial metabolic strategy under stress, during infection, or in industrial fermentation. NMR-based flux analysis revealed how pathogens rewire metabolism during host infection — enabling novel antimicrobial target identification.</div></div>
+  </div>
+</section>
+
+<!-- ── LIMITATIONS ── -->
+<section id="limitations">
+  <span class="sec-label">05 // Limitations</span>
+  <h2>Limitations of NMR Spectroscopy</h2>
+  <div class="lim-grid">
+    <div class="lim-item"><span class="lim-icon">💰</span>
+      <div class="lim-text"><strong>Expensive Infrastructure</strong><br>High-field superconducting magnets (600–1000 MHz) cost $1–5M+, require liquid helium/nitrogen maintenance, dedicated shielded facilities, and skilled operators.</div></div>
+    <div class="lim-item"><span class="lim-icon">🧪</span>
+      <div class="lim-text"><strong>Sample Requirements</strong><br>Typically requires mg quantities of pure compound. Complex mixtures reduce spectral quality. Biological samples may need protein purification or metabolite extraction before analysis.</div></div>
+    <div class="lim-item"><span class="lim-icon">📉</span>
+      <div class="lim-text"><strong>Lower Sensitivity</strong><br>NMR is ~10⁶ times less sensitive than fluorescence spectroscopy. Minimum detectable concentration is typically in the µM–mM range. Mass spectrometry can detect fmol–pmol quantities.</div></div>
+    <div class="lim-item"><span class="lim-icon">🧩</span>
+      <div class="lim-text"><strong>Data Complexity</strong><br>Multidimensional NMR spectra of proteins are extremely complex. Resonance assignment requires specialized software and expertise. Large proteins produce overlapping peaks that are difficult to resolve.</div></div>
+    <div class="lim-item"><span class="lim-icon">⚖️</span>
+      <div class="lim-text"><strong>Size Limitation</strong><br>Tumbling rate of large molecules (>50 kDa) causes rapid T₂ relaxation, broadening peaks. Special techniques (TROSY, deuteration) extend the limit but large complexes remain challenging.</div></div>
+    <div class="lim-item"><span class="lim-icon">⏱️</span>
+      <div class="lim-text"><strong>Acquisition Time</strong><strong></strong><br>Signal averaging for weak samples and multi-dimensional experiments can require hours to days of instrument time. This limits throughput compared to mass spectrometry-based approaches.</div></div>
+  </div>
+</section>
+
+<!-- ── QUIZ ── -->
+<section id="quiz">
+  <span class="sec-label">06 // Assessment</span>
+  <h2>Conceptual Quiz</h2>
+  <p style="margin-bottom:1.2rem;">Five questions covering core NMR principles. Select one answer per question.</p>
+  <div id="quiz-container"></div>
+  <div class="quiz-final" id="quiz-final">
+    <div class="final-num" id="final-score">0/5</div>
+    <p style="color:var(--text);margin-top:0.5rem;font-size:0.88rem;" id="final-msg"></p>
+    <button class="btn" onclick="buildQuiz()" style="margin-top:1rem;max-width:200px;">↺ Retry</button>
+  </div>
+</section>
+
+</main>
+
+<footer>⬡ NMR Spectroscopy Interactive Module — MSc Microbiology &nbsp;|&nbsp; Educational Use Only</footer>
+
+<script>
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+let fieldMHz = 300, shieldPct = 50, numEnvs = 2;
+let showSpinAnim = true;
+let simState = 'idle'; // idle | pulsing | relaxing | done
+let pulseT = 0, relaxT = 0;
+let spectrumData = []; // [{ppm, int, width, mult}]
+let rafId = null;
+let spinAnimId = null;
+let spins = [];
+
+// Canvas references
+const spinC = document.getElementById('spin-canvas');
+const specC = document.getElementById('spectrum-canvas');
+const sCtx  = spinC.getContext('2d');
+const pCtx  = specC.getContext('2d');
+
+// ── RESIZE ──
+function sizeCanvases() {
+  [spinC, specC].forEach(c => {
+    c.width  = c.clientWidth  * devicePixelRatio;
+    c.height = c.clientHeight * devicePixelRatio;
+  });
+  const cmpA = document.getElementById('cmp-a');
+  const cmpB = document.getElementById('cmp-b');
+  [cmpA, cmpB].forEach(c => {
+    c.width  = c.clientWidth  * devicePixelRatio;
+    c.height = c.clientHeight * devicePixelRatio;
+  });
+  drawComparison();
+  drawSpins();
+  if (spectrumData.length) drawSpectrum();
+}
+
+// ── SPIN GENERATION ──
+function generateSpins() {
+  spins = [];
+  const cx = spinC.width / 2, cy = spinC.height / 2;
+  const n = numEnvs * 6 + 6;
+  for (let i = 0; i < n; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const r = (0.15 + Math.random() * 0.28) * Math.min(cx, cy) * 2;
+    const envIdx = Math.floor(Math.random() * numEnvs);
+    spins.push({
+      x: cx + Math.cos(angle) * r * 0.7,
+      y: cy + Math.sin(angle) * r * 0.5,
+      env: envIdx,
+      phase: Math.random() * Math.PI * 2,
+      // alignment: 0=random, 1=aligned, 2=tipped, 3=relaxing
+      alignment: 0,
+      tiltAngle: (Math.random() - 0.5) * Math.PI,
+      omega: 0.5 + envIdx * 0.4 + Math.random() * 0.2
+    });
+  }
+}
+
+// colors per environment
+const ENV_COLORS = ['#00e5ff','#00ffcc','#ffaa00','#ff6eb4','#7b61ff','#ff4455'];
+
+function drawSpins() {
+  const c = spinC, ctx = sCtx;
+  const W = c.width, H = c.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+
+  // Magnetic field lines (vertical, blue-ish)
+  ctx.save();
+  for (let x = W * 0.1; x < W; x += W * 0.12) {
+    const grad = ctx.createLinearGradient(x, 0, x, H);
+    grad.addColorStop(0, '#00e5ff00');
+    grad.addColorStop(0.3, '#00e5ff18');
+    grad.addColorStop(0.7, '#00e5ff18');
+    grad.addColorStop(1, '#00e5ff00');
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    // arrow heads
+    ctx.fillStyle = '#00e5ff22';
+    ctx.beginPath();
+    ctx.moveTo(x - 4, H * 0.15);
+    ctx.lineTo(x + 4, H * 0.15);
+    ctx.lineTo(x, H * 0.05);
+    ctx.fill();
+  }
+  ctx.restore();
+
+  // B₀ label
+  ctx.font = `${W * 0.035}px 'DM Mono', monospace`;
+  ctx.fillStyle = '#00e5ff55';
+  ctx.fillText('B₀', W * 0.02, H * 0.08);
+
+  if (!showSpinAnim) {
+    ctx.fillStyle = '#00e5ff33';
+    ctx.font = `${W * 0.04}px 'DM Mono', monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText('SPIN DISPLAY OFF', W / 2, H / 2);
+    ctx.textAlign = 'left';
+    return;
+  }
+
+  const t = Date.now() * 0.001;
+
+  spins.forEach(s => {
+    let tilt = 0;
+    if (simState === 'idle') {
+      tilt = s.tiltAngle; // random
+    } else if (simState === 'pulsing') {
+      // tip toward xy
+      const prog = Math.min(1, pulseT / 30);
+      tilt = s.tiltAngle * (1 - prog) + (Math.PI / 2) * prog;
+    } else if (simState === 'relaxing') {
+      const prog = Math.min(1, relaxT / 120);
+      tilt = Math.PI / 2 * (1 - prog * 0.85);
+    } else {
+      // aligned
+      tilt = s.tiltAngle * 0.1;
+    }
+
+    // Precession
+    const precAngle = simState === 'relaxing' ? t * s.omega * 3 + s.phase :
+                      simState === 'idle' ? 0 : 0;
+    const len = Math.min(W, H) * 0.1;
+
+    ctx.save();
+    ctx.translate(s.x, s.y);
+    ctx.rotate(precAngle);
+    const col = ENV_COLORS[s.env % ENV_COLORS.length];
+    ctx.strokeStyle = col;
+    ctx.shadowColor = col;
+    ctx.shadowBlur = 6;
+    ctx.lineWidth = 1.5;
+    // Draw spin as double-headed arrow
+    const dx = Math.sin(tilt) * len;
+    const dy = -Math.cos(tilt) * len;
+    ctx.beginPath(); ctx.moveTo(-dx, -dy); ctx.lineTo(dx, dy); ctx.stroke();
+    // arrowhead
+    ctx.fillStyle = col;
+    ctx.beginPath();
+    ctx.moveTo(dx, dy);
+    const perp = Math.atan2(dy, dx);
+    ctx.lineTo(dx - 5 * Math.cos(perp - 0.4), dy - 5 * Math.sin(perp - 0.4));
+    ctx.lineTo(dx - 5 * Math.cos(perp + 0.4), dy - 5 * Math.sin(perp + 0.4));
+    ctx.fill();
+    ctx.restore();
+  });
+
+  // FID waveform during relaxation
+  if (simState === 'relaxing') {
+    const fidProg = relaxT / 120;
+    const decay = Math.exp(-fidProg * 2);
+    const yBase = H * 0.92;
+    const ampMax = H * 0.05;
+    ctx.save();
+    ctx.strokeStyle = `rgba(0,255,204,${0.6 * decay})`;
+    ctx.shadowColor = '#00ffcc';
+    ctx.shadowBlur = 4;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (let px = 0; px < W; px++) {
+      const tx = (px / W) * fidProg * 8;
+      let y = 0;
+      spectrumData.forEach((pk, i) => {
+        y += Math.sin(tx * (2 + i * 0.7)) * Math.exp(-tx * 0.4);
+      });
+      y *= ampMax * decay;
+      if (px === 0) ctx.moveTo(px, yBase - y);
+      else ctx.lineTo(px, yBase - y);
+    }
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.font = `${W * 0.03}px 'DM Mono', monospace`;
+    ctx.fillStyle = `rgba(0,255,204,${decay})`;
+    ctx.fillText('FID', W * 0.02, H * 0.97);
+  }
+}
+
+// ── SPECTRUM ──
+function buildSpectrumData() {
+  // Generate peaks based on controls
+  const shield = shieldPct / 100;
+  const field = fieldMHz;
+  const n = numEnvs;
+
+  // Base peak positions: shielding shifts them left (lower ppm)
+  const baseShifts = [0.9, 2.3, 3.8, 5.3, 7.2, 9.6];
+  const widthFactor = 1 - (field - 60) / 1000; // higher field → sharper
+
+  spectrumData = [];
+  for (let i = 0; i < n; i++) {
+    let ppm = baseShifts[i] * (0.4 + shield * 0.9);
+    ppm = Math.max(0.1, Math.min(12, ppm));
+    const intensity = 0.4 + Math.random() * 0.4 + (i === 0 ? 0.2 : 0);
+    const width = (0.05 + widthFactor * 0.15) * (1 + Math.random() * 0.1);
+    // Multiplicity: random 1-3
+    const mult = Math.min(3, 1 + Math.floor(Math.random() * (i + 1)));
+    spectrumData.push({ ppm, intensity: Math.min(1, intensity), width, mult });
+  }
+}
+
+function drawSpectrum() {
+  const c = specC, ctx = pCtx;
+  const W = c.width, H = c.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid noise / film texture
+  for (let i = 0; i < 600; i++) {
+    ctx.fillStyle = `rgba(0,229,255,${Math.random() * 0.015})`;
+    ctx.fillRect(Math.random() * W, Math.random() * H, 1, 1);
+  }
+
+  // Axes
+  const PAD_L = W * 0.08, PAD_R = W * 0.03, PAD_B = H * 0.18, PAD_T = H * 0.1;
+  const plotW = W - PAD_L - PAD_R;
+  const plotH = H - PAD_B - PAD_T;
+
+  // Axis lines
+  ctx.strokeStyle = '#1a3344';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(PAD_L, PAD_T); ctx.lineTo(PAD_L, PAD_T + plotH);
+  ctx.lineTo(PAD_L + plotW, PAD_T + plotH);
+  ctx.stroke();
+
+  // X axis labels (ppm, reversed: 12 → 0)
+  ctx.fillStyle = '#4a7a8a';
+  ctx.font = `${W * 0.028}px 'DM Mono', monospace`;
+  ctx.textAlign = 'center';
+  for (let ppm = 0; ppm <= 12; ppm += 2) {
+    const x = PAD_L + (1 - ppm / 12) * plotW;
+    ctx.fillStyle = '#4a7a8a';
+    ctx.fillText(ppm, x, PAD_T + plotH + H * 0.07);
+    ctx.strokeStyle = '#0d1e2a';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(x, PAD_T + plotH); ctx.lineTo(x, PAD_T); ctx.stroke();
+  }
+
+  // Axis label
+  ctx.fillStyle = '#4a7a8a';
+  ctx.font = `${W * 0.027}px 'DM Mono', monospace`;
+  ctx.textAlign = 'center';
+  ctx.fillText('Chemical Shift (ppm)', PAD_L + plotW / 2, H * 0.97);
+
+  // TMS reference
+  const tmsx = PAD_L + plotW;
+  ctx.fillStyle = '#4a7a8a44';
+  ctx.strokeStyle = '#4a7a8a44';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(tmsx, PAD_T); ctx.lineTo(tmsx, PAD_T + plotH); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.font = `${W * 0.022}px 'DM Mono', monospace`;
+  ctx.fillText('TMS', tmsx, PAD_T - H * 0.02);
+
+  if (simState === 'idle' || spectrumData.length === 0) {
+    ctx.fillStyle = '#00e5ff22';
+    ctx.font = `${W * 0.038}px 'DM Mono', monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText('Apply RF Pulse to acquire spectrum', PAD_L + plotW / 2, PAD_T + plotH / 2);
+    ctx.textAlign = 'left';
+    return;
+  }
+
+  // Draw noise baseline
+  ctx.strokeStyle = 'rgba(0,229,255,0.08)';
+  ctx.lineWidth = 0.5;
+  ctx.beginPath();
+  let prevY = PAD_T + plotH;
+  for (let px = 0; px < plotW; px++) {
+    const ny = PAD_T + plotH - (Math.random() * plotH * 0.012);
+    if (px === 0) ctx.moveTo(PAD_L + px, ny);
+    else ctx.lineTo(PAD_L + px, ny);
+  }
+  ctx.stroke();
+
+  // Draw peaks
+  const fadeIn = simState === 'relaxing' ? Math.min(1, relaxT / 60) : 1;
+
+  spectrumData.forEach((pk, idx) => {
+    const peakX = PAD_L + (1 - pk.ppm / 12) * plotW;
+    const peakH = plotH * pk.intensity * fadeIn;
+    const sigma = pk.width * plotW;
+    const col = ENV_COLORS[idx % ENV_COLORS.length];
+
+    // Draw multiplet (n+1 lines)
+    const spacing = sigma * 0.8;
+    const lines = pk.mult;
+    const offsets = [];
+    for (let m = 0; m < lines; m++) offsets.push((m - (lines - 1) / 2) * spacing);
+    const splitFactor = lines > 1 ? 0.85 / lines : 1;
+
+    offsets.forEach(off => {
+      const cx = peakX + off;
+      const thisH = peakH * splitFactor;
+
+      // Glow fill
+      const grad = ctx.createLinearGradient(cx, PAD_T + plotH, cx, PAD_T + plotH - thisH);
+      grad.addColorStop(0, col + '00');
+      grad.addColorStop(0.4, col + '18');
+      grad.addColorStop(1, col + '44');
+      ctx.fillStyle = grad;
+
+      // Draw Lorentzian shape
+      ctx.beginPath();
+      ctx.moveTo(cx, PAD_T + plotH);
+      for (let dx = -sigma * 5; dx <= sigma * 5; dx += 1) {
+        const y = PAD_T + plotH - thisH / (1 + (dx / sigma) * (dx / sigma));
+        if (dx === -sigma * 5) ctx.moveTo(cx + dx, y);
+        else ctx.lineTo(cx + dx, y);
+      }
+      ctx.lineTo(cx + sigma * 5, PAD_T + plotH);
+      ctx.closePath();
+      ctx.fill();
+
+      // Peak line
+      ctx.strokeStyle = col;
+      ctx.shadowColor = col;
+      ctx.shadowBlur = 8;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let dx = -sigma * 5; dx <= sigma * 5; dx += 0.5) {
+        const y = PAD_T + plotH - thisH / (1 + (dx / sigma) * (dx / sigma));
+        if (dx === -sigma * 5) ctx.moveTo(cx + dx, y);
+        else ctx.lineTo(cx + dx, y);
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    });
+
+    // Peak label
+    ctx.fillStyle = col;
+    ctx.font = `${W * 0.026}px 'DM Mono', monospace`;
+    ctx.textAlign = 'center';
+    const multLabels = ['s','d','t'];
+    ctx.fillText(`${pk.ppm.toFixed(1)}`, peakX, PAD_T + plotH - peakH - H * 0.03);
+    ctx.fillStyle = col + 'aa';
+    ctx.font = `${W * 0.022}px 'DM Mono', monospace`;
+    ctx.fillText(multLabels[pk.mult - 1] || 's', peakX, PAD_T + plotH - peakH - H * 0.07);
+  });
+
+  ctx.textAlign = 'left';
+}
+
+// ── COMPARISON CANVASES ──
+function drawComparison() {
+  const cmpA = document.getElementById('cmp-a');
+  const cmpB = document.getElementById('cmp-b');
+  drawCmpSpectrum(cmpA.getContext('2d'), cmpA.width, cmpA.height, 'shielded');
+  drawCmpSpectrum(cmpB.getContext('2d'), cmpB.width, cmpB.height, 'deshielded');
+}
+
+function drawCmpSpectrum(ctx, W, H, type) {
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+
+  const PAD_L = W * 0.08, PAD_R = W * 0.03, PAD_B = H * 0.2, PAD_T = H * 0.1;
+  const plotW = W - PAD_L - PAD_R, plotH = H - PAD_B - PAD_T;
+
+  ctx.strokeStyle = '#1a3344'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(PAD_L, PAD_T); ctx.lineTo(PAD_L, PAD_T + plotH);
+  ctx.lineTo(PAD_L + plotW, PAD_T + plotH);
+  ctx.stroke();
+
+  ctx.fillStyle = '#4a7a8a';
+  ctx.font = `${W * 0.055}px 'DM Mono', monospace`;
+  ctx.textAlign = 'center';
+  for (let ppm = 0; ppm <= 12; ppm += 4) {
+    const x = PAD_L + (1 - ppm / 12) * plotW;
+    ctx.fillText(ppm, x, PAD_T + plotH + H * 0.12);
+  }
+
+  const pkPpm = type === 'shielded' ? 1.2 : 8.8;
+  const col = type === 'shielded' ? '#00ffcc' : '#ff6eb4';
+  const pkX = PAD_L + (1 - pkPpm / 12) * plotW;
+  const pkH = plotH * 0.7;
+  const sigma = plotW * 0.02;
+
+  const grad = ctx.createLinearGradient(pkX, PAD_T + plotH, pkX, PAD_T + plotH - pkH);
+  grad.addColorStop(0, col + '00'); grad.addColorStop(1, col + '33');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.moveTo(pkX, PAD_T + plotH);
+  for (let dx = -sigma * 6; dx <= sigma * 6; dx++) {
+    const y = PAD_T + plotH - pkH / (1 + (dx/sigma)**2);
+    if (dx === -sigma*6) ctx.moveTo(pkX+dx, y); else ctx.lineTo(pkX+dx, y);
+  }
+  ctx.lineTo(pkX + sigma*6, PAD_T + plotH); ctx.closePath(); ctx.fill();
+
+  ctx.strokeStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 10; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  for (let dx = -sigma*6; dx <= sigma*6; dx += 0.5) {
+    const y = PAD_T + plotH - pkH / (1 + (dx/sigma)**2);
+    if (dx === -sigma*6) ctx.moveTo(pkX+dx, y); else ctx.lineTo(pkX+dx, y);
+  }
+  ctx.stroke(); ctx.shadowBlur = 0;
+
+  ctx.fillStyle = col;
+  ctx.font = `${W * 0.055}px 'DM Mono', monospace`;
+  ctx.textAlign = 'center';
+  ctx.fillText(`${pkPpm.toFixed(1)} ppm`, pkX, PAD_T + plotH - pkH - H * 0.06);
+  ctx.textAlign = 'left';
+}
+
+// ── ANIMATION LOOP ──
+function animate() {
+  if (simState === 'pulsing') {
+    pulseT++;
+    if (pulseT >= 40) {
+      simState = 'relaxing';
+      pulseT = 0;
+    }
+  } else if (simState === 'relaxing') {
+    relaxT++;
+    if (relaxT >= 130) {
+      simState = 'done';
+      updateReadouts();
+      updateContext();
+    }
+  }
+  drawSpins();
+  if (simState === 'relaxing' || simState === 'pulsing') drawSpectrum();
+  if (simState !== 'idle' && simState !== 'done') {
+    rafId = requestAnimationFrame(animate);
+  } else if (simState === 'done') {
+    drawSpectrum();
+  }
+}
+
+// ── CONTROLS ──
+function updateSliderDisplays() {
+  document.getElementById('v-field').textContent = fieldMHz + ' MHz';
+  document.getElementById('v-shield').textContent = shieldPct < 30 ? 'Shielded' : shieldPct > 70 ? 'Deshielded' : 'Neutral';
+  document.getElementById('v-envs').textContent = numEnvs;
+  document.getElementById('field-mhz').textContent = fieldMHz + ' MHz';
+}
+
+document.getElementById('sl-field').addEventListener('input', function() {
+  fieldMHz = +this.value; updateSliderDisplays();
+  if (simState === 'done') { buildSpectrumData(); drawSpectrum(); updateReadouts(); updateContext(); }
+});
+document.getElementById('sl-shield').addEventListener('input', function() {
+  shieldPct = +this.value; updateSliderDisplays();
+  if (simState === 'done') { buildSpectrumData(); drawSpectrum(); updateReadouts(); updateContext(); }
+});
+document.getElementById('sl-envs').addEventListener('input', function() {
+  numEnvs = +this.value; updateSliderDisplays();
+  generateSpins();
+  if (simState === 'done') { buildSpectrumData(); drawSpectrum(); updateReadouts(); updateContext(); }
+});
+
+document.getElementById('btn-rf').addEventListener('click', function() {
+  if (simState === 'pulsing' || simState === 'relaxing') return;
+  cancelAnimationFrame(rafId);
+  simState = 'pulsing'; pulseT = 0; relaxT = 0;
+  buildSpectrumData();
+  document.getElementById('status-light').classList.add('on');
+  document.getElementById('status-text').textContent = 'RF PULSE ACTIVE — spins being tipped';
+  this.classList.add('active');
+  setTimeout(() => {
+    document.getElementById('status-text').textContent = 'RELAXING — FID being acquired';
+  }, 500);
+  setTimeout(() => {
+    document.getElementById('status-text').textContent = 'SPECTRUM ACQUIRED';
+    document.getElementById('status-light').classList.remove('on');
+    document.getElementById('btn-rf').classList.remove('active');
+  }, 2500);
+  rafId = requestAnimationFrame(animate);
+});
+
+document.getElementById('btn-reset').addEventListener('click', function() {
+  cancelAnimationFrame(rafId);
+  simState = 'idle'; pulseT = 0; relaxT = 0;
+  spectrumData = [];
+  generateSpins();
+  drawSpins();
+  drawSpectrum();
+  document.getElementById('status-light').classList.remove('on');
+  document.getElementById('status-text').textContent = 'IDLE — Adjust controls and apply RF pulse';
+  document.getElementById('btn-rf').classList.remove('active');
+  document.getElementById('rd-shift').textContent = '— ppm';
+  document.getElementById('rd-int').textContent = '—';
+  document.getElementById('rd-count').textContent = '—';
+  document.getElementById('ctx-body').textContent = 'Configure the simulation and apply an RF pulse to begin.';
+});
+
+function toggleSpins() {
+  showSpinAnim = !showSpinAnim;
+  document.getElementById('spin-toggle').classList.toggle('on', showSpinAnim);
+  drawSpins();
+}
+
+function updateReadouts() {
+  if (!spectrumData.length) return;
+  const shifts = spectrumData.map(p => p.ppm.toFixed(2) + ' ppm').join(' | ');
+  const maxInt = Math.max(...spectrumData.map(p => p.intensity));
+  const intLabel = maxInt > 0.8 ? 'HIGH' : maxInt > 0.5 ? 'MEDIUM' : 'LOW';
+  document.getElementById('rd-shift').textContent = spectrumData.length === 1 ? spectrumData[0].ppm.toFixed(2) + ' ppm' : `${spectrumData.length} peaks`;
+  document.getElementById('rd-int').textContent = intLabel;
+  document.getElementById('rd-count').textContent = spectrumData.length;
+}
+
+function updateContext() {
+  const n = numEnvs, shield = shieldPct;
+  const body = document.getElementById('ctx-body');
+  if (n === 1) {
+    body.innerHTML = `<strong style="color:var(--teal)">Single proton environment.</strong> One peak indicates all protons are chemically equivalent. Consistent with a symmetric molecule such as TMS (tetramethylsilane, 0 ppm) or a molecule where all hydrogens occupy identical environments. In metabolomics: may indicate a simple, symmetric metabolite.`;
+  } else if (n <= 3) {
+    body.innerHTML = `<strong style="color:var(--cyan)">Simple spectrum — ${n} environments.</strong> Characteristic of a small molecule with a few distinct proton environments. In ¹H-NMR metabolomics, this pattern is consistent with short-chain organic acids, amino acids, or simple sugars. Peak positions (${shield < 40 ? 'shifted upfield — electron-rich environments' : shield > 60 ? 'shifted downfield — electron-withdrawing groups present' : 'mid-range — mixed environments'}).`;
+  } else {
+    body.innerHTML = `<strong style="color:var(--amber)">Complex spectrum — ${n} environments.</strong> Multiple overlapping peaks suggest a structurally complex molecule — a nucleotide, cofactor, or polypeptide fragment. In protein NMR, even greater complexity is expected: a 100-residue protein produces thousands of overlapping proton signals requiring 2D/3D NMR for assignment. ${shield > 60 ? ' Deshielded environments suggest aromatic rings (7–9 ppm) or carbonyls (8–10 ppm) are present.' : ''}`;
+  }
+}
+
+// ── STEPS ──
+function showStep(i, btn) {
+  document.querySelectorAll('.step-content').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.step-tab').forEach(e => e.classList.remove('active'));
+  document.getElementById('step-' + i).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── APPLICATIONS ──
+function showApp(id) {
+  document.querySelectorAll('.app-detail').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.app-card').forEach(e => e.classList.remove('sel'));
+  document.getElementById('app-' + id).classList.add('active');
+  document.querySelectorAll('.app-card').forEach(e => {
+    if (e.getAttribute('onclick') === `showApp('${id}')`) e.classList.add('sel');
+  });
+  document.getElementById('app-' + id).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ── QUIZ ──
+const QD = [
+  { q: "What causes different peaks to appear at different chemical shifts in a ¹H NMR spectrum?",
+    opts: ["Different masses of hydrogen isotopes", "Electrons surrounding each nucleus shielding it differently from the external field", "The magnetic field strength affects each hydrogen atom differently", "Hydrogen atoms in different positions emit different wavelengths of light"],
+    correct: 1,
+    exp: "The electron cloud around each nucleus acts as a local shield, slightly reducing the effective magnetic field experienced by that nucleus. Electron-poor (deshielded) protons resonate at higher frequency — higher ppm. This is the fundamental basis of chemical shift as a structural probe." },
+  { q: "In ¹H NMR spectroscopy, what does the area under a peak represent?",
+    opts: ["The number of distinct chemical environments in the molecule", "The energy of the radiofrequency pulse used", "The relative number of protons in that particular environment", "The relaxation time T₁ of that proton"],
+    correct: 2,
+    exp: "Peak integration (area) is directly proportional to the number of protons contributing to that signal. A methyl group (CH₃) gives a peak with three times the area of a single proton. This makes NMR inherently quantitative — a significant advantage over techniques requiring calibration standards." },
+  { q: "What is a Free Induction Decay (FID)?",
+    opts: ["The gradual reduction in radioactive emission from the NMR sample over time", "The oscillating signal from precessing nuclei that decays as spins return to equilibrium", "The process of separating different nuclei based on their spin states", "The pattern of electron density around a shielded nucleus"],
+    correct: 1,
+    exp: "After the RF pulse, the net magnetization precesses in the xy-plane, inducing an oscillating voltage in the detector coil. This signal decays as spins lose coherence (T₂ relaxation) and return to z-axis equilibrium (T₁ relaxation). Fourier transform converts this time-domain FID into the frequency-domain spectrum." },
+  { q: "Why does increasing magnetic field strength (B₀) improve NMR spectral quality?",
+    opts: ["Higher fields make protons emit light instead of radio waves", "Greater field strength increases separation between peaks in Hz, reducing spectral overlap", "Stronger fields allow shorter RF pulse durations", "Higher fields eliminate the need for deuterated solvents"],
+    correct: 1,
+    exp: "Chemical shift differences are fixed in ppm, but ppm is a relative scale. In absolute frequency (Hz), peak separation scales with field strength: at 300 MHz, two peaks 1 ppm apart are 300 Hz apart; at 900 MHz they are 900 Hz apart. Greater separation reduces overlap, allowing resolution of complex spectra from proteins and metabolite mixtures." },
+  { q: "In NMR metabolomics, what makes ¹H NMR suitable for identifying unknown metabolites in a biological sample?",
+    opts: ["¹H NMR can only detect molecules above a molecular weight of 500 Da", "Every metabolite produces a unique pattern of peaks (fingerprint) that encodes its molecular structure", "¹H NMR works only after metabolites are separated by chromatography", "Radiofrequency pulses selectively excite metabolites but not proteins or lipids"],
+    correct: 1,
+    exp: "Each metabolite produces a characteristic set of peaks at specific chemical shifts with specific multiplicities and intensities — a structural fingerprint. By comparing observed spectra to metabolite databases (HMDB, BMRB), unknown compounds can be identified in complex mixtures like urine, serum, or cell extracts, without prior knowledge of sample composition." }
+];
+
+let qAns = [];
+let qScore = 0;
+
+function buildQuiz() {
+  qAns = new Array(QD.length).fill(false);
+  qScore = 0;
+  document.getElementById('quiz-final').classList.remove('show');
+  const ctr = document.getElementById('quiz-container');
+  ctr.innerHTML = QD.map((q, qi) => `
+    <div class="quiz-q" id="qq${qi}">
+      <span class="q-num">QUESTION ${qi+1} / ${QD.length}</span>
+      <div class="q-text">${q.q}</div>
+      <div class="options">${q.opts.map((o,oi) => `
+        <button class="opt-btn" onclick="ansQ(${qi},${oi})">${String.fromCharCode(65+oi)}. ${o}</button>
+      `).join('')}</div>
+      <div class="feedback" id="fb${qi}"></div>
+    </div>
+  `).join('');
+}
+
+function ansQ(qi, oi) {
+  if (qAns[qi]) return;
+  qAns[qi] = true;
+  const q = QD[qi];
+  const el = document.getElementById('qq'+qi);
+  el.querySelectorAll('.opt-btn').forEach((b,i) => {
+    b.disabled = true;
+    if (i === q.correct) b.classList.add('correct');
+    else if (i === oi) b.classList.add('wrong');
+  });
+  const ok = oi === q.correct;
+  if (ok) qScore++;
+  const fb = document.getElementById('fb'+qi);
+  fb.className = 'feedback show ' + (ok ? 'ok' : 'bad');
+  fb.innerHTML = (ok ? '✓ Correct. ' : '✗ Incorrect. ') + q.exp;
+  if (qAns.every(Boolean)) {
+    const fin = document.getElementById('quiz-final');
+    document.getElementById('final-score').textContent = qScore + '/' + QD.length;
+    const pct = qScore / QD.length;
+    document.getElementById('final-msg').textContent =
+      pct===1 ? 'Perfect. Thorough grasp of NMR principles.' :
+      pct>=0.8 ? 'Strong. Review the questions you missed.' :
+      pct>=0.6 ? 'Adequate. Revisit the simulation and step-by-step sections.' :
+      'Needs work. Go back through the core concepts carefully.';
+    fin.classList.add('show');
+  }
+}
+
+// ── INIT ──
+function init() {
+  sizeCanvases();
+  generateSpins();
+  drawSpins();
+  drawSpectrum();
+  updateSliderDisplays();
+  buildQuiz();
+}
+
+window.addEventListener('resize', sizeCanvases);
+window.addEventListener('load', init);
+
+// Idle spin wobble
+setInterval(() => {
+  if (simState === 'idle' && showSpinAnim) {
+    spins.forEach(s => { s.tiltAngle += (Math.random() - 0.5) * 0.05; });
+    drawSpins();
+  }
+}, 100);
+</script>
+</body>
+</html>

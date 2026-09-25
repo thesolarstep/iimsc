@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mass Spectrometry — MSc Microbiology Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f14;
+    --surface: #161820;
+    --surface2: #1e2028;
+    --surface3: #252730;
+    --border: #2e3040;
+    --accent: #e8b84b;
+    --accent2: #5ec4a1;
+    --accent3: #e05c7a;
+    --accent4: #7b9cf5;
+    --text: #d8dae8;
+    --text-muted: #7a7f9a;
+    --text-dim: #4a4f68;
+    --heading: #f0f2ff;
+    --glow: rgba(232,184,75,0.15);
+    --glow2: rgba(94,196,161,0.1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  .hero {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 64px 40px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -80px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(232,184,75,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 20%;
+    width: 400px; height: 300px;
+    background: radial-gradient(circle, rgba(94,196,161,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-inner { max-width: 900px; margin: 0 auto; position: relative; }
+
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    background: rgba(232,184,75,0.1);
+    border: 1px solid rgba(232,184,75,0.2);
+    padding: 4px 12px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    color: var(--heading);
+    line-height: 1.15;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 span { color: var(--accent); font-style: italic; }
+
+  .hero-subtitle {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    font-style: italic;
+    max-width: 620px;
+    margin-bottom: 32px;
+  }
+
+  .hero-meta {
+    display: flex; gap: 24px; flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .hero-meta span { color: var(--accent2); }
+
+  /* ── LAYOUT ── */
+  .layout { display: flex; max-width: 1200px; margin: 0 auto; }
+
+  /* ── SIDEBAR / TOC ── */
+  .sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 32px 0;
+  }
+
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .toc-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 0 24px 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+
+  .toc-item {
+    display: block;
+    padding: 8px 24px;
+    font-size: 13.5px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+    cursor: pointer;
+  }
+
+  .toc-item:hover, .toc-item.active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+    background: rgba(232,184,75,0.05);
+  }
+
+  .toc-item.sub {
+    padding-left: 36px;
+    font-size: 12.5px;
+    color: var(--text-dim);
+  }
+
+  .toc-item.sub:hover { color: var(--accent2); border-left-color: var(--accent2); }
+
+  .toc-section-label {
+    padding: 16px 24px 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    flex: 1;
+    min-width: 0;
+    padding: 48px 56px;
+  }
+
+  .section {
+    margin-bottom: 72px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .section.visible { opacity: 1; transform: translateY(0); }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    color: var(--heading);
+    margin-bottom: 24px;
+    line-height: 1.25;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+  }
+
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    color: var(--accent);
+    margin: 32px 0 12px;
+    font-style: italic;
+  }
+
+  h4 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent2);
+    margin: 24px 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-style: normal;
+  }
+
+  p { margin-bottom: 16px; }
+
+  strong { color: var(--heading); font-weight: 600; }
+
+  em { color: var(--accent); font-style: italic; }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85em;
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: var(--accent4);
+  }
+
+  /* ── ANECDOTE ── */
+  .anecdote {
+    background: linear-gradient(135deg, rgba(232,184,75,0.07), rgba(232,184,75,0.03));
+    border: 1px solid rgba(232,184,75,0.2);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin: 24px 0;
+    position: relative;
+  }
+
+  .anecdote::before {
+    content: '📖';
+    font-size: 1.2rem;
+    position: absolute;
+    top: -12px; left: 16px;
+    background: var(--bg);
+    padding: 0 6px;
+  }
+
+  .anecdote-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .anecdote p { font-style: italic; color: var(--text-muted); margin-bottom: 0; font-size: 0.95rem; }
+
+  /* ── KEY CONCEPT ── */
+  .key-concept {
+    background: linear-gradient(135deg, rgba(94,196,161,0.07), rgba(94,196,161,0.03));
+    border: 1px solid rgba(94,196,161,0.2);
+    border-left: 3px solid var(--accent2);
+    border-radius: 6px;
+    padding: 18px 22px;
+    margin: 20px 0;
+  }
+
+  .key-concept-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    color: var(--accent2);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .key-concept p { margin-bottom: 0; color: var(--text); }
+
+  /* ── WARNING / CAUTION ── */
+  .caution {
+    background: rgba(224,92,122,0.06);
+    border: 1px solid rgba(224,92,122,0.2);
+    border-left: 3px solid var(--accent3);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 20px 0;
+  }
+
+  .caution-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.15em;
+    color: var(--accent3);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .caution p { margin-bottom: 0; font-size: 0.94rem; color: var(--text-muted); }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; margin: 20px 0; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  thead tr {
+    background: var(--surface3);
+    border-bottom: 2px solid var(--border);
+  }
+
+  th {
+    text-align: left;
+    padding: 12px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    font-weight: 600;
+  }
+
+  td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+  }
+
+  tbody tr:hover { background: var(--surface2); }
+
+  td strong { color: var(--accent); }
+
+  /* ── FORMULA BLOCK ── */
+  .formula {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 24px;
+    margin: 16px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    color: var(--accent4);
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── INTERACTIVE QUIZ ── */
+  .quiz {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px;
+    margin: 32px 0;
+  }
+
+  .quiz-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent3);
+    margin-bottom: 14px;
+  }
+
+  .quiz-question {
+    font-size: 1rem;
+    color: var(--heading);
+    margin-bottom: 16px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+  }
+
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+
+  .quiz-option {
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 11px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.92rem;
+    color: var(--text);
+  }
+
+  .quiz-option:hover { border-color: var(--accent4); background: rgba(123,156,245,0.08); }
+  .quiz-option.correct { border-color: var(--accent2) !important; background: rgba(94,196,161,0.1) !important; color: var(--accent2) !important; }
+  .quiz-option.wrong { border-color: var(--accent3) !important; background: rgba(224,92,122,0.08) !important; color: var(--accent3) !important; }
+
+  .quiz-feedback {
+    margin-top: 14px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    min-height: 20px;
+    font-style: italic;
+  }
+
+  .quiz-feedback.correct-msg { color: var(--accent2); }
+  .quiz-feedback.wrong-msg { color: var(--accent3); }
+
+  /* ── ACCORDION ── */
+  .accordion { margin: 16px 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+
+  .accordion-header {
+    background: var(--surface2);
+    padding: 14px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Source Serif 4', serif;
+    font-weight: 600;
+    color: var(--heading);
+    font-size: 0.95rem;
+    user-select: none;
+    transition: background 0.2s;
+  }
+
+  .accordion-header:hover { background: var(--surface3); }
+
+  .accordion-header .chevron {
+    font-size: 0.7rem;
+    color: var(--accent);
+    transition: transform 0.3s;
+    font-style: normal;
+  }
+
+  .accordion-header.open .chevron { transform: rotate(180deg); }
+
+  .accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s;
+    padding: 0 20px;
+    color: var(--text-muted);
+    font-size: 0.94rem;
+  }
+
+  .accordion-body.open { max-height: 800px; padding: 16px 20px; }
+
+  /* ── SPECTRUM VISUALIZER ── */
+  .spectrum-demo {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 24px 0;
+  }
+
+  .spectrum-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent4);
+    margin-bottom: 16px;
+  }
+
+  .spectrum-canvas-wrap { position: relative; }
+
+  canvas#spectrumCanvas {
+    width: 100%;
+    height: 200px;
+    border-radius: 4px;
+    background: #0a0b0f;
+    display: block;
+  }
+
+  .spectrum-controls {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px;
+  }
+
+  .spec-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 6px 14px;
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .spec-btn:hover, .spec-btn.active {
+    border-color: var(--accent4);
+    color: var(--accent4);
+    background: rgba(123,156,245,0.1);
+  }
+
+  /* ── ION SOURCE DIAGRAM ── */
+  .diagram-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 24px 0;
+    overflow: hidden;
+  }
+
+  .diagram-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  /* ── STEP FLOW ── */
+  .step-flow { display: flex; gap: 0; flex-wrap: wrap; margin: 24px 0; }
+
+  .step {
+    flex: 1;
+    min-width: 130px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 16px;
+    position: relative;
+    text-align: center;
+    transition: background 0.2s;
+  }
+
+  .step:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    font-size: 1.1rem;
+    z-index: 2;
+  }
+
+  .step:hover { background: var(--surface3); }
+
+  .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .step-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent2);
+    margin-bottom: 4px;
+  }
+
+  .step-desc { font-size: 0.78rem; color: var(--text-muted); }
+
+  /* ── FLASHCARD ── */
+  .flashcard-section { margin: 24px 0; }
+
+  .flashcard-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent3);
+    margin-bottom: 16px;
+  }
+
+  .flashcard-wrap {
+    perspective: 1000px;
+    width: 100%;
+    height: 180px;
+    cursor: pointer;
+  }
+
+  .flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+
+  .flashcard-wrap.flipped .flashcard-inner { transform: rotateY(180deg); }
+
+  .flashcard-front, .flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    text-align: center;
+  }
+
+  .flashcard-front {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+  }
+
+  .flashcard-back {
+    background: linear-gradient(135deg, rgba(94,196,161,0.1), rgba(123,156,245,0.08));
+    border: 1px solid rgba(94,196,161,0.2);
+    transform: rotateY(180deg);
+  }
+
+  .flashcard-front .fc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 12px;
+  }
+
+  .flashcard-q { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--heading); font-style: italic; }
+
+  .flashcard-a { font-size: 0.92rem; color: var(--text); line-height: 1.6; }
+
+  .flashcard-nav { display: flex; gap: 10px; margin-top: 12px; justify-content: center; }
+
+  .fc-nav-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 7px 18px;
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .fc-nav-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  .fc-counter { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); padding: 7px 0; }
+
+  /* ── GLOSSARY ── */
+  .glossary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .glossary-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    transition: border-color 0.2s;
+  }
+
+  .glossary-item:hover { border-color: var(--border); }
+
+  .glossary-term {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .glossary-def { font-size: 0.87rem; color: var(--text-muted); }
+
+  /* ── PROGRESS BAR (reading) ── */
+  #readingProgress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    width: 0%;
+    z-index: 1000;
+    transition: width 0.1s;
+  }
+
+  /* ── BACK TO TOP ── */
+  #backToTop {
+    position: fixed;
+    bottom: 32px; right: 32px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 999;
+    text-decoration: none;
+  }
+
+  #backToTop.visible { opacity: 1; }
+  #backToTop:hover { background: var(--accent); color: var(--bg); }
+
+  /* ── HIGHLIGHT ── */
+  .highlight { background: rgba(232,184,75,0.15); padding: 1px 4px; border-radius: 3px; color: var(--accent); }
+
+  /* ── LIST STYLE ── */
+  ul.notes-list, ol.notes-list {
+    margin: 12px 0 16px 20px;
+    color: var(--text);
+  }
+
+  ul.notes-list li, ol.notes-list li {
+    margin-bottom: 8px;
+    padding-left: 4px;
+  }
+
+  ul.notes-list li::marker { color: var(--accent2); }
+  ol.notes-list li::marker { color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { padding: 32px 24px; }
+    .hero { padding: 40px 24px; }
+  }
+
+  @media (max-width: 600px) {
+    .step-flow { flex-direction: column; }
+    .step:not(:last-child)::after { content: '↓'; right: 50%; bottom: -14px; top: auto; transform: translateX(50%); }
+  }
+
+  /* ── SEARCH BOX ── */
+  .search-wrap { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+
+  .search-input {
+    width: 100%;
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-input:focus { border-color: var(--accent2); }
+  .search-input::placeholder { color: var(--text-dim); }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+  /* ── TOOLTIP ── */
+  [data-tip] { position: relative; cursor: help; border-bottom: 1px dashed var(--text-dim); }
+
+  [data-tip]:hover::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    color: var(--text);
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 100;
+    font-style: normal;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  /* ── SPECTRUM SVG ── */
+  .spectrum-svg { width: 100%; }
+</style>
+</head>
+<body>
+
+<div id="readingProgress"></div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">MSc Microbiology · Analytical Methods</div>
+    <h1>Mass <span>Spectrometry</span><br>Comprehensive Notes</h1>
+    <p class="hero-subtitle">From ions in a vacuum to proteome-wide microbial identification — everything you need to know.</p>
+    <div class="hero-meta">
+      Level: <span>Late MSc / Graduate</span> &nbsp;·&nbsp;
+      Topics: <span>12 sections</span> &nbsp;·&nbsp;
+      Interactive: <span>quizzes, flashcards, diagrams</span>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="search-wrap">
+      <input class="search-input" type="text" placeholder="Search topics…" id="searchInput" oninput="filterTOC(this.value)">
+    </div>
+    <div class="toc-title">Contents</div>
+
+    <div class="toc-section-label">Foundations</div>
+    <a class="toc-item" href="#s1">1. What Is Mass Spectrometry?</a>
+    <a class="toc-item sub" href="#s1a">The fundamental principle</a>
+    <a class="toc-item sub" href="#s1b">Historical context</a>
+    <a class="toc-item" href="#s2">2. Ionisation Methods</a>
+    <a class="toc-item sub" href="#s2a">ESI</a>
+    <a class="toc-item sub" href="#s2b">MALDI</a>
+    <a class="toc-item sub" href="#s2c">EI &amp; CI</a>
+
+    <div class="toc-section-label">Instrumentation</div>
+    <a class="toc-item" href="#s3">3. Mass Analysers</a>
+    <a class="toc-item sub" href="#s3a">Quadrupole</a>
+    <a class="toc-item sub" href="#s3b">Time-of-Flight</a>
+    <a class="toc-item sub" href="#s3c">Orbitrap &amp; Ion Trap</a>
+    <a class="toc-item" href="#s4">4. Tandem MS (MS/MS)</a>
+    <a class="toc-item" href="#s5">5. Detectors &amp; Data</a>
+
+    <div class="toc-section-label">Microbiology Applications</div>
+    <a class="toc-item" href="#s6">6. Microbial ID — MALDI-TOF</a>
+    <a class="toc-item" href="#s7">7. Proteomics &amp; Metaproteomics</a>
+    <a class="toc-item" href="#s8">8. Metabolomics</a>
+    <a class="toc-item" href="#s9">9. Lipidomics &amp; Lipopolysaccharides</a>
+    <a class="toc-item" href="#s10">10. Antibiotic Resistance</a>
+
+    <div class="toc-section-label">Review</div>
+    <a class="toc-item" href="#s11">11. Data Analysis</a>
+    <a class="toc-item" href="#s12">12. Glossary &amp; Flashcards</a>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ════════════════════════════════ SECTION 1 ════════════════════════════════ -->
+    <section class="section" id="s1">
+      <div class="section-label">Section 01</div>
+      <h2>What Is Mass Spectrometry?</h2>
+
+      <p>Mass spectrometry (<strong>MS</strong>) is an analytical technique that measures the <strong>mass-to-charge ratio (<em>m/z</em>)</strong> of ions. By doing so, it provides precise information about the <strong>molecular weight, structure, and identity</strong> of compounds — from small metabolites to entire viral proteomes.</p>
+
+      <p>At its core, every mass spectrometer does three things: <strong>ionises</strong> analyte molecules, <strong>separates</strong> ions by m/z, and <strong>detects</strong> them to generate a spectrum.</p>
+
+      <div class="step-flow">
+        <div class="step">
+          <div class="step-num">Step 1</div>
+          <div class="step-name">Sample Intro</div>
+          <div class="step-desc">Liquid, gas, or solid loaded</div>
+        </div>
+        <div class="step">
+          <div class="step-num">Step 2</div>
+          <div class="step-name">Ionisation</div>
+          <div class="step-desc">Neutral molecules → charged ions</div>
+        </div>
+        <div class="step">
+          <div class="step-num">Step 3</div>
+          <div class="step-name">Separation</div>
+          <div class="step-desc">Ions sorted by m/z</div>
+        </div>
+        <div class="step">
+          <div class="step-num">Step 4</div>
+          <div class="step-name">Detection</div>
+          <div class="step-desc">Ion abundance measured</div>
+        </div>
+        <div class="step">
+          <div class="step-num">Step 5</div>
+          <div class="step-name">Spectrum</div>
+          <div class="step-desc">Data → identification</div>
+        </div>
+      </div>
+
+      <h3 id="s1a">The Fundamental Principle</h3>
+
+      <p>All mass analysers exploit the fact that ions with different <em>m/z</em> ratios behave differently in electromagnetic fields. The <span data-tip="mass-to-charge ratio; the x-axis of any mass spectrum">m/z</span> value is calculated as:</p>
+
+      <div class="formula">m/z = (molecular mass + z × 1.00728) / z</div>
+
+      <p>where <code>z</code> is the number of charges (protons gained or lost). A singly charged ion (<code>z=1</code>) of glucose (MW ≈ 180 Da) appears at <em>m/z</em> 181 (adding one proton).</p>
+
+      <div class="key-concept">
+        <div class="key-concept-label">🔑 Key Concept</div>
+        <p>MS does <strong>not</strong> measure mass directly — it measures the ratio of mass to charge. A doubly charged ion appears at half the m/z of a singly charged ion of the same molecule. This is crucial when interpreting spectra of multiply charged proteins.</p>
+      </div>
+
+      <h3 id="s1b">A Brief History</h3>
+
+      <p>J.J. Thomson built the first mass spectrograph in 1912 to study isotopes of neon — demonstrating that neon was actually two isotopes (<sup>20</sup>Ne and <sup>22</sup>Ne). Francis Aston later won the 1922 Nobel Prize for mapping the isotopes of most elements. For decades MS remained a physicist's tool for studying small atoms and gases.</p>
+
+      <div class="anecdote">
+        <div class="anecdote-label">Historical Anecdote</div>
+        <p>The leap into biology came dramatically in 1989 when John Fenn and Koichi Tanaka (separately) developed techniques to ionise intact proteins without destroying them — ESI and MALDI respectively. Fenn famously said his technique could "weigh an elephant one hair at a time." Both received (or should have received) Nobel Prizes: Fenn won in 2002; Tanaka — a production engineer with no PhD — was the surprise co-winner. He was reportedly so shocked by the announcement he assumed a colleague was pranking him.</p>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ════════════════════════════════ SECTION 2 ════════════════════════════════ -->
+    <section class="section" id="s2">
+      <div class="section-label">Section 02</div>
+      <h2>Ionisation Methods</h2>
+
+      <p>Ionisation is arguably the most critical step — a poor ionisation method destroys or obscures your analyte before it ever reaches the analyser. The choice depends on molecule size, volatility, and whether intact molecular ions are needed.</p>
+
+      <h3 id="s2a">Electrospray Ionisation (ESI)</h3>
+
+      <p>ESI is the workhorse of biological MS. A liquid sample is pumped through a metal capillary at high voltage (~3–5 kV). The strong electric field sprays the liquid into a fine mist of charged droplets. As solvent evaporates, the droplets shrink until ions are expelled into the gas phase.</p>
+
+      <p>ESI produces <strong>multiply charged ions</strong> from large biomolecules — a protein of 50 kDa might appear as a series of peaks from [M+20H]<sup>20+</sup> to [M+30H]<sup>30+</sup>, all within the typical <em>m/z</em> 500–2000 range of most instruments.</p>
+
+      <div class="key-concept">
+        <div class="key-concept-label">🔑 Why Multiply Charged Ions Matter</div>
+        <p>A 150 kDa antibody would require an analyser with m/z range up to 150,000 if it only carried one charge. ESI gives it ~50–60 charges, compressing it to m/z ~2,500–3,000 — perfectly measurable on standard instruments.</p>
+      </div>
+
+      <h3 id="s2b">MALDI — Matrix-Assisted Laser Desorption/Ionisation</h3>
+
+      <p>In MALDI, the analyte is co-crystallised with a UV-absorbing <strong>matrix compound</strong> (e.g., α-cyano-4-hydroxycinnamic acid, CHCA; or sinapinic acid). A pulsed laser fires at the crystal; the matrix absorbs energy, vaporises, and carries analyte ions into the gas phase — largely singly charged.</p>
+
+      <p>Because MALDI produces predominantly <strong>singly charged [M+H]⁺ ions</strong>, spectra are simpler than ESI. MALDI-TOF (paired with a time-of-flight analyser) is the dominant technology for <strong>rapid microbial identification</strong> in clinical and food microbiology labs — more on this in Section 6.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Feature</th><th>ESI</th><th>MALDI</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Charge state</td><td>Multiple — complex spectra</td><td>Mostly singly charged — simple spectra</td></tr>
+            <tr><td>Sample format</td><td>Solution (continuous flow)</td><td>Dry crystal on a plate</td></tr>
+            <tr><td>Best for</td><td>Proteins, peptides, metabolites, drugs</td><td>Proteins, peptides, intact microbial cells, polymers</td></tr>
+            <tr><td>Common coupling</td><td>LC-MS/MS (proteomics)</td><td>TOF (microbial ID, intact protein)</td></tr>
+            <tr><td>Sensitivity</td><td>Very high (fmol)</td><td>High (pmol)</td></tr>
+            <tr><td>Salt tolerance</td><td>Low — needs clean sample</td><td>Moderate — matrix suppresses salts</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 id="s2c">Electron Ionisation (EI) &amp; Chemical Ionisation (CI)</h3>
+
+      <p><strong>EI</strong> is the classic method for small, volatile, non-polar molecules (e.g., fatty acid methyl esters, VOCs). A beam of 70 eV electrons bombards vaporised analyte, causing extensive fragmentation. This fragmentation is <em>reproducible</em>, making EI spectra matchable against the <strong>NIST library</strong> of >350,000 compounds — invaluable for microbial metabolite profiling.</p>
+
+      <p><strong>CI</strong> uses a reagent gas (methane, ammonia) to produce softer ionisation with less fragmentation, giving a prominent <strong>molecular ion</strong> useful when EI shatters the molecule beyond recognition.</p>
+
+      <div class="anecdote">
+        <div class="anecdote-label">Lab Anecdote</div>
+        <p>EI was used in the 1960s to identify amino acids in the Murchison meteorite that fell in Australia in 1969 — some of them not present in Earth organisms. The reproducibility of 70 eV fragmentation patterns meant spectra taken on Earth could be compared decades later with modern databases. MS's ability to identify molecules from tiny samples without needing a "reference strain" parallels its power in clinical microbiology today.</p>
+      </div>
+
+      <!-- QUIZ 1 -->
+      <div class="quiz">
+        <div class="quiz-title">✦ Check Your Understanding — Ionisation</div>
+        <div class="quiz-question">A researcher wants to rapidly identify bacterial colonies directly from a culture plate with minimal sample preparation. Which ionisation method is most appropriate?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="checkQuiz(this, false, 'ESI requires a liquid sample in continuous flow — not suited for intact cells on a plate.')">A) Electrospray Ionisation (ESI)</div>
+          <div class="quiz-option" onclick="checkQuiz(this, true, 'Correct! MALDI-TOF can analyse intact bacterial cells or crude protein extracts spotted onto a target plate, making it ideal for rapid clinical ID.')">B) MALDI</div>
+          <div class="quiz-option" onclick="checkQuiz(this, false, 'EI requires volatile, small molecules and high vacuum vaporisation — not suitable for intact bacteria.')">C) Electron Ionisation (EI)</div>
+          <div class="quiz-option" onclick="checkQuiz(this, false, 'CI is for small volatile molecules, not intact microbial cells.')">D) Chemical Ionisation (CI)</div>
+        </div>
+        <div class="quiz-feedback" id="qf1"></div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ════════════════════════════════ SECTION 3 ════════════════════════════════ -->
+    <section class="section" id="s3">
+      <div class="section-label">Section 03</div>
+      <h2>Mass Analysers</h2>
+
+      <p>After ionisation, ions are accelerated into the mass analyser — the "heart" of the instrument that physically separates them by <em>m/z</em>. Different analysers offer different trade-offs of <strong>resolution</strong>, <strong>mass accuracy</strong>, <strong>scan speed</strong>, and <strong>cost</strong>.</p>
+
+      <h3 id="s3a">Quadrupole (Q)</h3>
+
+      <p>Four parallel metal rods carry alternating RF and DC voltages. Only ions of a specific <em>m/z</em> have stable trajectories and pass through; others collide with the rods. By scanning the voltages, a mass spectrum is built sequentially.</p>
+
+      <ul class="notes-list">
+        <li>Resolution: unit (1 Da)</li>
+        <li>Mass accuracy: ~100–200 ppm</li>
+        <li>Strengths: robust, fast, excellent for <em>targeted</em> quantification (<span data-tip="Multiple Reaction Monitoring — selects a precursor and product ion for ultimate specificity">MRM/SRM</span>)</li>
+        <li>Weaknesses: limited mass range (typically &lt;3,000 m/z), low resolution</li>
+      </ul>
+
+      <h3 id="s3b">Time-of-Flight (TOF)</h3>
+
+      <p>Ions are accelerated by the same electric potential, giving all ions the same kinetic energy (<code>KE = ½mv²</code>). Lighter ions therefore travel <em>faster</em> down a flight tube and arrive at the detector sooner. The time of flight is proportional to √(m/z).</p>
+
+      <div class="formula">t = L × √(m/z × 1/(2eV))</div>
+
+      <p>where <code>L</code> is tube length, <code>V</code> is accelerating voltage, and <code>e</code> is elementary charge. A <strong>reflectron</strong> (ion mirror) corrects for small kinetic energy spreads, greatly improving resolution.</p>
+
+      <ul class="notes-list">
+        <li>Resolution: 10,000–40,000 (reflectron)</li>
+        <li>Mass accuracy: 5–20 ppm (with calibration)</li>
+        <li>Unlimited mass range in principle</li>
+        <li>Essential for MALDI-TOF microbial ID and intact protein analysis</li>
+      </ul>
+
+      <h3 id="s3c">Orbitrap &amp; Ion Trap</h3>
+
+      <p>The <strong>Orbitrap</strong> (invented by Alexander Makarov in 1999, commercialised by Thermo Scientific) traps ions in oscillating orbits around a spindle electrode. Ions of different <em>m/z</em> oscillate at characteristic <em>frequencies</em>; Fourier transform converts the image current into a mass spectrum.</p>
+
+      <ul class="notes-list">
+        <li>Resolution: up to 500,000 (FWHM) — distinguishes <sup>13</sup>C isotopes from isobaric peaks</li>
+        <li>Mass accuracy: &lt;1 ppm (with internal calibration)</li>
+        <li>The gold standard for <strong>high-resolution discovery proteomics</strong> and <strong>metabolomics</strong></li>
+      </ul>
+
+      <div class="anecdote">
+        <div class="anecdote-label">Instrument Anecdote</div>
+        <p>The Orbitrap was born from Makarov's PhD thesis work on ion kinetics in the USSR. When he joined what became Thermo Scientific, he spent years building an instrument his colleagues doubted would ever work. The first commercial Orbitrap (LTQ-Orbitrap) launched in 2005 and within five years had revolutionised proteomics, enabling identification of >10,000 proteins in a single experiment — something that had taken entire PhD projects with earlier instruments.</p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Analyser</th><th>Resolution</th><th>Mass Accuracy</th><th>Speed</th><th>Best Use</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Quadrupole</strong></td><td>Unit (~1 Da)</td><td>100–200 ppm</td><td>Fast</td><td>Targeted quantification (MRM)</td></tr>
+            <tr><td><strong>Ion Trap (IT)</strong></td><td>~4,000</td><td>~200 ppm</td><td>Very fast</td><td>MSⁿ fragmentation studies</td></tr>
+            <tr><td><strong>TOF</strong></td><td>10,000–40,000</td><td>5–20 ppm</td><td>Fast</td><td>Microbial ID, intact proteins</td></tr>
+            <tr><td><strong>Orbitrap</strong></td><td>15,000–500,000</td><td>&lt;2 ppm</td><td>Moderate</td><td>Discovery proteomics, metabolomics</td></tr>
+            <tr><td><strong>FT-ICR</strong></td><td>&gt;1,000,000</td><td>&lt;0.1 ppm</td><td>Slow</td><td>Top-down proteomics, isotopologue studies</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- INTERACTIVE SPECTRUM DEMO -->
+      <div class="spectrum-demo">
+        <div class="spectrum-title">⚡ Interactive Spectrum Demo — Click a molecule to view its simulated MS spectrum</div>
+        <canvas id="spectrumCanvas" width="800" height="200"></canvas>
+        <div class="spectrum-controls">
+          <button class="spec-btn active" onclick="drawSpectrum('glucose')">Glucose (ESI+)</button>
+          <button class="spec-btn" onclick="drawSpectrum('peptide')">Peptide (ESI+)</button>
+          <button class="spec-btn" onclick="drawSpectrum('maldi_bacteria')">Bacteria (MALDI-TOF)</button>
+          <button class="spec-btn" onclick="drawSpectrum('lipid')">Lipid A (ESI−)</button>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ════════════════════════════════ SECTION 4 ════════════════════════════════ -->
+    <section class="section" id="s4">
+      <div class="section-label">Section 04</div>
+      <h2>Tandem Mass Spectrometry (MS/MS)</h2>
+
+      <p>A single MS experiment tells you the mass of a molecule. <strong>Tandem MS (MS/MS or MS²)</strong> goes further: it selects a specific ion from the first MS, fragments it, then analyses the fragments in a second MS stage. This yields <strong>structural information</strong> — the identity of amino acid sequences, lipid backbones, glycan structures, etc.</p>
+
+      <h3>Dissociation Methods</h3>
+
+      <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          Collision-Induced Dissociation (CID / HCD)
+          <span class="chevron">▼</span>
+        </div>
+        <div class="accordion-body">
+          <p>The precursor ion is accelerated into an inert collision gas (nitrogen or argon). Kinetic energy converts to vibrational energy, breaking the weakest bonds. In peptides, CID preferentially cleaves the <strong>peptide bond</strong> to give <em>b</em> and <em>y</em> ions — the cornerstone of <em>bottom-up proteomics</em>. HCD (higher-energy collisional dissociation) in Orbitrap instruments gives high-resolution fragment spectra.</p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          Electron Transfer Dissociation (ETD) &amp; ECD
+          <span class="chevron">▼</span>
+        </div>
+        <div class="accordion-body">
+          <p>Radical electrons are transferred to multiply protonated peptides, causing N–Cα backbone cleavage to give <em>c</em> and <em>z</em> ions. ETD is gentler than CID and preserves labile modifications such as <strong>phosphorylation and glycosylation</strong> — invaluable for post-translational modification (PTM) mapping. It works best on highly charged (z ≥ 3) ions.</p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          In-Source Fragmentation &amp; MSⁿ
+          <span class="chevron">▼</span>
+        </div>
+        <div class="accordion-body">
+          <p>Ion traps can perform MS³, MS⁴, etc. (MSⁿ) by isolating a fragment ion and fragmenting it again. This allows complete structural elucidation of glycans and complex lipids. While powerful, sensitivity drops with each stage due to ion losses.</p>
+        </div>
+      </div>
+
+      <h3>Ion Series in Peptide Fragmentation</h3>
+
+      <p>When a peptide is fragmented by CID, the nomenclature follows the Roepstorff–Fohlman system: ions retaining the N-terminus are labelled <strong>a, b, c</strong>; ions retaining the C-terminus are <strong>x, y, z</strong>. The most common are <em>b</em> and <em>y</em> ions.</p>
+
+      <div class="formula">b₁ b₂ b₃ … [peptide] … y₃ y₂ y₁</div>
+
+      <p>A series of consecutive <em>y</em> ions differing by the mass of one amino acid residue allows direct <strong>de novo sequencing</strong> of the peptide.</p>
+
+      <div class="key-concept">
+        <div class="key-concept-label">🔑 Shotgun Proteomics Workflow</div>
+        <p>In bottom-up shotgun proteomics: proteins are <strong>digested with trypsin</strong> (cleaves after Lys/Arg), peptides are separated by <strong>LC</strong>, ionised by ESI, and subjected to <strong>MS/MS (DDA or DIA)</strong>. Fragment spectra are matched against protein databases (Mascot, SEQUEST, MaxQuant) to identify proteins and quantify abundance.</p>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ════════════════════════════════ SECTION 5 ════════════════════════════════ -->
+    <section class="section" id="s5">
+      <div class="section-label">Section 05</div>
+      <h2>Detectors &amp; Data Output</h2>
+
+      <p>Ions leaving the analyser must be detected and converted to an electrical signal. The most common detector is the <strong>electron multiplier</strong>: an ion strikes a conversion dynode, releasing secondary electrons that cascade through a series of dynodes, amplifying the signal by 10⁶–10⁸ fold.</p>
+
+      <p>Modern instruments output raw data as an <strong>m/z spectrum</strong> (x-axis: m/z; y-axis: relative ion abundance). For LC-MS/MS experiments, a <strong>Total Ion Chromatogram (TIC)</strong> shows total ion current over elution time, while <strong>Extracted Ion Chromatograms (XICs)</strong> trace specific m/z values — used for quantification.</p>
+
+      <h3>Key Metrics</h3>
+
+      <ul class="notes-list">
+        <li><strong>Resolution (R):</strong> R = m/Δm — the ability to distinguish two closely spaced peaks</li>
+        <li><strong>Mass accuracy:</strong> difference between measured and theoretical mass (ppm)</li>
+        <li><strong>Dynamic range:</strong> ratio of the most to least abundant detectable ion (typically 10³–10⁵)</li>
+        <li><strong>Sensitivity:</strong> minimum detectable amount (often fmol–amol for modern instruments)</li>
+      </ul>
+
+      <div class="caution">
+        <div class="caution-label">⚠ Common Pitfall</div>
+        <p>Students often confuse <em>resolution</em> and <em>mass accuracy</em>. A low-resolution instrument can have good mass accuracy (it reads the correct mass, just can't separate nearby peaks). An Orbitrap has both — but a quadrupole in triple-quad mode has moderate accuracy and low resolution, relying on fragmentation pattern for specificity, not mass alone.</p>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ════════════════════════════════ SECTION 6 ════════════════════════════════ -->
+    <section class="section" id="s6">
+      <div class="section-label">Section 06</div>
+      <h2>Microbial Identification by MALDI-TOF MS</h2>
+
+      <p>MALDI-TOF MS has <strong>transformed clinical microbiology</strong> since the mid-2000s. Traditional biochemical identification (API strips, Vitek) required 24–48 h; MALDI-TOF delivers a species-level identification in <strong>minutes from a single colony</strong>.</p>
+
+      <h3>How It Works</h3>
+
+      <p>A colony is transferred to a steel target plate, overlaid with MALDI matrix (typically CHCA or DHB), and allowed to air-dry. The laser fires, vaporising predominantly <strong>ribosomal proteins</strong> (the most abundant and conserved proteins in bacteria, 2–20 kDa range). The resulting mass fingerprint is compared against a database of reference spectra.</p>
+
+      <div class="key-concept">
+        <div class="key-concept-label">🔑 Why Ribosomal Proteins?</div>
+        <p>Ribosomal proteins are (1) highly abundant — constituting ~25% of dry cell mass, (2) evolutionarily conserved in sequence, giving species-specific mass patterns, and (3) soluble and small enough for MALDI. The pattern of peaks between 2–12 kDa acts as a "spectral fingerprint."</p>
+      </div>
+
+      <h3>Commercial Systems</h3>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>System</th><th>Developer</th><th>Database Size</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>VITEK MS</strong></td><td>bioMérieux</td><td>>2,000 spp.</td><td>FDA-cleared; IVD-grade; droplet deposition</td></tr>
+            <tr><td><strong>MALDI Biotyper</strong></td><td>Bruker Daltonics</td><td>>6,000 spp.</td><td>Most widely researched; open database; used in research</td></tr>
+            <tr><td><strong>ASTA MBT</strong></td><td>Shimadzu</td><td>~900 spp.</td><td>Less common; Asia-focused deployment</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Limitations &amp; Challenges</h3>
+
+      <ul class="notes-list">
+        <li><strong>Database gaps:</strong> rare organisms, non-culturable species, and novel pathogens may not match. A new <em>Elizabethkingia</em> outbreak strain may score poorly if the database strain differs significantly.</li>
+        <li><strong>Strain-level resolution:</strong> Standard MALDI-TOF reliably identifies to species level, but <em>strain</em> typing (e.g., distinguishing MRSA strains) requires additional tools. Peak pattern analysis at higher mass ranges or direct-on-plate typing algorithms are active research areas.</li>
+        <li><strong>Blood culture bottles:</strong> Direct identification from positive blood cultures requires a short extraction step to remove blood proteins that suppress ionisation.</li>
+        <li><strong>Anaerobes and moulds:</strong> Require more rigorous extraction (ethanol/formic acid). Fungal ID is improving but still less reliable than bacterial.</li>
+        <li><strong>Antibiotic resistance:</strong> Cannot reliably detect resistance by standard MALDI-TOF — requires dedicated assays (see Section 10).</li>
+      </ul>
+
+      <div class="anecdote">
+        <div class="anecdote-label">Clinical Anecdote</div>
+        <p>In a landmark 2010 study at the Charité hospital in Berlin, MALDI-TOF was deployed for routine bacteriology identification. The total cost per identification dropped from €24.0 (conventional) to €1.3. More importantly, time-to-identification dropped from >24 h to under 10 minutes for sub-cultured colonies. For bloodstream infections, every hour of delay in appropriate antibiotic therapy increases mortality by ~7% — making these time savings clinically meaningful. Today, MALDI-TOF is the standard of care in most major clinical microbiology labs worldwide.</p>
+      </div>
+
+      <!-- QUIZ 2 -->
+      <div class="quiz">
+        <div class="quiz-title">✦ Check Your Understanding — MALDI-TOF ID</div>
+        <div class="quiz-question">A MALDI-TOF Biotyper score of 1.7 is obtained for an isolate from a wound swab. What does this score indicate and what should be the next step?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="checkQuiz(this, false, 'Scores ≥2.0 indicate secure genus+species ID. A score of 1.7 is in the "probable genus" range.')">A) Reliable species identification — report and treat accordingly</div>
+          <div class="quiz-option" onclick="checkQuiz(this, true, 'Correct! Bruker scores 1.7–2.0 suggest probable genus but unreliable species ID. The isolate should be re-run (fresh extraction, repeat spotting) or submitted for 16S rRNA gene sequencing.')">B) Probable genus only — re-run or perform 16S rRNA sequencing</div>
+          <div class="quiz-option" onclick="checkQuiz(this, false, 'Score of 1.7 does not mean contamination. It means an uncertain match.')">C) Likely contamination — discard and re-culture</div>
+          <div class="quiz-option" onclick="checkQuiz(this, false, 'MALDI-TOF cannot determine antibiotic resistance from spectral fingerprint scores.')">D) Perform antibiotic susceptibility testing only</div>
+        </div>
+        <div class="quiz-feedback" id="qf2"></div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ════════════════════════════════ SECTION 7 ════════════════════════════════ -->
+    <section class="section" id="s7">
+      <div class="section-label">Section 07</div>
+      <h2>Proteomics &amp; Metaproteomics</h2>
+
+      <p><strong>Proteomics</strong> is the large-scale study of all proteins expressed by a cell or organism at a given time — the <em>proteome</em>. Unlike the static genome, the proteome is dynamic, reflecting the organism's actual metabolic state.</p>
+
+      <h3>Bottom-Up vs. Top-Down Proteomics</h3>
+
+      <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          Bottom-Up (Shotgun) Proteomics
+          <span class="chevron">▼</span>
+        </div>
+        <div class="accordion-body">
+          <p>Proteins are first <strong>digested into peptides</strong> (usually by trypsin), separated by reversed-phase LC, and analysed by ESI-MS/MS. Peptide spectra are matched against protein databases. This is the most common approach, capable of identifying and quantifying <strong>thousands of proteins per sample</strong>. Drawback: protein inference ambiguity (different proteins may share peptides) and loss of intact protein information.</p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          Top-Down Proteomics
+          <span class="chevron">▼</span>
+        </div>
+        <div class="accordion-body">
+          <p>Intact proteins are injected directly (no digestion), separated by LC or capillary electrophoresis, and fragmented in the MS. High-resolution instruments (FT-ICR, Orbitrap) are required. Top-down preserves <strong>all PTMs in context</strong> — valuable for studying proteoforms (e.g., alternative splicing, multiple phosphorylations). Technically challenging due to complex spectra and lower sensitivity for large proteins.</p>
+        </div>
+      </div>
+
+      <h3>Metaproteomics</h3>
+
+      <p><strong>Metaproteomics</strong> applies shotgun proteomics to <em>complex microbial communities</em> — gut microbiome, soil, biofilms, ocean samples. The combined protein extract from thousands of species is digested and analysed by LC-MS/MS. Spectra are matched against metagenome-derived sequence databases.</p>
+
+      <p>Key questions addressed by metaproteomics:</p>
+
+      <ul class="notes-list">
+        <li>Which species are <em>metabolically active</em> (not just present — DNA can linger from dead cells)?</li>
+        <li>What functions are being performed — who is breaking down cellulose, fixing nitrogen, producing short-chain fatty acids?</li>
+        <li>How does community function change in disease (e.g., IBD gut microbiome vs. healthy)?</li>
+      </ul>
+
+      <div class="key-concept">
+        <div class="key-concept-label">🔑 Metaproteomics vs. Metagenomics</div>
+        <p>Metagenomics tells you <em>who is there and what they could do</em>. Metaproteomics tells you <em>what they are actually doing right now</em>. Both together (meta-omics integration) provide the most complete picture of microbiome function.</p>
+      </div>
+
+      <h3>Quantification Strategies</h3>
+
+      <ul class="notes-list">
+        <li><strong>Label-free quantification (LFQ):</strong> compare XIC peak areas across runs. Simple but requires careful normalisation.</li>
+        <li><strong>SILAC</strong> (Stable Isotope Labelling by Amino acids in Cell culture): cells grown in ¹³C/¹⁵N amino acids. Pairs of heavy/light peptides elute together; ratio = fold-change. Gold standard for cell culture proteomics.</li>
+        <li><strong>TMT/iTRAQ</strong> (isobaric mass tags): up to 18 samples multiplexed in one run. Tags add equal mass to all samples but release diagnostic reporter ions in MS/MS. Widely used for clinical cohort studies.</li>
+        <li><strong>DIA (Data-Independent Acquisition):</strong> all precursor ions are fragmented systematically (no selection). Results in highly reproducible quantification; analysed by Spectronaut or DIA-NN software.</li>
+      </ul>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ════════════════════════════════ SECTION 8 ════════════════════════════════ -->
+    <section class="section" id="s8">
+      <div class="section-label">Section 08</div>
+      <h2>Metabolomics</h2>
+
+      <p>The <strong>metabolome</strong> comprises all small molecules (&lt;1,500 Da) in a biological sample — amino acids, organic acids, nucleotides, lipids, xenobiotics. It is the closest readout to phenotype: the integrated output of genome + transcriptome + proteome + environment.</p>
+
+      <h3>Untargeted vs. Targeted Metabolomics</h3>
+
+      <p><strong>Untargeted (discovery):</strong> Measure as many metabolites as possible without prior hypothesis. Use HRMS (Orbitrap, QTOF). Yields thousands of features; unknown metabolites are a major challenge — &lt;40% of features can typically be annotated even in well-studied organisms.</p>
+
+      <p><strong>Targeted (quantitative):</strong> Pre-selected metabolites measured by triple quadrupole MRM. Highly sensitive, accurate, and reproducible — used for clinical biomarker validation.</p>
+
+      <h3>MS in Microbial Metabolomics</h3>
+
+      <ul class="notes-list">
+        <li><strong>Secondary metabolite discovery:</strong> fungi and actinobacteria are prolific producers of bioactive compounds. MS-guided fractionation (GNPS molecular networking) identifies novel antibiotics, mycotoxins, and signalling molecules.</li>
+        <li><strong>Quorum sensing molecules:</strong> N-acyl homoserine lactones (AHLs) in gram-negatives are detected by LC-MS/MS at nM concentrations.</li>
+        <li><strong>Volatile organic compounds (VOCs):</strong> headspace SPME–GC-EI-MS detects diagnostic VOC profiles from bacterial cultures — being evaluated for breath-based infection diagnostics.</li>
+        <li><strong>Isotope tracing:</strong> ¹³C-labelled substrates fed to bacteria; mass shifts of metabolites reveal active pathway flux (metabolic flux analysis).</li>
+      </ul>
+
+      <div class="anecdote">
+        <div class="anecdote-label">Research Anecdote</div>
+        <p>In 2012, researchers at the Scripps Institution used <em>GNPS (Global Natural Products Social Molecular Networking)</em> — a crowd-sourced MS/MS database — to discover that a marine actinobacterium made a novel compound related to a known antibiotic. The compound had been detected before but misidentified because conventional chromatography doesn't separate closely related analogues. MS/MS networking grouped the spectra by structural similarity, revealing the family relationship. This approach has since been used to discover dozens of novel bioactive microbial metabolites.</p>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ════════════════════════════════ SECTION 9 ════════════════════════════════ -->
+    <section class="section" id="s9">
+      <div class="section-label">Section 09</div>
+      <h2>Lipidomics &amp; Lipopolysaccharides</h2>
+
+      <p>Bacterial lipids are crucial virulence factors, membrane components, and diagnostic markers. MS has become indispensable for lipid characterisation.</p>
+
+      <h3>Lipopolysaccharide (LPS) Analysis</h3>
+
+      <p>LPS (endotoxin) of Gram-negative bacteria consists of <strong>Lipid A</strong> (the toxic component, embedded in the outer membrane), a core oligosaccharide, and the O-antigen polysaccharide. MS analysis of LPS provides:</p>
+
+      <ul class="notes-list">
+        <li>Lipid A fatty acid composition — key for understanding TLR4 agonism/antagonism</li>
+        <li>Core sugar modifications that correlate with antibiotic resistance (e.g., phosphoethanolamine additions in colistin resistance)</li>
+        <li>O-antigen structure for serotyping <em>E. coli</em>, <em>Salmonella</em>, and other pathogens</li>
+      </ul>
+
+      <p>Lipid A is typically analysed by negative-mode ESI-MS or MALDI-TOF after isolation by Bligh–Dyer extraction. Its high negative charge density makes negative-mode ionisation efficient.</p>
+
+      <div class="key-concept">
+        <div class="key-concept-label">🔑 Colistin Resistance &amp; MS</div>
+        <p>Resistance to colistin (last-resort antibiotic) involves addition of phosphoethanolamine (PEtN) or 4-amino-4-deoxy-L-arabinose (Ara4N) to Lipid A, reducing negative charge and colistin binding. These modifications cause a mass shift of +123 Da (PEtN) or +131 Da (Ara4N) detectable by MS — allowing direct resistance mechanism identification from lipid extracts.</p>
+      </div>
+
+      <h3>Intact Lipid Analysis</h3>
+
+      <p>Shotgun lipidomics (direct infusion ESI-MS/MS) or LC-MS/MS can profile thousands of lipid species from microbial membranes. This has revealed, for example, that <em>Mycobacterium tuberculosis</em> uses unique lipids (mycocerosic acids, phthiocerol dimycocerosates) as virulence factors — structures only fully elucidated by tandem MS.</p>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ════════════════════════════════ SECTION 10 ════════════════════════════════ -->
+    <section class="section" id="s10">
+      <div class="section-label">Section 10</div>
+      <h2>Antibiotic Resistance Detection by MS</h2>
+
+      <p>Conventional AST (Antimicrobial Susceptibility Testing) — disk diffusion, MIC broth dilution — requires 16–24 h of growth. MS-based approaches aim to dramatically shorten this.</p>
+
+      <h3>β-Lactamase Detection (MALDI-TOF)</h3>
+
+      <p>Bacteria are incubated with a β-lactam antibiotic (e.g., meropenem) for 2–4 hours. If the organism produces β-lactamase, the antibiotic is hydrolysed — detectable as a mass shift of +18 Da (water addition to the β-lactam ring). MALDI-TOF directly measures the intact drug and its hydrolysis product.</p>
+
+      <div class="formula">Meropenem (MW 383 Da) → Hydrolysed meropenem (MW 401 Da)</div>
+
+      <p>This approach successfully detects carbapenemases (KPC, NDM, OXA) within 2–4 hours — faster than any culture-based method. Commercial kits (MBT STAR-BL, Bruker) are now available.</p>
+
+      <h3>Whole-Cell Resistance Markers</h3>
+
+      <p>MALDI-TOF spectra can distinguish MRSA from MSSA in <em>some</em> settings by detecting the presence/absence of a specific peak (the PBP2a protein at ~78 kDa is outside the standard 2–12 kDa window, but modified analysis conditions can detect it). More practically, <strong>subtype-specific peaks</strong> in ribosomal spectra correlate with certain resistance genotypes in organisms like <em>Candida auris</em>.</p>
+
+      <h3>Emerging: Isotope Ratio MS for AMR</h3>
+
+      <p>By using ¹³C-labelled glucose and measuring isotopic incorporation into metabolites, it is possible to assess bacterial metabolic activity in the presence of antibiotics within 30–60 minutes — an entire culture cycle shorter than standard AST. This approach is being developed for rapid phenotypic AST in research settings.</p>
+
+      <div class="anecdote">
+        <div class="anecdote-label">Clinical Anecdote</div>
+        <p>In 2019, a multi-centre European study showed that MALDI-TOF-based carbapenemase detection from positive blood cultures reduced the time from culture positivity to actionable resistance result from >24 h to ~3 h. In one simulated patient scenario, this translated to the difference between appropriate carbapenem-sparing therapy and a full day of empiric carbapenem exposure — with implications for both patient outcomes and antimicrobial stewardship.</p>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ════════════════════════════════ SECTION 11 ════════════════════════════════ -->
+    <section class="section" id="s11">
+      <div class="section-label">Section 11</div>
+      <h2>Data Analysis &amp; Bioinformatics</h2>
+
+      <p>Raw MS data is meaningless without appropriate processing. The challenge scales enormously with experiment type — a MALDI-TOF identification is automated in seconds; a shotgun metaproteomics dataset may contain millions of spectra requiring days of computational analysis.</p>
+
+      <h3>Proteomics Data Analysis Pipeline</h3>
+
+      <div class="step-flow">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-name">Raw data</div>
+          <div class="step-desc">.raw/.wiff files from instrument</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-name">Peak picking</div>
+          <div class="step-desc">Signal → centroid list</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-name">Database search</div>
+          <div class="step-desc">Mascot / SEQUEST / Andromeda</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-name">FDR filtering</div>
+          <div class="step-desc">Target-decoy approach (1% FDR)</div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-name">Quantification</div>
+          <div class="step-desc">MaxQuant / Spectronaut</div>
+        </div>
+      </div>
+
+      <h3>False Discovery Rate (FDR) Control</h3>
+
+      <p>With millions of spectra, random chance matches accumulate. The <strong>target-decoy strategy</strong> is standard: a reversed (decoy) protein database is appended to the real database. Matches to decoys estimate the false positive rate. Filtering at 1% FDR means ~1% of reported peptide-spectrum matches (PSMs) are incorrect.</p>
+
+      <div class="caution">
+        <div class="caution-label">⚠ FDR Caution</div>
+        <p>1% PSM-level FDR does not mean 1% protein-level FDR. A protein identified by only one peptide is much less reliable than one with many peptides. Always apply protein-level FDR separately and prefer proteins identified by ≥2 unique peptides.</p>
+      </div>
+
+      <h3>Key Software Tools</h3>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Software</th><th>Use</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>MaxQuant</strong></td><td>Proteomics (LFQ, SILAC)</td><td>Free; widely used; includes Perseus for stats</td></tr>
+            <tr><td><strong>Spectronaut</strong></td><td>DIA proteomics</td><td>Commercial; best-in-class DIA analysis</td></tr>
+            <tr><td><strong>XCMS / MZmine</strong></td><td>Metabolomics feature finding</td><td>Open source; R/Java based</td></tr>
+            <tr><td><strong>GNPS</strong></td><td>Molecular networking (metabolomics)</td><td>Web-based; crowd-sourced MS/MS library</td></tr>
+            <tr><td><strong>MetaProteomeAnalyzer</strong></td><td>Metaproteomics</td><td>Handles multi-species database searches</td></tr>
+            <tr><td><strong>Skyline</strong></td><td>Targeted MS (MRM)</td><td>Free; quantification &amp; method building</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ════════════════════════════════ SECTION 12 ════════════════════════════════ -->
+    <section class="section" id="s12">
+      <div class="section-label">Section 12</div>
+      <h2>Glossary &amp; Flashcards</h2>
+
+      <h3>Key Terminology</h3>
+
+      <div class="glossary-grid">
+        <div class="glossary-item"><div class="glossary-term">m/z</div><div class="glossary-def">Mass-to-charge ratio. The x-axis of a mass spectrum. Determines where an ion appears in the spectrum.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Dalton (Da)</div><div class="glossary-def">Unit of molecular mass; 1 Da = 1/12 the mass of a ¹²C atom (~1.66 × 10⁻²⁷ kg).</div></div>
+        <div class="glossary-item"><div class="glossary-term">Precursor ion</div><div class="glossary-def">The ion selected in MS1 for fragmentation in MS/MS. Also called parent ion.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Product ion</div><div class="glossary-def">A fragment ion produced from the precursor ion during MS/MS. Also called daughter ion.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Monoisotopic mass</div><div class="glossary-def">Mass calculated using the lightest isotope of each element (¹H, ¹²C, ¹⁴N, etc.). Used in database searches.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Average mass</div><div class="glossary-def">Mass calculated using natural isotope abundances. Relevant for low-resolution measurements of larger molecules.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Trypsin digestion</div><div class="glossary-def">Proteolytic cleavage at C-terminal of Lys (K) and Arg (R). Most commonly used enzyme in bottom-up proteomics.</div></div>
+        <div class="glossary-item"><div class="glossary-term">MRM / SRM</div><div class="glossary-def">Multiple/Selected Reaction Monitoring. Targeted quantification using precursor → product ion transitions on a triple quadrupole.</div></div>
+        <div class="glossary-item"><div class="glossary-term">DDA</div><div class="glossary-def">Data-Dependent Acquisition. Instrument selects the most abundant precursors for MS/MS in real time.</div></div>
+        <div class="glossary-item"><div class="glossary-term">DIA</div><div class="glossary-def">Data-Independent Acquisition. All precursors in m/z windows are fragmented systematically. More reproducible quantification.</div></div>
+        <div class="glossary-item"><div class="glossary-term">MALDI score</div><div class="glossary-def">Bruker Biotyper log(score): ≥2.0 = species ID; 1.7–2.0 = genus probable; &lt;1.7 = unreliable match.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Reflectron</div><div class="glossary-def">Ion mirror in a TOF instrument that corrects kinetic energy spread, improving resolution.</div></div>
+        <div class="glossary-item"><div class="glossary-term">In-source fragmentation</div><div class="glossary-def">Unintended fragmentation in the ion source (before the mass analyser). Can complicate spectra.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Matrix suppression</div><div class="glossary-def">MALDI matrix helps prevent ion suppression from salts and non-volatile contaminants.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Isotope pattern</div><div class="glossary-def">Cluster of peaks at M, M+1, M+2 from natural isotope abundances. Used to determine charge state and verify molecular formula.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Charge deconvolution</div><div class="glossary-def">Computational process that converts multiply charged ESI ion series back into a neutral mass spectrum.</div></div>
+      </div>
+
+      <!-- FLASHCARDS -->
+      <div class="flashcard-section">
+        <div class="flashcard-title">🃏 Flashcard Revision — Click to flip · Navigate with buttons</div>
+
+        <div class="flashcard-wrap" id="flashcard" onclick="flipCard()">
+          <div class="flashcard-inner" id="flashcardInner">
+            <div class="flashcard-front">
+              <div class="fc-label">Question</div>
+              <div class="flashcard-q" id="fcQuestion">Loading…</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="flashcard-a" id="fcAnswer">Loading…</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flashcard-nav">
+          <button class="fc-nav-btn" onclick="prevCard()">◀ Prev</button>
+          <div class="fc-counter" id="fcCounter">1 / 10</div>
+          <button class="fc-nav-btn" onclick="nextCard()">Next ▶</button>
+        </div>
+      </div>
+
+      <!-- FINAL QUIZ -->
+      <div class="quiz">
+        <div class="quiz-title">✦ Final Check — Integrated Concepts</div>
+        <div class="quiz-question">In a shotgun metaproteomics experiment, an unknown peak is detected at m/z 401.3 in negative mode that was absent in a control sample. Paired with m/z 383.3 in the control, this most likely represents:</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="checkQuiz(this, false, 'Glycosylation adds much larger masses (162 Da per hexose, etc.) and would not explain an 18 Da shift.')">A) A glycosylation modification on a lipid</div>
+          <div class="quiz-option" onclick="checkQuiz(this, false, 'Phosphorylation adds 80 Da, not 18 Da.')">B) Phosphorylation of a metabolite</div>
+          <div class="quiz-option" onclick="checkQuiz(this, true, 'Correct! The 18 Da mass shift (+H₂O) from meropenem (383 Da) to its hydrolysis product (401 Da) in negative mode is the classic MALDI-TOF or LC-MS signature of β-lactamase activity — indicating carbapenem hydrolysis.')">C) β-Lactamase hydrolysis of meropenem</div>
+          <div class="quiz-option" onclick="checkQuiz(this, false, 'Matrix adducts typically add 127–172 Da (CHCA, DHB), not 18 Da.')">D) MALDI matrix adduct formation</div>
+        </div>
+        <div class="quiz-feedback" id="qf3"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<a href="#" id="backToTop" title="Back to top">↑</a>
+
+<script>
+// ── SECTION OBSERVER ──────────────────────────────────────────
+const sections = document.querySelectorAll('.section');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.07 });
+sections.forEach(s => observer.observe(s));
+
+// ── READING PROGRESS ─────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  const totalHeight = document.body.scrollHeight - window.innerHeight;
+  const progress = (window.scrollY / totalHeight) * 100;
+  document.getElementById('readingProgress').style.width = progress + '%';
+
+  const btn = document.getElementById('backToTop');
+  if (window.scrollY > 400) btn.classList.add('visible');
+  else btn.classList.remove('visible');
+
+  // TOC active state
+  document.querySelectorAll('.toc-item').forEach(link => {
+    const href = link.getAttribute('href');
+    if (!href) return;
+    const target = document.querySelector(href);
+    if (!target) return;
+    const rect = target.getBoundingClientRect();
+    if (rect.top >= 0 && rect.top < 300) {
+      document.querySelectorAll('.toc-item').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    }
+  });
+});
+
+// ── QUIZ ────────────────────────────────────────────────────
+let quizDone = { qf1: false, qf2: false, qf3: false };
+
+function checkQuiz(btn, correct, msg) {
+  const container = btn.closest('.quiz');
+  const fbEl = container.querySelector('.quiz-feedback');
+  const id = fbEl.id;
+  if (quizDone[id]) return;
+  quizDone[id] = true;
+
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) {
+    // mark correct
+    container.querySelectorAll('.quiz-option').forEach(opt => {
+      const onclick = opt.getAttribute('onclick');
+      if (onclick && onclick.includes('true,')) opt.classList.add('correct');
+    });
+  }
+  fbEl.textContent = msg;
+  fbEl.className = 'quiz-feedback ' + (correct ? 'correct-msg' : 'wrong-msg');
+  container.querySelectorAll('.quiz-option').forEach(o => o.style.pointerEvents = 'none');
+}
+
+// ── ACCORDION ───────────────────────────────────────────────
+function toggleAccordion(header) {
+  header.classList.toggle('open');
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+// ── TOC SEARCH ──────────────────────────────────────────────
+function filterTOC(val) {
+  const q = val.toLowerCase();
+  document.querySelectorAll('.toc-item').forEach(item => {
+    item.style.display = item.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// ── SPECTRUM CANVAS ─────────────────────────────────────────
+const spectraData = {
+  glucose: {
+    title: 'Glucose [M+H]⁺ (ESI+) — MW 180.06 Da',
+    peaks: [
+      { mz: 163.1, rel: 35, label: '[M+H-H₂O]⁺' },
+      { mz: 181.1, rel: 100, label: '[M+H]⁺' },
+      { mz: 203.1, rel: 28, label: '[M+Na]⁺' },
+      { mz: 219.1, rel: 12, label: '[M+K]⁺' },
+      { mz: 361.2, rel: 8, label: '[2M+H]⁺' }
+    ],
+    mzMin: 100, mzMax: 400
+  },
+  peptide: {
+    title: 'Tryptic Peptide ACTH₁₋₁₀ (ESI+) — Multiple charge states',
+    peaks: [
+      { mz: 433.2, rel: 45, label: '[M+3H]³⁺' },
+      { mz: 649.8, rel: 100, label: '[M+2H]²⁺' },
+      { mz: 1298.6, rel: 35, label: '[M+H]⁺' }
+    ],
+    mzMin: 300, mzMax: 1500
+  },
+  maldi_bacteria: {
+    title: 'E. coli MALDI-TOF Fingerprint — Ribosomal proteins (2–12 kDa)',
+    peaks: [
+      { mz: 3483, rel: 28, label: 'L36' },
+      { mz: 4366, rel: 55, label: 'S22' },
+      { mz: 5096, rel: 100, label: 'L34' },
+      { mz: 6255, rel: 70, label: 'L32' },
+      { mz: 7273, rel: 65, label: 'L30' },
+      { mz: 7868, rel: 48, label: 'S15' },
+      { mz: 9741, rel: 42, label: 'L29' },
+      { mz: 11505, rel: 38, label: 'L26' }
+    ],
+    mzMin: 2000, mzMax: 14000
+  },
+  lipid: {
+    title: 'Lipid A E. coli K12 (ESI−) — Negative mode',
+    peaks: [
+      { mz: 1404.9, rel: 40, label: '[M-2H]²⁻/2' },
+      { mz: 1436.9, rel: 62, label: 'Pent.form' },
+      { mz: 1796.2, rel: 100, label: '[M-H]⁻ hexa' },
+      { mz: 2034.4, rel: 28, label: '[M-H]⁻ +PEtN' }
+    ],
+    mzMin: 1200, mzMax: 2200
+  }
+};
+
+let currentSpectrum = 'glucose';
+
+function drawSpectrum(key) {
+  currentSpectrum = key;
+  document.querySelectorAll('.spec-btn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase().includes(key.replace('_', ' '))));
+  const canvas = document.getElementById('spectrumCanvas');
+  const ctx = canvas.getContext('2d');
+  const data = spectraData[key];
+  const W = canvas.width, H = canvas.height;
+  const pad = { left: 50, right: 20, top: 20, bottom: 36 };
+  const plotW = W - pad.left - pad.right;
+  const plotH = H - pad.top - pad.bottom;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#0a0b0f';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid
+  ctx.strokeStyle = '#1a1c24';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 5; i++) {
+    const y = pad.top + plotH - (i / 5) * plotH;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + plotW, y); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#2e3040';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(pad.left, pad.top); ctx.lineTo(pad.left, pad.top + plotH);
+  ctx.moveTo(pad.left, pad.top + plotH); ctx.lineTo(pad.left + plotW, pad.top + plotH);
+  ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#4a4f68';
+  ctx.font = '11px JetBrains Mono, monospace';
+  ctx.fillText('m/z', pad.left + plotW / 2 - 10, H - 4);
+  ctx.save();
+  ctx.translate(12, pad.top + plotH / 2 + 20);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Rel. Intensity (%)', 0, 0);
+  ctx.restore();
+
+  const mzRange = data.mzMax - data.mzMin;
+
+  // Peaks
+  data.peaks.forEach(peak => {
+    const x = pad.left + ((peak.mz - data.mzMin) / mzRange) * plotW;
+    const peakH = (peak.rel / 100) * plotH;
+    const y1 = pad.top + plotH;
+    const y0 = y1 - peakH;
+
+    // Gradient peak
+    const grad = ctx.createLinearGradient(x, y0, x, y1);
+    grad.addColorStop(0, peak.rel === 100 ? '#e8b84b' : '#5ec4a1');
+    grad.addColorStop(1, 'rgba(94,196,161,0.1)');
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = peak.rel >= 80 ? 2.5 : 1.8;
+    ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x, y0); ctx.stroke();
+
+    // Labels for significant peaks
+    if (peak.rel >= 28) {
+      ctx.fillStyle = peak.rel === 100 ? '#e8b84b' : '#7a7f9a';
+      ctx.font = '9px JetBrains Mono, monospace';
+      ctx.save();
+      ctx.translate(x, y0 - 4);
+      ctx.rotate(-Math.PI / 6);
+      ctx.fillText(peak.label || peak.mz, 0, 0);
+      ctx.restore();
+    }
+  });
+
+  // Title
+  ctx.fillStyle = '#4a4f68';
+  ctx.font = '10px JetBrains Mono, monospace';
+  ctx.fillText(data.title, pad.left + 6, pad.top + 14);
+
+  // m/z tick labels
+  const tickCount = 5;
+  for (let i = 0; i <= tickCount; i++) {
+    const mzVal = data.mzMin + (i / tickCount) * mzRange;
+    const x = pad.left + (i / tickCount) * plotW;
+    ctx.fillStyle = '#4a4f68';
+    ctx.font = '9px JetBrains Mono, monospace';
+    ctx.fillText(Math.round(mzVal), x - 10, pad.top + plotH + 14);
+  }
+}
+
+// Initial draw after canvas setup
+window.addEventListener('load', () => {
+  const canvas = document.getElementById('spectrumCanvas');
+  canvas.width = canvas.offsetWidth || 800;
+  drawSpectrum('glucose');
+  initFlashcards();
+});
+
+window.addEventListener('resize', () => {
+  const canvas = document.getElementById('spectrumCanvas');
+  canvas.width = canvas.offsetWidth;
+  drawSpectrum(currentSpectrum);
+});
+
+// ── FLASHCARDS ───────────────────────────────────────────────
+const cards = [
+  { q: 'What does m/z stand for and why is it the key parameter in MS?', a: 'm/z = mass-to-charge ratio. It is the parameter analysers actually separate — not mass alone. A doubly charged ion of 10 kDa appears at m/z 5,000, not 10,000.' },
+  { q: 'Why does ESI produce multiply charged ions, and why is this useful?', a: 'ESI adds multiple protons in solution before desolvation. Multiple charges compress large molecules into detectable m/z ranges (e.g., a 150 kDa antibody → m/z ~2,500 with ~60 charges).' },
+  { q: 'What is the Bruker Biotyper score threshold for a reliable species identification?', a: '≥2.0 indicates reliable genus + species ID. Scores 1.7–2.0 suggest probable genus only. <1.7 is unreliable — requires re-run or alternative methods (e.g., 16S rRNA sequencing).' },
+  { q: 'Explain the principle of Time-of-Flight mass analysis.', a: 'All ions receive equal kinetic energy (½mv²). Lighter ions travel faster down the flight tube and arrive first. Time of arrival ∝ √(m/z), giving a mass spectrum from flight time differences.' },
+  { q: 'What b and y ions are produced in CID of a peptide?', a: 'b ions retain the N-terminus; y ions retain the C-terminus. Both result from cleavage of the peptide bond. Sequential differences in b or y series reveal the amino acid sequence.' },
+  { q: 'How does MS detect β-lactamase activity?', a: 'Bacteria are incubated with a β-lactam antibiotic. β-Lactamase opens the β-lactam ring, adding H₂O (+18 Da). MS detects the drug and its hydrolysed form — e.g., meropenem at 383 Da → 401 Da.' },
+  { q: 'What is the target-decoy strategy in proteomics database searching?', a: 'A reversed (decoy) database is appended to the real one. PSMs to decoy entries represent false positives. Filtering at 1% FDR means ≤1% of accepted PSMs are expected to be incorrect.' },
+  { q: 'Why are ribosomal proteins the basis of MALDI-TOF microbial fingerprinting?', a: 'They are (1) highly abundant (~25% dry mass), (2) species-conserved in sequence (thus species-specific in mass pattern), and (3) small (2–12 kDa), perfectly suited to MALDI-TOF analysis.' },
+  { q: 'What is the difference between untargeted and targeted metabolomics?', a: 'Untargeted: discover all features (HRMS, hypothesis-free). Targeted: quantify specific pre-selected metabolites by MRM on triple-quadrupole (higher sensitivity, better reproducibility).' },
+  { q: 'What modification to Lipid A confers colistin resistance and how is it detected by MS?', a: 'Addition of phosphoethanolamine (PEtN, +123 Da) or Ara4N (+131 Da) to Lipid A phosphate groups reduces negative charge, decreasing colistin affinity. The mass shift is directly detectable by negative-mode ESI-MS.' }
+];
+
+let currentCard = 0;
+let isFlipped = false;
+
+function initFlashcards() { showCard(); }
+
+function showCard() {
+  document.getElementById('fcQuestion').textContent = cards[currentCard].q;
+  document.getElementById('fcAnswer').textContent = cards[currentCard].a;
+  document.getElementById('fcCounter').textContent = (currentCard + 1) + ' / ' + cards.length;
+  if (isFlipped) {
+    document.getElementById('flashcard').classList.remove('flipped');
+    isFlipped = false;
+  }
+}
+
+function flipCard() {
+  isFlipped = !isFlipped;
+  document.getElementById('flashcard').classList.toggle('flipped', isFlipped);
+}
+
+function nextCard() {
+  currentCard = (currentCard + 1) % cards.length;
+  isFlipped = false;
+  showCard();
+}
+
+function prevCard() {
+  currentCard = (currentCard - 1 + cards.length) % cards.length;
+  isFlipped = false;
+  showCard();
+}
+</script>
+</body>
+</html>
